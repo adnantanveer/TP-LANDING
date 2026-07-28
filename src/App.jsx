@@ -9,6 +9,7 @@ import { ThreePaths } from './components/sections/ThreePaths'
 import { PromptToProduct } from './components/sections/PromptToProduct'
 import { CapabilityGraph } from './components/sections/CapabilityGraph'
 import { ExpertiseGrid } from './components/sections/ExpertiseGrid'
+import { EvolvingCanvas } from './components/sections/EvolvingCanvas'
 import { OurWork } from './components/sections/OurWork'
 import { IdeaJourney } from './components/sections/IdeaJourney'
 import { Precision } from './components/sections/Precision'
@@ -41,6 +42,7 @@ function App() {
         <PromptToProduct />
         <CapabilityGraph />
         <ExpertiseGrid />
+        <EvolvingCanvas />
         <OurWork />
         <IdeaJourney />
         <Precision />
