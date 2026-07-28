@@ -1,13 +1,21 @@
+import { lazy, Suspense } from 'react'
 import { SplitHeading } from '../common/SplitHeading'
 import { Button } from '../common/Button'
 import { ParticleNetwork } from './ParticleNetwork'
 import './Hero.css'
+
+// Three.js is a heavy dependency — keep it out of the main bundle and let it
+// load as its own chunk in parallel rather than bloating the critical path.
+const HeroScene3D = lazy(() => import('./HeroScene3D').then((m) => ({ default: m.HeroScene3D })))
 
 export function Hero({ introDone = true }) {
   return (
     <section id="top" className="hero" aria-label="Introduction">
       <div className="hero__scene" aria-hidden="true">
         <ParticleNetwork />
+        <Suspense fallback={null}>
+          <HeroScene3D />
+        </Suspense>
         <div className="hero__vignette" />
       </div>
 

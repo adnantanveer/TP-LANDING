@@ -1,0 +1,11 @@
+.hero-scene-3d {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-scene-3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
