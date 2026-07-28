@@ -1,0 +1,93 @@
+.capability-graph {
+  background: var(--color-soft-black);
+  color: var(--on-dark-text);
+  padding-block: var(--space-2xl);
+}
+
+.capability-graph__copy {
+  margin-top: var(--space-sm);
+  color: var(--on-dark-text-muted);
+  font-size: var(--fs-lead);
+  max-width: 48ch;
+}
+
+.capability-graph__stage {
+  position: relative;
+  margin-top: var(--space-xl);
+  max-width: 620px;
+  aspect-ratio: 440 / 320;
+}
+
+.capability-graph__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.capability-graph__link {
+  stroke: var(--color-line-on-dark);
+  stroke-width: 1.5;
+}
+
+.capability-graph__node circle {
+  fill: var(--color-soft-black);
+  stroke: var(--color-blue-muted-soft);
+  stroke-width: 1.6;
+}
+
+.capability-graph__node--core circle {
+  fill: var(--color-blue-muted-soft);
+  stroke: none;
+}
+
+.capability-graph__stage.is-live .capability-graph__node--core circle {
+  animation: cg-pulse 2.6s ease-in-out infinite;
+}
+
+.capability-graph__stage.is-live .capability-graph__node:not(.capability-graph__node--core) circle {
+  animation: cg-pulse-ring 2.6s ease-in-out infinite;
+}
+
+.capability-graph__stage.is-live .capability-graph__node:nth-of-type(2) circle { animation-delay: 0.2s; }
+.capability-graph__stage.is-live .capability-graph__node:nth-of-type(3) circle { animation-delay: 0.4s; }
+.capability-graph__stage.is-live .capability-graph__node:nth-of-type(4) circle { animation-delay: 0.6s; }
+
+@keyframes cg-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+@keyframes cg-pulse-ring {
+  0%, 100% { stroke: var(--color-blue-muted-soft); }
+  50% { stroke: var(--on-dark-text); }
+}
+
+.capability-graph__label {
+  position: absolute;
+  transform: translate(-50%, 14px);
+  font-size: var(--fs-small);
+  color: var(--on-dark-text-muted);
+  white-space: nowrap;
+}
+
+.capability-graph__label--core {
+  transform: translate(-50%, -26px);
+  color: var(--on-dark-text);
+  font-weight: 600;
+}
+
+.capability-graph--simplified {
+  padding-block: var(--space-2xl);
+}
+
+@media (max-width: 900px) {
+  .capability-graph__stage {
+    max-width: 100%;
+  }
+
+  .capability-graph__label {
+    font-size: 0.75rem;
+  }
+}
