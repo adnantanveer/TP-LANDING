@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { navLinks } from '../../data/nav'
 import { Icon } from '../common/Icon'
 import { Button } from '../common/Button'
+import logo from '../../assets/techpotam-logo.png'
 import './Footer.css'
 
 const socials = [
-  { name: 'LinkedIn', icon: 'linkedin-icon', href: '[Your LinkedIn URL]' },
-  { name: 'X / Twitter', icon: 'x-icon', href: '[Your X/Twitter URL]' },
-  { name: 'Instagram', icon: 'instagram-icon', href: '[Your Instagram URL]' },
+  { name: 'LinkedIn', icon: 'linkedin-icon', href: 'https://www.linkedin.com/company/techpotam-private-limited/posts/' },
+  { name: 'X / Twitter', icon: 'x-icon', href: 'https://x.com/techpotam' },
+  { name: 'Instagram', icon: 'instagram-icon', href: 'https://www.instagram.com/techpotam/' },
+  { name: 'Facebook', icon: 'facebook-icon', href: 'https://www.facebook.com/people/Techpotam/100064071823814/' },
 ]
 
 export function Footer() {
@@ -28,7 +30,7 @@ export function Footer() {
           <h2 className="footer__heading">
             Have a project in mind? <br /> We&rsquo;d love to hear about it.
           </h2>
-          <Button href="mailto:[Your Contact Email]" variant="primary on-dark">
+          <Button href="mailto:Info@techpotam.com" variant="primary on-dark">
             Start Your Project
           </Button>
         </div>
@@ -67,15 +69,15 @@ export function Footer() {
         </div>
 
         <div className="footer__col">
-          <span className="footer__col-title">UK Office</span>
+          <span className="footer__col-title">Our Office</span>
           <address>
-            [Your UK Office Address]
+            C1-301, Sector 16C
             <br />
-            [Your City], [Your Postcode]
+            Noida, India 201318
             <br />
-            <a href="tel:[Your Phone Number]">[Your Phone Number]</a>
+            <a href="tel:+917065946898">+91-7065946898</a>
             <br />
-            <a href="mailto:[Your Contact Email]">[Your Contact Email]</a>
+            <a href="mailto:Info@techpotam.com">Info@techpotam.com</a>
           </address>
         </div>
 
@@ -84,7 +86,7 @@ export function Footer() {
           <ul className="footer__socials">
             {socials.map((social) => (
               <li key={social.name}>
-                <a href={social.href} aria-label={social.name}>
+                <a href={social.href} target="_blank" rel="noreferrer" aria-label={social.name}>
                   <Icon name={social.icon} />
                 </a>
               </li>
@@ -95,7 +97,7 @@ export function Footer() {
 
       <div className="container footer__bottom">
         <span>&copy; {new Date().getFullYear()} TechPotam. All rights reserved.</span>
-        <span className="footer__wordmark">techpotam.</span>
+        <img src={logo} alt="TechPotam" className="footer__wordmark" />
       </div>
     </footer>
   )

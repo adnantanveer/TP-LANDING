@@ -28,9 +28,49 @@
   box-shadow: var(--shadow-soft);
 }
 
-.path-card__icon {
-  color: var(--color-blue-muted);
+.path-icon {
+  display: block;
+  width: 44px;
+  height: 44px;
   margin-bottom: var(--space-md);
+  overflow: visible;
+}
+
+.path-icon .icon-draw {
+  fill: none;
+  stroke: var(--color-blue-muted);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.path-icon .icon-pop {
+  fill: var(--color-ink);
+}
+
+.path-icon .icon-accent {
+  fill: var(--color-blue-muted);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.path-icon.is-live .icon-accent {
+  animation: icon-pulse 2.4s ease-in-out infinite;
+}
+
+.path-icon--spin.is-live {
+  animation: spin-slow 7s linear infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.25);
+  }
 }
 
 .path-card h3 {

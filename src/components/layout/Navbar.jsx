@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { navLinks } from '../../data/nav'
+import logo from '../../assets/techpotam-logo.png'
 import './Navbar.css'
 
 export function Navbar() {
@@ -34,7 +35,7 @@ export function Navbar() {
     <header className="navbar">
       <div className="navbar__inner container">
         <a href="#top" className="navbar__logo">
-          techpotam<span className="navbar__logo-dot">.</span>
+          <img src={logo} alt="TechPotam" className="navbar__logo-img" />
         </a>
 
         <nav className="navbar__links" aria-label="Primary">

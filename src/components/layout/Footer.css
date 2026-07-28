@@ -127,9 +127,10 @@
 }
 
 .footer__wordmark {
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--on-dark-text);
+  height: 20px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.94;
 }
 
 @media (max-width: 900px) {

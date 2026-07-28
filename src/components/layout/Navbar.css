@@ -25,7 +25,6 @@
   pointer-events: auto;
 }
 
-.navbar__logo,
 .navbar__links a,
 .navbar__cta,
 .navbar__burger span {
@@ -33,15 +32,17 @@
 }
 
 .navbar__logo {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.15rem;
-  text-decoration: none;
-  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
 }
 
-.navbar__logo-dot {
-  color: var(--color-blue-muted-soft);
+.navbar__logo-img {
+  height: 26px;
+  width: auto;
+  /* Real brand mark ships in green/charcoal; flatten to off-white so it
+     reads correctly against the dark nav pill instead of clashing. */
+  filter: brightness(0) invert(1);
+  opacity: 0.94;
 }
 
 .navbar__links {

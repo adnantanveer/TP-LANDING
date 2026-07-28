@@ -14,18 +14,53 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 .preloader__word {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: -0.01em;
+  height: 22px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.94;
 }
 
-.preloader__dot {
-  color: var(--color-blue-muted-soft);
+.preloader__mark {
+  position: relative;
+  width: clamp(140px, 9vw + 110px, 200px);
+  aspect-ratio: 1;
+}
+
+.preloader__ring-svg,
+.preloader__glyph {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.preloader__ring-track {
+  fill: none;
+  stroke: var(--color-line-on-dark);
+  stroke-width: 2;
+}
+
+.preloader__ring-fill {
+  fill: none;
+  stroke: var(--color-blue-muted-soft);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.preloader__glyph-outer {
+  fill: rgba(247, 245, 242, 0.03);
+  stroke: var(--on-dark-text);
+  stroke-width: 1.2;
+}
+
+.preloader__glyph-inner {
+  fill: rgba(124, 158, 186, 0.16);
+  stroke: var(--color-blue-muted-soft);
+  stroke-width: 1.1;
 }
 
 .preloader__count {
@@ -33,29 +68,38 @@
   align-items: flex-start;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(4rem, 3rem + 6vw, 8rem);
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
 }
 
 .preloader__percent {
-  font-size: clamp(1.25rem, 1rem + 1vw, 2rem);
-  margin-top: 0.5em;
+  font-size: 0.5em;
+  margin-top: 0.15em;
   color: var(--on-dark-text-muted);
 }
 
-.preloader__bar-track {
-  width: min(220px, 40vw);
-  height: 1px;
-  background: var(--color-line-on-dark);
+.preloader__disciplines {
+  display: flex;
+  gap: var(--space-lg);
 }
 
-.preloader__bar-fill {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--color-blue-muted-soft);
-  transform: scaleX(0);
-  transform-origin: left;
+.preloader__chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3xs);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.04em;
+  color: var(--on-dark-text-muted);
+  opacity: 0.35;
+  transform: scale(0.92);
+  transition: opacity 0.4s var(--ease-soft), transform 0.4s var(--ease-soft), color 0.4s var(--ease-soft);
+}
+
+.preloader__chip.is-active {
+  opacity: 1;
+  color: var(--on-dark-text);
+  transform: scale(1);
 }
