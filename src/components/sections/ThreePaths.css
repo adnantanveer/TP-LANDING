@@ -43,8 +43,8 @@
 
 .path-icon {
   display: block;
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   margin-bottom: var(--space-md);
   overflow: visible;
 }
@@ -73,8 +73,21 @@
   animation: icon-pulse 2.4s ease-in-out infinite;
 }
 
-.path-icon--spin.is-live {
-  animation: spin-slow 7s linear infinite;
+.path-icon.is-live .ai-dot {
+  animation: dot-bounce 1.2s ease-in-out infinite;
+}
+
+.path-icon.is-live .ai-dot:nth-of-type(2) {
+  animation-delay: 0.15s;
+}
+
+.path-icon.is-live .ai-dot:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes dot-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 1; }
+  30% { transform: translateY(-3px); opacity: 0.6; }
 }
 
 @keyframes icon-pulse {
