@@ -1,5 +1,4 @@
 .three-paths {
-  padding-block: var(--space-2xl);
   background: var(--color-bg-off);
 }
 
@@ -8,8 +7,15 @@
   max-width: 14ch;
 }
 
-.three-paths__grid {
-  margin-top: var(--space-xl);
+.three-paths__pin {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.three-paths__row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-md);
@@ -20,11 +26,18 @@
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
   padding: var(--space-lg) var(--space-md);
-  transition: transform var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft);
+  transition: opacity var(--dur-med) var(--ease-soft), transform var(--dur-med) var(--ease-soft),
+    box-shadow var(--dur-fast) var(--ease-soft);
 }
 
-.path-card:hover {
-  transform: translateY(-6px);
+.three-paths__row .path-card {
+  opacity: 0.4;
+  transform: scale(0.96);
+}
+
+.three-paths__row .path-card.is-active {
+  opacity: 1;
+  transform: scale(1);
   box-shadow: var(--shadow-soft);
 }
 
@@ -42,6 +55,8 @@
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: left center;
 }
 
 .path-icon .icon-pop {
@@ -83,8 +98,19 @@
   line-height: 1.6;
 }
 
+/* Simplified / mobile / reduced-motion fallback: a plain stacked list */
+.three-paths--simplified {
+  padding-block: var(--space-2xl);
+}
+
+.three-paths__stack {
+  margin-top: var(--space-xl);
+  display: grid;
+  gap: var(--space-md);
+}
+
 @media (max-width: 900px) {
-  .three-paths__grid {
-    grid-template-columns: 1fr;
+  .three-paths__stage .path-card {
+    padding: var(--space-md);
   }
 }

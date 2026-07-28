@@ -17,7 +17,7 @@ export function MobileIcon() {
     <svg viewBox="0 0 48 48" className="path-icon" aria-hidden="true">
       <rect className="icon-draw" x="14" y="4" width="20" height="40" rx="5" />
       <line className="icon-draw" x1="21" y1="40" x2="27" y2="40" />
-      <path className="icon-draw" d="M19 26q5-5 10 0" />
+      <path className="icon-pop" d="M19 26q5-5 10 0" />
       <circle className="icon-pop icon-accent" cx="30" cy="11" r="2" />
     </svg>
   )
@@ -26,7 +26,7 @@ export function MobileIcon() {
 export function AiIcon() {
   return (
     <svg viewBox="0 0 48 48" className="path-icon path-icon--spin" aria-hidden="true">
-      <path className="icon-draw" d="M24 4 27 20 44 24 27 28 24 44 21 28 4 24 21 20Z" />
+      <path className="icon-pop" d="M24 4 27 20 44 24 27 28 24 44 21 28 4 24 21 20Z" />
       <circle className="icon-pop icon-accent" cx="24" cy="24" r="2" />
     </svg>
   )

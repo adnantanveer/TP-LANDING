@@ -1,8 +1,11 @@
 import { useRef } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { paths } from '../../data/paths'
 import { WebIcon, MobileIcon, AiIcon } from './PathIcons'
 import { SplitHeading } from '../common/SplitHeading'
+import { Reveal } from '../common/Reveal'
+import { useSimplifiedMotion } from '../../hooks/useSimplifiedMotion'
 import { useScopedGsap } from '../../hooks/useScopedGsap'
 import './ThreePaths.css'
 
@@ -19,70 +22,100 @@ function PathContent({ path }) {
   )
 }
 
+/** Resets a card's icon to its hidden state, then plays the draw-in + pop-in. */
+function playIconIn(card) {
+  const drawEls = card.querySelectorAll('.icon-draw')
+  const popEls = card.querySelectorAll('.icon-pop')
+  const iconEl = card.querySelector('.path-icon')
+  iconEl?.classList.remove('is-live')
+
+  gsap.set(drawEls, { scaleX: 0, transformOrigin: 'left center' })
+  gsap.set(popEls, { opacity: 0, scale: 0.5, transformOrigin: 'center' })
+
+  gsap.to(drawEls, { scaleX: 1, duration: 0.45, stagger: 0.06, ease: 'power2.out' })
+  gsap.to(popEls, {
+    opacity: 1,
+    scale: 1,
+    duration: 0.3,
+    stagger: 0.05,
+    delay: 0.3,
+    ease: 'back.out(2)',
+    onComplete: () => iconEl?.classList.add('is-live'),
+  })
+}
+
 export function ThreePaths() {
+  const simplified = useSimplifiedMotion()
   const sectionRef = useRef(null)
   const cardRefs = useRef([])
 
   useScopedGsap(
     sectionRef,
     () => {
+      if (simplified) return
       const cards = cardRefs.current.filter(Boolean)
       if (!cards.length) return
 
-      cards.forEach((card) => {
-        const drawEls = card.querySelectorAll('.icon-draw')
-        const popEls = card.querySelectorAll('.icon-pop')
-        drawEls.forEach((el) => {
-          const length = el.getTotalLength ? el.getTotalLength() : 100
-          gsap.set(el, { strokeDasharray: length, strokeDashoffset: length })
-        })
-        gsap.set(popEls, { opacity: 0, scale: 0.5, transformOrigin: 'center' })
-      })
-      gsap.set(cards, { opacity: 0, y: 28 })
+      playIconIn(cards[0])
 
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: sectionRef.current, start: 'top 78%', once: true },
-      })
+      let currentIndex = 0
 
-      cards.forEach((card, i) => {
-        const drawEls = card.querySelectorAll('.icon-draw')
-        const popEls = card.querySelectorAll('.icon-pop')
-        const iconEl = card.querySelector('.path-icon')
-        const startAt = i * 0.25
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: () => `+=${window.innerHeight * (paths.length - 1) * 0.9}`,
+        pin: true,
+        scrub: 1,
+        onUpdate: (self) => {
+          const idx = Math.min(paths.length - 1, Math.floor(self.progress * paths.length))
+          if (idx === currentIndex) return
+          const prevIdx = currentIndex
+          currentIndex = idx
 
-        tl.to(card, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, startAt)
-          .to(drawEls, { strokeDashoffset: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' }, startAt + 0.1)
-          .to(
-            popEls,
-            {
-              opacity: 1,
-              scale: 1,
-              duration: 0.3,
-              stagger: 0.05,
-              ease: 'back.out(2)',
-              onComplete: () => iconEl?.classList.add('is-live'),
-            },
-            startAt + 0.35
-          )
+          cards[prevIdx].classList.remove('is-active')
+          cards[idx].classList.add('is-active')
+          playIconIn(cards[idx])
+        },
       })
     },
-    []
+    [simplified]
   )
+
+  if (simplified) {
+    return (
+      <section id="paths" className="three-paths three-paths--simplified" aria-label="What we build">
+        <div className="container">
+          <p className="eyebrow">What we build</p>
+          <SplitHeading as="h2" className="three-paths__title">
+            Three Paths
+          </SplitHeading>
+
+          <div className="three-paths__stack">
+            {paths.map((path) => (
+              <Reveal as="article" key={path.id} className="path-card path-card--static" data-cursor-hover>
+                <PathContent path={path} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section id="paths" className="three-paths" ref={sectionRef} aria-label="What we build">
-      <div className="container">
+      <div className="three-paths__pin container">
         <p className="eyebrow">What we build</p>
         <SplitHeading as="h2" className="three-paths__title">
           Three Paths
         </SplitHeading>
 
-        <div className="three-paths__grid">
+        <div className="three-paths__row">
           {paths.map((path, i) => (
             <article
               key={path.id}
               ref={(el) => (cardRefs.current[i] = el)}
-              className="path-card"
+              className={`path-card ${i === 0 ? 'is-active' : ''}`}
               data-cursor-hover
             >
               <PathContent path={path} />
