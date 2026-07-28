@@ -8,6 +8,7 @@ import { Craft } from './components/sections/Craft'
 import { ThreePaths } from './components/sections/ThreePaths'
 import { PromptToProduct } from './components/sections/PromptToProduct'
 import { CapabilityGraph } from './components/sections/CapabilityGraph'
+import { ExpertiseGrid } from './components/sections/ExpertiseGrid'
 import { OurWork } from './components/sections/OurWork'
 import { IdeaJourney } from './components/sections/IdeaJourney'
 import { Precision } from './components/sections/Precision'
@@ -39,6 +40,7 @@ function App() {
         <ThreePaths />
         <PromptToProduct />
         <CapabilityGraph />
+        <ExpertiseGrid />
         <OurWork />
         <IdeaJourney />
         <Precision />
