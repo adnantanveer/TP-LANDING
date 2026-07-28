@@ -18,6 +18,10 @@ export function useLenis(enabled = true) {
       smoothWheel: true,
     })
 
+    // Keep Lenis's internal position in sync with the forced scroll-to-top
+    // in main.jsx, so it never thinks it's somewhere the page isn't.
+    lenis.scrollTo(0, { immediate: true })
+
     lenis.on('scroll', ScrollTrigger.update)
 
     const onTick = (time) => {
