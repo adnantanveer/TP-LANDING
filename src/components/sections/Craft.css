@@ -1,0 +1,39 @@
+.craft {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  color: var(--on-dark-text);
+  overflow: hidden;
+}
+
+.craft__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.craft__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.55) 0%, rgba(20, 20, 20, 0.78) 100%);
+}
+
+.craft__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.craft__title {
+  font-size: clamp(4.5rem, 3rem + 10vw, 13rem);
+  line-height: 0.9;
+  color: var(--on-dark-text);
+}
+
+.craft__copy {
+  margin: var(--space-md) auto 0;
+  max-width: 46ch;
+  font-size: var(--fs-lead);
+  color: var(--on-dark-text-muted);
+}

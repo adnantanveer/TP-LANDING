@@ -1,0 +1,109 @@
+.developers {
+  background: var(--color-bg-off);
+  padding-block: var(--space-2xl);
+  overflow: clip;
+}
+
+.developers__lede {
+  margin-top: var(--space-sm);
+  max-width: 50ch;
+  color: var(--color-warm-gray-text);
+  font-size: var(--fs-lead);
+}
+
+.developers__grid {
+  margin-top: var(--space-xl);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+}
+
+.developer-card {
+  will-change: transform;
+}
+
+.developer-card__frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.developer-card__media {
+  position: absolute;
+  inset: -15% 0;
+  height: 130%;
+}
+
+/* Distinct tone per card so the row doesn't read as one flat repeated block */
+.developer-card:nth-child(1) .video-block__placeholder {
+  background-image: linear-gradient(135deg, var(--color-blue-muted) 0%, var(--color-charcoal) 100%);
+}
+.developer-card:nth-child(2) .video-block__placeholder {
+  background-image: linear-gradient(135deg, var(--color-charcoal) 0%, var(--color-blue-muted) 100%);
+}
+.developer-card:nth-child(3) .video-block__placeholder {
+  background-image: linear-gradient(150deg, var(--color-blue-muted) 0%, var(--color-warm-gray) 100%);
+}
+.developer-card:nth-child(4) .video-block__placeholder {
+  background-image: linear-gradient(150deg, var(--color-soft-black) 0%, var(--color-blue-muted-soft) 100%);
+}
+
+.developer-card__shine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.developer-card__shine::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -30%;
+  width: 46%;
+  height: 220%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(247, 245, 242, 0.16) 45%,
+    rgba(247, 245, 242, 0.32) 50%,
+    rgba(247, 245, 242, 0.16) 55%,
+    transparent 100%
+  );
+  transform: translateX(-60%) rotate(8deg);
+  animation: shine-sweep 6s ease-in-out infinite;
+  animation-delay: var(--shine-delay, 0s);
+}
+
+@keyframes shine-sweep {
+  0%, 42% {
+    transform: translateX(-60%) rotate(8deg);
+  }
+  62%, 100% {
+    transform: translateX(260%) rotate(8deg);
+  }
+}
+
+.developer-card__caption {
+  margin-top: var(--space-sm);
+}
+
+.developer-card__caption h3 {
+  font-size: var(--fs-h3);
+  margin-bottom: var(--space-3xs);
+}
+
+.developer-card__caption p {
+  color: var(--color-warm-gray-text);
+  font-size: var(--fs-small);
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .developers__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

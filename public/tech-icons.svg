@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="tech-angular-icon" viewBox="0 0 24 24">
+    <path d="M12 2 21 5.5 19.5 18 12 22 4.5 18 3 5.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+    <path d="M12 6.5 16.5 16.5M12 6.5 7.5 16.5M9.3 13.5h5.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+  </symbol>
+
+  <symbol id="tech-react-icon" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="2" fill="currentColor" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="currentColor" stroke-width="1" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(60 12 12)" />
+    <ellipse cx="12" cy="12" rx="10" ry="4" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(120 12 12)" />
+  </symbol>
+
+  <symbol id="tech-node-icon" viewBox="0 0 24 24">
+    <path d="M12 2 21 7v10l-9 5-9-5V7Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+    <path d="M12 2v20" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="1 3" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="tech-python-icon" viewBox="0 0 24 24">
+    <path d="M12 3c-3 0-5 1-5 3v2h5v1H5c-2 0-3 1.4-3 4s1 4 3 4h2v-2.6c0-2 1.6-3.4 4-3.4h4c2 0 3.5-1.5 3.5-3.5V6c0-2-2-3-5-3Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" />
+    <path d="M12 21c3 0 5-1 5-3v-2h-5v-1h7c2 0 3-1.4 3-4s-1-4-3-4h-2v2.6c0 2-1.6 3.4-4 3.4H10c-2 0-3.5 1.5-3.5 3.5V18c0 2 2 3 5 3Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" />
+  </symbol>
+
+  <symbol id="tech-aws-icon" viewBox="0 0 24 24">
+    <path d="M6.5 15.5a4 4 0 0 1 .3-8 5 5 0 0 1 9.6-1.3 3.8 3.8 0 0 1 3.6 3.8 3.5 3.5 0 0 1-.3 5.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+    <path d="M4 18.5c4 2 12 2 16 0" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="tech-azure-icon" viewBox="0 0 24 24">
+    <path d="M9 3h5l-5.5 15H4Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+    <path d="M13 3 8 15.5 20 15 12.5 8Z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" />
+  </symbol>
+
+  <symbol id="tech-docker-icon" viewBox="0 0 24 24">
+    <rect x="3" y="11" width="3" height="3" fill="currentColor" />
+    <rect x="7" y="11" width="3" height="3" fill="currentColor" />
+    <rect x="11" y="11" width="3" height="3" fill="currentColor" />
+    <rect x="7" y="7" width="3" height="3" fill="currentColor" />
+    <rect x="11" y="7" width="3" height="3" fill="currentColor" />
+    <path d="M2 14c1 4 4 6 8.5 6 6 0 9.5-3.5 10.5-7.5-1 .5-2 .3-2.5-.3-.7.8-2 1-3 .3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+  </symbol>
+
+  <symbol id="tech-flutter-icon" viewBox="0 0 24 24">
+    <path d="M5 15 15 5h6L11 15Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+    <path d="M11 15 21 15 15.5 20.5 9 14Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+  </symbol>
+
+  <symbol id="tech-java-icon" viewBox="0 0 24 24">
+    <path d="M6 11h10a3 3 0 0 1 0 6H8a3 3 0 0 1-3-3v-3Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+    <path d="M16 12.5h1.5a2 2 0 0 1 0 4H16" fill="none" stroke="currentColor" stroke-width="1.2" />
+    <path d="M9 3.5c-1 1 1 1.5 0 2.6M12.5 3.5c-1 1 1 1.5 0 2.6" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+    <path d="M6 19c3 1.6 9 1.6 12 0" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="tech-springboot-icon" viewBox="0 0 24 24">
+    <path d="M18.5 5.5c2.3 3.6 1.8 9-1.6 12.4-3.7 3.7-9.9 3.9-13.4.4 1-.2 2-.6 2.8-1.2-3-1.8-4.3-5.7-2.7-9C5.4 3.8 10.4 2 14.6 3.7c1.3.5 2.5 1 3.9 1.8Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" />
+    <path d="M7 17c3.5-4 7-6.5 11-8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="tech-kubernetes-icon" viewBox="0 0 24 24">
+    <path d="M12 2 20 8l-3 10H7L4 8Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+    <path d="M12 2v6M20 8l-6 3M17 18l-5-5M7 18l5-5M4 8l6 3" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+    <circle cx="12" cy="12" r="1.4" fill="currentColor" />
+  </symbol>
+
+  <symbol id="tech-postgresql-icon" viewBox="0 0 24 24">
+    <path d="M12 3a8 8 0 0 0-8 8c0 3.5 2 6.5 5 7.7-.2-1 0-1.8.6-2.3-1.4-.6-2.4-2-2.4-3.7 0-2.3 2-4.2 4.8-4.2s4.8 1.9 4.8 4.2c0 1.7-1 3.1-2.4 3.7.6.5.8 1.3.6 2.3 3-1.2 5-4.2 5-7.7a8 8 0 0 0-8-8Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" />
+  </symbol>
+
+  <symbol id="tech-mongodb-icon" viewBox="0 0 24 24">
+    <path d="M12 2c3 4 5 8 5 11.5a5 5 0 0 1-10 0C7 10 9 6 12 2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" />
+    <path d="M12 13v9" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="tech-typescript-icon" viewBox="0 0 24 24">
+    <rect x="2.5" y="2.5" width="19" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="1.3" />
+    <path d="M7 9.5h5M9.5 9.5V16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+    <path d="M14 15.3c.3.7 1 1.1 1.9 1.1 1.1 0 1.8-.5 1.8-1.3 0-.9-.7-1.1-1.8-1.4-1.2-.3-1.9-.7-1.9-1.6 0-.8.7-1.4 1.7-1.4.9 0 1.5.4 1.8 1" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" />
+  </symbol>
+</svg>

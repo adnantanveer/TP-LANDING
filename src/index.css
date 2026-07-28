@@ -1,0 +1,123 @@
+@import '@fontsource-variable/inter';
+@import './styles/tokens.css';
+@import './styles/animations.css';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img, svg, video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: var(--container-w);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-blue-muted);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: var(--space-md);
+  z-index: 1000;
+  background: var(--color-ink);
+  color: var(--color-bg-off);
+  padding: 0.75em 1.25em;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: top var(--dur-fast) var(--ease-soft);
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-blue-muted);
+  outline-offset: 3px;
+}
+
+section {
+  position: relative;
+}
+
+::selection {
+  background: var(--color-blue-muted);
+  color: var(--on-dark-text);
+}
+
+.split-line {
+  display: block;
+  overflow: hidden;
+}
+
+.split-line .word {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}

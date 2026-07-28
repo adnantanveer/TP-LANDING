@@ -1,0 +1,109 @@
+.our-work {
+  position: relative;
+  background: var(--color-bg);
+  padding-block: var(--space-xl);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.our-work__intro {
+  flex-shrink: 0;
+}
+
+.our-work__viewport {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-top: var(--space-lg);
+}
+
+.our-work__track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: max-content;
+  padding-inline: var(--space-md);
+  will-change: transform;
+}
+
+.work-card {
+  position: relative;
+  width: min(60vw, 760px);
+  aspect-ratio: 16 / 10;
+  flex-shrink: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.work-card__media {
+  position: absolute;
+  inset: 0;
+}
+
+.work-card__caption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--space-md);
+  background: linear-gradient(0deg, rgba(20, 20, 20, 0.82) 0%, transparent 70%);
+  color: var(--on-dark-text);
+}
+
+.work-card__category {
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-dark-text-muted);
+}
+
+.work-card__caption h3 {
+  font-size: var(--fs-h3);
+  margin-top: var(--space-2xs);
+}
+
+.work-card__hover-info {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  color: var(--on-dark-text-muted);
+  transition: max-height var(--dur-med) var(--ease-soft), opacity var(--dur-fast) var(--ease-soft),
+    margin-top var(--dur-med) var(--ease-soft);
+}
+
+.work-card:hover .work-card__hover-info,
+.work-card:focus-within .work-card__hover-info {
+  max-height: 4em;
+  opacity: 1;
+  margin-top: var(--space-2xs);
+}
+
+.work-card__link {
+  display: inline-block;
+  margin-top: var(--space-xs);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--color-blue-muted-soft);
+}
+
+@media (max-width: 900px) {
+  .our-work {
+    height: auto;
+  }
+  .our-work__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: var(--space-md);
+  }
+  .our-work__track {
+    padding-inline: var(--space-sm);
+  }
+  .work-card {
+    width: 82vw;
+    aspect-ratio: 4 / 5;
+    scroll-snap-align: start;
+  }
+}
