@@ -64,8 +64,19 @@
   position: absolute;
   inset: 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.idea-journey__panel-visual {
+  flex: none;
+  width: 160px;
+  height: 160px;
+}
+
+.idea-journey__panel-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .idea-journey__panel-step {
@@ -108,6 +119,12 @@
   padding-top: var(--space-md);
 }
 
+.idea-journey__item-visual {
+  flex: none;
+  width: 56px;
+  height: 56px;
+}
+
 .idea-journey__step {
   font-family: var(--font-display);
   font-size: var(--fs-h3);
@@ -125,8 +142,80 @@
   color: var(--on-dark-text-muted);
 }
 
+.journey-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.journey-icon .icon-draw {
+  fill: none;
+  stroke: var(--on-dark-text-muted);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.journey-icon .icon-pop {
+  fill: var(--on-dark-text);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.journey-icon .icon-accent {
+  fill: var(--color-blue-muted-soft);
+}
+
+.journey-icon .icon-line {
+  fill: none;
+  stroke: var(--color-blue-muted-soft);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.journey-icon.is-live .icon-accent {
+  animation: icon-pulse-soft 2.4s ease-in-out infinite;
+}
+
+.journey-icon.is-live .journey-icon__ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ripple-out 1.6s ease-out infinite;
+}
+
+.journey-icon.is-live .journey-icon__flame {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: flame-flicker 0.6s ease-in-out infinite;
+}
+
+@keyframes icon-pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.2); }
+}
+
+@keyframes flame-flicker {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(1.2); opacity: 0.7; }
+}
+
 @media (max-width: 900px) {
   .idea-journey__pin {
     grid-template-columns: 1fr;
+  }
+
+  .idea-journey__panel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .idea-journey__panel-visual {
+    width: 100px;
+    height: 100px;
   }
 }

@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { paths } from '../../data/paths'
 import { WebIcon, MobileIcon, AiIcon } from './PathIcons'
@@ -7,6 +6,7 @@ import { SplitHeading } from '../common/SplitHeading'
 import { Reveal } from '../common/Reveal'
 import { useSimplifiedMotion } from '../../hooks/useSimplifiedMotion'
 import { useScopedGsap } from '../../hooks/useScopedGsap'
+import { playIconIn } from '../../utils/iconMotion'
 import './ThreePaths.css'
 
 const PATH_ICONS = { web: WebIcon, mobile: MobileIcon, ai: AiIcon }
@@ -20,28 +20,6 @@ function PathContent({ path }) {
       <p>{path.description}</p>
     </>
   )
-}
-
-/** Resets a card's icon to its hidden state, then plays the draw-in + pop-in. */
-function playIconIn(card) {
-  const drawEls = card.querySelectorAll('.icon-draw')
-  const popEls = card.querySelectorAll('.icon-pop')
-  const iconEl = card.querySelector('.path-icon')
-  iconEl?.classList.remove('is-live')
-
-  gsap.set(drawEls, { scaleX: 0, transformOrigin: 'left center' })
-  gsap.set(popEls, { opacity: 0, scale: 0.5, transformOrigin: 'center' })
-
-  gsap.to(drawEls, { scaleX: 1, duration: 0.45, stagger: 0.06, ease: 'power2.out' })
-  gsap.to(popEls, {
-    opacity: 1,
-    scale: 1,
-    duration: 0.3,
-    stagger: 0.05,
-    delay: 0.3,
-    ease: 'back.out(2)',
-    onComplete: () => iconEl?.classList.add('is-live'),
-  })
 }
 
 export function ThreePaths() {
