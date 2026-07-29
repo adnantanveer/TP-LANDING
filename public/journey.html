@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>From One Instruction to the Edge of the Solar System — TechPotam</title>
+<meta name="description" content="A short scroll-told history of computing, code and AI — from the first punched instruction to the edge of the solar system." />
+<style>
+  :root {
+    --bg: #05060a;
+    --text: #f4f6f9;
+    --text-muted: rgba(244, 246, 249, 0.62);
+    --text-faint: rgba(244, 246, 249, 0.36);
+    --blue: #7d97ad;
+    --blue-dim: rgba(125, 151, 173, 0.16);
+    --gold: #e8b567;
+    --gold-dim: rgba(232, 181, 103, 0.16);
+    --line: rgba(244, 246, 249, 0.1);
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  #stars {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .topnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px clamp(20px, 4vw, 56px);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+  }
+
+  .topnav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 7px 14px;
+    border-radius: 999px;
+    transition: color 0.25s ease, border-color 0.25s ease;
+  }
+
+  .topnav a:hover { color: var(--text); border-color: var(--blue); }
+  .topnav span { color: var(--text-faint); }
+
+  main { position: relative; z-index: 1; }
+
+  section {
+    position: relative;
+    padding: clamp(80px, 14vh, 160px) clamp(20px, 6vw, 90px);
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin: 0 0 20px;
+  }
+
+  h1, h2 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 20px;
+    text-wrap: balance;
+  }
+
+  h1 { font-size: clamp(2.4rem, 1.6rem + 3.6vw, 4.6rem); max-width: 16ch; }
+  h2 { font-size: clamp(1.9rem, 1.4rem + 2.2vw, 3.1rem); max-width: 15ch; }
+
+  p.lead {
+    font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.3rem);
+    line-height: 1.65;
+    color: var(--text-muted);
+    max-width: 58ch;
+    margin: 0;
+  }
+
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-reveal].is-in { opacity: 1; transform: translateY(0); }
+  [data-reveal-delay="1"] { transition-delay: 0.12s; }
+  [data-reveal-delay="2"] { transition-delay: 0.24s; }
+
+  /* ---------------- Hero ---------------- */
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 100px;
+  }
+
+  .hero__scroll {
+    margin-top: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .hero__scroll::before {
+    content: '';
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(var(--blue), transparent);
+    animation: scrollpulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes scrollpulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ---------------- Section frame ---------------- */
+
+  .frame {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: clamp(40px, 6vw, 90px);
+    align-items: center;
+  }
+
+  .frame__stage {
+    position: relative;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 880px) {
+    .frame { grid-template-columns: 1fr; }
+    .frame__stage { order: -1; height: 260px; }
+  }
+
+  /* ---------------- Punch card / origin ---------------- */
+
+  .card {
+    width: 240px;
+    height: 150px;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    background: rgba(244, 246, 249, 0.02);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .card__holes {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 6px;
+  }
+
+  .card__holes span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1px solid var(--text-faint);
+  }
+
+  .card__holes span.lit { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 6px var(--gold-dim); }
+
+  .card__terminal {
+    margin-top: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    min-height: 1.4em;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .card__terminal::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 11px;
+    background: var(--gold);
+    margin-left: 2px;
+    vertical-align: -1px;
+    animation: caretblink 1s steps(1) infinite;
+  }
+
+  @keyframes caretblink { 50% { opacity: 0; } }
+
+  /* ---------------- Orbit system (shared: languages + planets) ---------------- */
+
+  .orbit {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .orbit__core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 78px;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+    color: var(--bg);
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 34px 6px var(--gold-dim);
+    z-index: 2;
+  }
+
+  .orbit__ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px dashed var(--line);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .orbit__spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    animation: spin linear infinite;
+    animation-duration: var(--dur);
+  }
+
+  .orbit__body {
+    position: absolute;
+    left: var(--r);
+    top: 0;
+    transform: translate(-50%, -50%);
+    animation: counterspin linear infinite;
+    animation-duration: var(--dur);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .orbit__body .dot {
+    width: var(--size, 8px);
+    height: var(--size, 8px);
+    border-radius: 50%;
+    background: var(--color, var(--blue));
+    flex: none;
+  }
+
+  .orbit__label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+  @keyframes counterspin { to { transform: translate(-50%, -50%) rotate(-360deg); } }
+
+  /* ---------------- Neural / domain graph ---------------- */
+
+  .graph { width: 100%; height: 100%; overflow: visible; }
+
+  .graph__link {
+    fill: none;
+    stroke: var(--blue-dim);
+    stroke-width: 1.4;
+    stroke-dasharray: 170;
+    stroke-dashoffset: 170;
+    transition: stroke-dashoffset 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .graph.is-in .graph__link { stroke-dashoffset: 0; }
+
+  .graph__node circle {
+    fill: var(--bg);
+    stroke: var(--blue);
+    stroke-width: 1.6;
+    opacity: 0;
+    transform: scale(0.4);
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .graph.is-in .graph__node circle { opacity: 1; transform: scale(1); }
+  .graph__node--core circle { fill: var(--gold); stroke: none; }
+
+  .graph__label {
+    position: absolute;
+    transform: translate(-50%, 14px);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.3s;
+  }
+
+  .graph-wrap.is-in .graph__label { opacity: 1; }
+
+  /* ---------------- Finale: solar system ---------------- */
+
+  .finale {
+    position: relative;
+    height: 320vh;
+  }
+
+  .finale__stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .finale__text {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 3;
+    padding-inline: 20px;
+  }
+
+  .finale__text .eyebrow { justify-content: center; display: flex; }
+  .finale__text h2 { max-width: 20ch; margin-inline: auto; }
+  .finale__text p { margin: 14px auto 0; }
+
+  .system {
+    position: relative;
+    width: min(1400px, 100vw);
+    height: min(1400px, 100vw);
+  }
+
+  .sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 60px 14px var(--gold-dim);
+    z-index: 2;
+  }
+
+  .planet-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .planet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    animation: spin linear infinite;
+    animation-duration: var(--dur);
+  }
+
+  .planet .dot {
+    position: absolute;
+    left: var(--r);
+    top: 0;
+    transform: translate(-50%, -50%);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: var(--color);
+  }
+
+  .probe-track {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 46%;
+    height: 2px;
+    transform: translateY(-50%);
+    z-index: 3;
+  }
+
+  .probe {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text);
+    box-shadow: 0 0 14px 4px rgba(244, 246, 249, 0.5);
+    transform: translate(0, -50%);
+  }
+
+  .edge-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 92%;
+    height: 92%;
+    border: 1px dashed var(--text-faint);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+  }
+
+  .edge-label {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    z-index: 4;
+    max-width: 34ch;
+    background: var(--bg);
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+
+  .edge-label strong { color: var(--text); }
+
+  /* ---------------- Close ---------------- */
+
+  .close {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .close h2 { margin-inline: auto; }
+  .close p.lead { margin-inline: auto; }
+
+  .close__cta {
+    margin: 34px auto 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 26px;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14.5px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .close__cta:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -14px rgba(244, 246, 249, 0.35); }
+
+  footer {
+    text-align: center;
+    padding: 40px 20px 60px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  /* ---------------- Custom cursor ---------------- */
+
+  #cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border: 1px solid var(--text);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 50;
+    transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+    opacity: 0.7;
+    will-change: transform;
+  }
+
+  #cursor.is-hover {
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    background: rgba(244, 246, 249, 0.08);
+  }
+
+  body.has-custom-cursor, body.has-custom-cursor a, body.has-custom-cursor button {
+    cursor: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.3s !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div id="cursor"></div>
+
+<nav class="topnav">
+  <a href="/">&larr; TechPotam</a>
+  <span>A short history of intelligence</span>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="eyebrow" data-reveal>TechPotam &mdash; a short history</p>
+    <h1 data-reveal data-reveal-delay="1">From One Instruction to the Edge of the Solar System.</h1>
+    <p class="lead" data-reveal data-reveal-delay="2">
+      In eighty years we went from a single punched card to machines that think alongside us
+      &mdash; and we still haven&rsquo;t stopped reaching. Scroll to see how we got here.
+    </p>
+    <div class="hero__scroll" data-reveal data-reveal-delay="2">Scroll to begin</div>
+  </section>
+
+  <!-- ORIGIN -->
+  <section>
+    <div class="frame">
+      <div data-reveal>
+        <p class="eyebrow">1943 &mdash; 1958</p>
+        <h2>It began with a single instruction.</h2>
+        <p class="lead">
+          Before software had a name, it was a stack of punched cards &mdash; one hole, one
+          instruction, one step closer to a machine that could follow a thought. ENIAC filled
+          a room to do what a calculator now does from a pocket.
+        </p>
+      </div>
+      <div class="frame__stage" data-reveal>
+        <div class="card" id="punch-card">
+          <div class="card__holes" id="card-holes"></div>
+          <div class="card__terminal" id="card-terminal"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES ORBIT -->
+  <section>
+    <div class="frame">
+      <div data-reveal>
+        <p class="eyebrow">1957 &mdash; today</p>
+        <h2>Then we taught it to speak our languages.</h2>
+        <p class="lead">
+          Fortran, C, Python, JavaScript &mdash; every language traded a little machine
+          efficiency for a little more human meaning, until code started to read almost like
+          a sentence.
+        </p>
+      </div>
+      <div class="frame__stage">
+        <div class="orbit">
+          <div class="orbit__core">Machine</div>
+
+          <div class="orbit__ring" style="width:110px; height:110px;"></div>
+          <div class="orbit__ring" style="width:170px; height:170px;"></div>
+          <div class="orbit__ring" style="width:230px; height:230px;"></div>
+          <div class="orbit__ring" style="width:290px; height:290px;"></div>
+
+          <div class="orbit__spin" style="--dur:16s;">
+            <div class="orbit__body" style="--r:55px;">
+              <span class="dot" style="--size:6px; --color:var(--text-faint);"></span>
+              <span class="orbit__label">Fortran</span>
+            </div>
+          </div>
+          <div class="orbit__spin" style="--dur:22s;">
+            <div class="orbit__body" style="--r:85px;">
+              <span class="dot" style="--size:7px;"></span>
+              <span class="orbit__label">C</span>
+            </div>
+          </div>
+          <div class="orbit__spin" style="--dur:28s; animation-direction:reverse;">
+            <div class="orbit__body" style="--r:115px;">
+              <span class="dot" style="--size:8px; --color:var(--gold);"></span>
+              <span class="orbit__label">Python</span>
+            </div>
+          </div>
+          <div class="orbit__spin" style="--dur:34s;">
+            <div class="orbit__body" style="--r:145px;">
+              <span class="dot" style="--size:7px;"></span>
+              <span class="orbit__label">JavaScript</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI DOMAINS GRAPH -->
+  <section>
+    <div class="frame">
+      <div data-reveal>
+        <p class="eyebrow">2012 &mdash; today</p>
+        <h2>Now it reaches into everything we do.</h2>
+        <p class="lead">
+          AI reads scans doctors might miss, predicts weather days out, folds proteins that
+          took decades to understand by hand, and drafts a first version of almost anything.
+          It isn&rsquo;t one invention &mdash; it&rsquo;s a new layer under all of them.
+        </p>
+      </div>
+      <div class="frame__stage">
+        <div class="graph-wrap" id="graph-wrap" style="position:relative; width:100%; height:100%;">
+          <svg class="graph" id="graph" viewBox="0 0 320 280">
+            <line class="graph__link" x1="160" y1="140" x2="70" y2="55" />
+            <line class="graph__link" x1="160" y1="140" x2="250" y2="55" />
+            <line class="graph__link" x1="160" y1="140" x2="55" y2="150" />
+            <line class="graph__link" x1="160" y1="140" x2="265" y2="150" />
+            <line class="graph__link" x1="160" y1="140" x2="80" y2="235" />
+            <line class="graph__link" x1="160" y1="140" x2="240" y2="235" />
+
+            <g class="graph__node graph__node--core"><circle cx="160" cy="140" r="10" /></g>
+            <g class="graph__node"><circle cx="70" cy="55" r="6" /></g>
+            <g class="graph__node"><circle cx="250" cy="55" r="6" /></g>
+            <g class="graph__node"><circle cx="55" cy="150" r="6" /></g>
+            <g class="graph__node"><circle cx="265" cy="150" r="6" /></g>
+            <g class="graph__node"><circle cx="80" cy="235" r="6" /></g>
+            <g class="graph__node"><circle cx="240" cy="235" r="6" /></g>
+          </svg>
+          <span class="graph__label" style="left:21.9%; top:19.6%;">Medicine</span>
+          <span class="graph__label" style="left:78.1%; top:19.6%;">Climate</span>
+          <span class="graph__label" style="left:17.2%; top:53.6%;">Language</span>
+          <span class="graph__label" style="left:82.8%; top:53.6%;">Design</span>
+          <span class="graph__label" style="left:25%; top:83.9%;">Biology</span>
+          <span class="graph__label" style="left:75%; top:83.9%;">Space</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINALE: SOLAR SYSTEM -->
+  <section class="finale" id="finale" aria-label="Reaching the edge of the solar system">
+    <div class="finale__stage">
+      <div class="finale__text" data-reveal>
+        <p class="eyebrow">1977 &mdash; today</p>
+        <h2>And together, we reached for the edge.</h2>
+        <p class="lead">
+          Voyager 1 launched in 1977 running on roughly 68 kilobytes of memory &mdash; less
+          than this page. It is now over 15 billion miles away, past the edge of the solar
+          system, still sending data back on code written before most of us were born.
+        </p>
+      </div>
+
+      <div class="system">
+        <div class="edge-ring"></div>
+        <div class="planet-ring" style="width:16%; height:16%;"></div>
+        <div class="planet-ring" style="width:24%; height:24%;"></div>
+        <div class="planet-ring" style="width:34%; height:34%;"></div>
+        <div class="planet-ring" style="width:46%; height:46%;"></div>
+        <div class="planet-ring" style="width:58%; height:58%;"></div>
+        <div class="planet-ring" style="width:70%; height:70%;"></div>
+        <div class="planet-ring" style="width:80%; height:80%;"></div>
+        <div class="planet-ring" style="width:88%; height:88%;"></div>
+
+        <div class="planet" style="--dur:5s;"><span class="dot" style="--r:8%; --size:5px; --color:#b8ada0;"></span></div>
+        <div class="planet" style="--dur:8s; animation-direction:reverse;"><span class="dot" style="--r:12%; --size:6px; --color:#d9c199;"></span></div>
+        <div class="planet" style="--dur:12s;"><span class="dot" style="--r:17%; --size:6px; --color:var(--blue);"></span></div>
+        <div class="planet" style="--dur:16s;"><span class="dot" style="--r:23%; --size:5px; --color:#c07a55;"></span></div>
+        <div class="planet" style="--dur:24s; animation-direction:reverse;"><span class="dot" style="--r:29%; --size:9px; --color:#cba586;"></span></div>
+        <div class="planet" style="--dur:32s;"><span class="dot" style="--r:35%; --size:8px; --color:#e3d3a3;"></span></div>
+        <div class="planet" style="--dur:40s; animation-direction:reverse;"><span class="dot" style="--r:40%; --size:6px; --color:#9fd4d9;"></span></div>
+        <div class="planet" style="--dur:50s;"><span class="dot" style="--r:44%; --size:6px; --color:#7d97ad;"></span></div>
+
+        <div class="sun"></div>
+
+        <div class="probe-track">
+          <div class="probe" id="probe"></div>
+        </div>
+      </div>
+
+      <div class="edge-label" id="edge-label">
+        <strong>Voyager&nbsp;1</strong> &mdash; still transmitting, still beyond the edge.
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="close">
+    <p class="eyebrow" style="justify-content:center; display:flex;" data-reveal>What&rsquo;s next</p>
+    <h2 data-reveal>We&rsquo;re still writing the instructions.</h2>
+    <p class="lead" data-reveal>
+      Every product we build stands on this &mdash; eighty years of people teaching machines
+      to help us reach further. We just get to add the next few lines.
+    </p>
+    <a class="close__cta" href="/" data-reveal>Back to TechPotam &rarr;</a>
+  </section>
+
+  <footer>TechPotam &mdash; a short history of intelligence</footer>
+
+</main>
+
+<script>
+(function () {
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var coarse = window.matchMedia('(pointer: coarse)').matches;
+
+  /* ---------- Starfield ---------- */
+  var canvas = document.getElementById('stars');
+  var ctx = canvas.getContext('2d');
+  var w, h, stars, nebulae, t = 0;
+
+  function initStars() {
+    var count = Math.max(60, Math.min(220, Math.round((w * h) / 9000)));
+    stars = [];
+    for (var i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.3 + 0.3,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.4 + Math.random() * 0.6
+      });
+    }
+    nebulae = [
+      { x: w * 0.18, y: h * 0.22, r: Math.max(w, h) * 0.4, color: '125,151,173' },
+      { x: w * 0.85, y: h * 0.55, r: Math.max(w, h) * 0.32, color: '232,181,103' },
+      { x: w * 0.45, y: h * 0.88, r: Math.max(w, h) * 0.3, color: '125,151,173' }
+    ];
+  }
+
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    initStars();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (var n = 0; n < nebulae.length; n++) {
+      var neb = nebulae[n];
+      var g = ctx.createRadialGradient(neb.x, neb.y, 0, neb.x, neb.y, neb.r);
+      g.addColorStop(0, 'rgba(' + neb.color + ',0.09)');
+      g.addColorStop(1, 'rgba(' + neb.color + ',0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var tw = reduced ? 0.75 : 0.4 + 0.6 * Math.sin(t * s.speed + s.phase);
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(244,246,249,' + (0.2 + tw * 0.65) + ')';
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function loop() {
+    t += 0.02;
+    draw();
+    if (!reduced) requestAnimationFrame(loop);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  draw();
+  if (!reduced) requestAnimationFrame(loop);
+
+  /* ---------- Scroll reveals ---------- */
+  var revealEls = document.querySelectorAll('[data-reveal]');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  revealEls.forEach(function (el) { io.observe(el); });
+
+  var graphWrap = document.getElementById('graph-wrap');
+  var graph = document.getElementById('graph');
+  if (graphWrap) {
+    var gio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          graphWrap.classList.add('is-in');
+          graph.classList.add('is-in');
+          gio.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.35 });
+    gio.observe(graphWrap);
+  }
+
+  /* ---------- Punch card + typewriter ---------- */
+  var holesEl = document.getElementById('card-holes');
+  var litPattern = [1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0];
+  for (var hIdx = 0; hIdx < 18; hIdx++) {
+    var hole = document.createElement('span');
+    if (litPattern[hIdx]) hole.className = 'lit';
+    holesEl.appendChild(hole);
+  }
+
+  var terminalEl = document.getElementById('card-terminal');
+  var punchCard = document.getElementById('punch-card');
+  var typed = false;
+
+  function typeSequence() {
+    if (typed) return;
+    typed = true;
+    var full = '01001000 01000101 01001100 01001100 01001111';
+    var resolved = 'HELLO';
+    var i = 0;
+    var id = setInterval(function () {
+      terminalEl.textContent = full.slice(0, i + 1);
+      i++;
+      if (i >= full.length) {
+        clearInterval(id);
+        setTimeout(function () {
+          terminalEl.textContent = resolved;
+        }, 500);
+      }
+    }, reduced ? 1 : 26);
+  }
+
+  if (punchCard) {
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          typeSequence();
+          cio.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    cio.observe(punchCard);
+  }
+
+  /* ---------- Finale: scroll-linked probe ---------- */
+  var finale = document.getElementById('finale');
+  var probe = document.getElementById('probe');
+  var edgeLabel = document.getElementById('edge-label');
+  var ticking = false;
+
+  function updateProbe() {
+    ticking = false;
+    if (!finale) return;
+    var rect = finale.getBoundingClientRect();
+    var total = finale.offsetHeight - window.innerHeight;
+    if (total <= 0) return;
+    var scrolled = Math.min(Math.max(-rect.top, 0), total);
+    var progress = scrolled / total;
+    var track = finale.querySelector('.probe-track');
+    var maxDist = track.clientWidth;
+    probe.style.left = (progress * maxDist) + 'px';
+    probe.style.top = (50 + Math.sin(progress * Math.PI) * -6) + '%';
+    edgeLabel.style.opacity = progress > 0.85 ? 1 : 0;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      requestAnimationFrame(updateProbe);
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', updateProbe);
+  updateProbe();
+
+  /* ---------- Custom cursor ---------- */
+  if (!coarse && !reduced) {
+    var cursor = document.getElementById('cursor');
+    document.body.classList.add('has-custom-cursor');
+    window.addEventListener('pointermove', function (e) {
+      cursor.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
+    });
+    document.querySelectorAll('a, button').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { cursor.classList.add('is-hover'); });
+      el.addEventListener('mouseleave', function () { cursor.classList.remove('is-hover'); });
+    });
+  } else {
+    var cur = document.getElementById('cursor');
+    if (cur) cur.style.display = 'none';
+  }
+})();
+</script>
+
+</body>
+</html>
