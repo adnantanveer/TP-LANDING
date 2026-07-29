@@ -23,7 +23,7 @@ export function Hero({ introDone = true }) {
         <SplitHeading as="h1" immediate play={introDone} className="hero__title">
           We don&rsquo;t just build software. We craft digital experiences people remember.
         </SplitHeading>
-        <p className="hero__subhead">
+        <p className="hero__subhead lead">
           We design and engineer premium websites, applications and intelligent digital
           products for ambitious businesses across the UK.
         </p>

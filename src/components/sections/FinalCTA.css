@@ -27,13 +27,14 @@
 }
 
 .final-cta__title {
-  font-size: var(--fs-h1);
-  max-width: 16ch;
+  font-size: clamp(3rem, 2rem + 6vw, 6.5rem);
+  letter-spacing: -0.03em;
+  max-width: 15ch;
   margin-inline: auto;
 }
 
 .final-cta__ctas {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-xl);
   display: flex;
   gap: var(--space-sm);
   justify-content: center;

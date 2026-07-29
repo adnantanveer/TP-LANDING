@@ -9,13 +9,14 @@
   max-width: 50ch;
   color: var(--color-warm-gray-text);
   font-size: var(--fs-lead);
+  font-weight: var(--fw-light);
 }
 
 .developers__grid {
   margin-top: var(--space-xl);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 .developer-card {
@@ -99,6 +100,7 @@
 .developer-card__caption p {
   color: var(--color-warm-gray-text);
   font-size: var(--fs-small);
+  font-weight: var(--fw-light);
   line-height: 1.55;
 }
 

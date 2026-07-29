@@ -5,6 +5,8 @@
   align-items: center;
   color: var(--on-dark-text);
   overflow: hidden;
+  margin-top: -6rem;
+  padding-top: 6rem;
 }
 
 .craft__media {
@@ -26,14 +28,15 @@
 }
 
 .craft__title {
-  font-size: clamp(4.5rem, 3rem + 10vw, 13rem);
-  line-height: 0.9;
+  font-size: var(--fs-display);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
   color: var(--on-dark-text);
 }
 
 .craft__copy {
-  margin: var(--space-md) auto 0;
-  max-width: 46ch;
+  margin: var(--space-lg) auto 0;
+  max-width: 42ch;
   font-size: var(--fs-lead);
   color: var(--on-dark-text-muted);
 }

@@ -33,7 +33,7 @@ export function HeroScene3D() {
     container.appendChild(renderer.domElement)
 
     const rig = new THREE.Group()
-    rig.position.set(1.7, -0.6, 0)
+    rig.position.set(2.3, -0.5, 0)
     scene.add(rig)
 
     const tiltGroup = new THREE.Group()

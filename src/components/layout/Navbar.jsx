@@ -6,7 +6,24 @@ import './Navbar.css'
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
+  const [activeHref, setActiveHref] = useState('')
   const firstLinkRef = useRef(null)
+
+  useEffect(() => {
+    const sections = navLinks.map((link) => document.querySelector(link.href)).filter(Boolean)
+    if (!sections.length) return undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveHref(`#${entry.target.id}`)
+        })
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+    )
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -40,7 +57,12 @@ export function Navbar() {
 
         <nav className="navbar__links" aria-label="Primary">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href}>
+            <a
+              key={link.href}
+              href={link.href}
+              className={link.href === activeHref ? 'is-active' : ''}
+              aria-current={link.href === activeHref ? 'true' : undefined}
+            >
               {link.label}
             </a>
           ))}

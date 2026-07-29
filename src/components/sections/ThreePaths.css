@@ -18,16 +18,16 @@
 .three-paths__row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 .path-card {
   background: var(--color-bg);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
-  padding: var(--space-lg) var(--space-md);
+  padding: var(--space-xl) var(--space-lg);
   transition: opacity var(--dur-med) var(--ease-soft), transform var(--dur-med) var(--ease-soft),
-    box-shadow var(--dur-fast) var(--ease-soft);
+    box-shadow var(--dur-fast) var(--ease-soft), border-color var(--dur-fast) var(--ease-soft);
 }
 
 .three-paths__row .path-card {
@@ -39,6 +39,11 @@
   opacity: 1;
   transform: scale(1);
   box-shadow: var(--shadow-soft);
+}
+
+.three-paths__row .path-card.is-active:hover {
+  border-color: var(--color-blue-muted-soft);
+  transform: scale(1.015);
 }
 
 .path-icon {
@@ -90,12 +95,13 @@
 
 .path-card h3 {
   font-size: var(--fs-h3);
-  margin-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 .path-card p {
   color: var(--color-warm-gray-text);
-  line-height: 1.6;
+  font-weight: var(--fw-light);
+  line-height: 1.65;
 }
 
 /* Simplified / mobile / reduced-motion fallback: a plain stacked list */

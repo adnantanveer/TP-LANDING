@@ -15,7 +15,7 @@ export function Craft() {
         <SplitHeading as="h2" className="craft__title">
           Craft.
         </SplitHeading>
-        <p className="craft__copy">
+        <p className="craft__copy lead">
           Every product we ship carries the same intention as a piece of design work —
           considered, deliberate, felt before it&rsquo;s understood.
         </p>

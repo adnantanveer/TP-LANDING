@@ -50,14 +50,19 @@ export function OurWork() {
 
       <div className="our-work__viewport">
         <div className="our-work__track" ref={trackRef}>
-          {work.map((project) => (
-            <article key={project.id} className="work-card" data-cursor-hover>
-              <VideoBlock tone="dark" label={`${project.title} preview`} className="work-card__media" />
+          {work.map((project, i) => (
+            <article key={project.id} className="work-card" data-cursor-hover data-cursor-label="View">
+              <div className="work-card__frame">
+                <VideoBlock tone="dark" label={`${project.title} preview`} className="work-card__media" />
+              </div>
+              <span className="work-card__index">{String(i + 1).padStart(2, '0')}</span>
               <div className="work-card__caption">
                 <span className="work-card__category">{project.category}</span>
                 <h3>{project.title}</h3>
                 <p className="work-card__hover-info">{project.caption}</p>
-                <span className="work-card__link">View Case Study →</span>
+                <span className="work-card__link">
+                  View Case Study <span className="work-card__link-arrow">→</span>
+                </span>
               </div>
             </article>
           ))}

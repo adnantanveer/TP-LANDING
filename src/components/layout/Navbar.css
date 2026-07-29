@@ -47,32 +47,40 @@
 
 .navbar__links {
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-lg);
   font-size: var(--fs-small);
-  font-weight: 500;
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.01em;
 }
 
 .navbar__links a {
   text-decoration: none;
   position: relative;
+  padding-block: 0.2em;
+  transition: color var(--dur-fast) var(--ease-soft);
 }
 
 .navbar__links a::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: -4px;
+  bottom: -2px;
   width: 100%;
   height: 1px;
   background: currentColor;
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform var(--dur-fast) var(--ease-soft);
+  transition: transform var(--dur-med) var(--ease-mask);
 }
 
-.navbar__links a:hover::after {
+.navbar__links a:hover::after,
+.navbar__links a.is-active::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+.navbar__links a.is-active {
+  color: var(--color-blue-muted-soft);
 }
 
 .navbar__cta {
