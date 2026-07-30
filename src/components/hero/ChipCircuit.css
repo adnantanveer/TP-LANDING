@@ -1,0 +1,84 @@
+.chip-circuit {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-circuit__svg {
+  width: min(100%, 720px);
+  height: 100%;
+  overflow: visible;
+}
+
+.chip-circuit__trace {
+  stroke: var(--color-blue-muted-soft);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 6px rgba(124, 158, 186, 0.6));
+}
+
+.chip-node__glow {
+  fill: rgba(124, 158, 186, 0.16);
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-soft);
+}
+
+.chip-node__body {
+  fill: rgba(20, 20, 20, 0.55);
+  stroke: var(--color-line-on-dark);
+  stroke-width: 1.5;
+  transition: stroke 0.5s var(--ease-soft);
+}
+
+.chip-node__pin {
+  stroke: var(--color-line-on-dark);
+  stroke-width: 2;
+  transition: stroke 0.5s var(--ease-soft);
+}
+
+.chip-node__icon {
+  color: var(--on-dark-text-muted);
+  opacity: 0.7;
+  transition: color 0.5s var(--ease-soft), opacity 0.5s var(--ease-soft);
+}
+
+.chip-node__label {
+  fill: var(--on-dark-text-muted);
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-soft), fill 0.5s var(--ease-soft);
+}
+
+.chip-node.is-active .chip-node__glow {
+  opacity: 1;
+}
+
+.chip-node.is-active .chip-node__body {
+  stroke: var(--color-blue-muted-soft);
+}
+
+.chip-node.is-active .chip-node__pin {
+  stroke: var(--color-blue-muted-soft);
+}
+
+.chip-node.is-active .chip-node__icon {
+  color: var(--on-dark-text);
+  opacity: 1;
+}
+
+.chip-node.is-active .chip-node__label {
+  opacity: 1;
+  fill: var(--on-dark-text);
+}
+
+@media (max-width: 900px) {
+  .chip-circuit {
+    opacity: 0.7;
+  }
+}

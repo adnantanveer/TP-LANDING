@@ -20,6 +20,7 @@
 
 .btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 8px 32px -8px rgba(76, 107, 138, 0.55);
 }
 
 .btn__label {

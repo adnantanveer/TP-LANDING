@@ -32,7 +32,7 @@ function App() {
       <Navbar />
       {!simplified && <CursorFollower />}
       <main id="main">
-        <Hero introDone={introDone} />
+        <Hero />
         <Craft />
         <ThreePaths />
         <OurWork />
