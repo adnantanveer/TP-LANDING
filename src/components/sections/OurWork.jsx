@@ -53,7 +53,12 @@ export function OurWork() {
           {work.map((project, i) => (
             <article key={project.id} className="work-card" data-cursor-hover data-cursor-label="View">
               <div className="work-card__frame">
-                <VideoBlock tone="dark" label={`${project.title} preview`} className="work-card__media" />
+                <VideoBlock
+                  tone="dark"
+                  image={project.image}
+                  label={`${project.title} preview`}
+                  className="work-card__media"
+                />
               </div>
               <span className="work-card__index">{String(i + 1).padStart(2, '0')}</span>
               <div className="work-card__caption">

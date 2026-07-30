@@ -1,16 +1,10 @@
 import { useState } from 'react'
 import { navLinks } from '../../data/nav'
+import { socials } from '../../data/socials'
 import { Icon } from '../common/Icon'
 import { Button } from '../common/Button'
 import logo from '../../assets/techpotam-logo.png'
 import './Footer.css'
-
-const socials = [
-  { name: 'LinkedIn', icon: 'linkedin-icon', href: 'https://www.linkedin.com/company/techpotam-private-limited/posts/' },
-  { name: 'X / Twitter', icon: 'x-icon', href: 'https://x.com/techpotam' },
-  { name: 'Instagram', icon: 'instagram-icon', href: 'https://www.instagram.com/techpotam/' },
-  { name: 'Facebook', icon: 'facebook-icon', href: 'https://www.facebook.com/people/Techpotam/100064071823814/' },
-]
 
 export function Footer() {
   const [email, setEmail] = useState('')

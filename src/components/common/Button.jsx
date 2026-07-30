@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useMagnetic } from '../../hooks/useMagnetic'
 import './Button.css'
 
 export function Button({
@@ -11,6 +12,7 @@ export function Button({
   ...rest
 }) {
   const ref = useRef(null)
+  useMagnetic(ref, { strength: 0.3, max: 14 })
 
   const spawnRipple = (event) => {
     const el = ref.current

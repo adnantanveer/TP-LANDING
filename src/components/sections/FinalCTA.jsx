@@ -1,13 +1,14 @@
 import { SplitHeading } from '../common/SplitHeading'
 import { Button } from '../common/Button'
 import { VideoBlock } from '../common/VideoBlock'
+import ctaTrees from '../../assets/final-cta-trees.jpg'
 import './FinalCTA.css'
 
 export function FinalCTA() {
   return (
     <section id="final-cta" className="final-cta" aria-label="Get in touch">
       <div className="final-cta__media" aria-hidden="true">
-        <VideoBlock tone="dark" label="Studio reel" />
+        <VideoBlock tone="dark" image={ctaTrees} label="Studio reel" />
         <div className="final-cta__scrim" />
       </div>
 

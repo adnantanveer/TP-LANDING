@@ -14,6 +14,7 @@ export function VideoBlock({ src, poster, image, label, tone = 'dark', className
   const wrapperRef = useRef(null)
   const videoRef = useRef(null)
   const [inView, setInView] = useState(false)
+  const [revealed, setRevealed] = useState(false)
 
   useEffect(() => {
     const el = wrapperRef.current
@@ -26,6 +27,10 @@ export function VideoBlock({ src, poster, image, label, tone = 'dark', className
   }, [])
 
   useEffect(() => {
+    if (inView) setRevealed(true)
+  }, [inView])
+
+  useEffect(() => {
     const video = videoRef.current
     if (!video || !src) return
     if (inView) {
@@ -36,7 +41,10 @@ export function VideoBlock({ src, poster, image, label, tone = 'dark', className
   }, [inView, src])
 
   return (
-    <div ref={wrapperRef} className={`video-block video-block--${tone} ${className}`.trim()}>
+    <div
+      ref={wrapperRef}
+      className={`video-block video-block--${tone} ${revealed ? 'is-revealed' : ''} ${className}`.trim()}
+    >
       {src ? (
         <video
           ref={videoRef}

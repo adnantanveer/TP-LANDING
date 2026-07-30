@@ -1,0 +1,14 @@
+.role-cycler {
+  position: relative;
+  display: inline-block;
+  height: 1.2em;
+  min-width: 6.5ch;
+  overflow: hidden;
+  vertical-align: bottom;
+  color: var(--on-dark-text);
+  font-weight: var(--fw-semibold);
+}
+
+.role-cycler__word:not(:first-child) {
+  display: none;
+}

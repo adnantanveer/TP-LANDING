@@ -12,6 +12,28 @@
   object-fit: cover;
 }
 
+.video-block__media,
+.video-block__image {
+  clip-path: inset(0 0 0 100%);
+  transform: scale(1.1);
+  transition: clip-path 1.3s var(--ease-mask), transform 1.6s var(--ease-mask);
+}
+
+.video-block.is-revealed .video-block__media,
+.video-block.is-revealed .video-block__image {
+  clip-path: inset(0 0 0 0%);
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-block__media,
+  .video-block__image {
+    clip-path: none;
+    transform: none;
+    transition: none;
+  }
+}
+
 .video-block__placeholder {
   position: absolute;
   inset: 0;
