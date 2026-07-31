@@ -40,6 +40,14 @@ export function Hero() {
   // Post-headline sequence: 0 = nothing yet, 1 = subhead typing, 2 = buttons
   // shown. Starts once the headline's own resolve animation finishes.
   const [stage, setStage] = useState(0)
+  // The scroll-trigger's onUpdate closure is created once and never sees
+  // later re-renders, so it can't read the `stage` state directly — this
+  // ref is kept in sync purely so that closure can check "is the text
+  // sequence actually finished yet" at the moment scroll reaches the pin's
+  // end, regardless of how fast the user scrolled to get there.
+  const stageRef = useRef(stage)
+  stageRef.current = stage
+  const scrollLockedRef = useRef(false)
 
   // useLayoutEffect (not useEffect) matters here: every other pinned
   // section (ThreePaths, OurWork, etc.) measures its own ScrollTrigger via
@@ -71,11 +79,27 @@ export function Hero() {
         // back through its states too, not just a one-time trigger.
         const p = self.progress
         setCharStage(p >= CLOUD_THRESHOLD ? 2 : p >= ENGINEERING_THRESHOLD ? 1 : 0)
+
+        // Scroll reached the end of the pin, but the text sequence (typed
+        // subhead, then buttons) hasn't actually finished yet — hold here.
+        // A real overflow lock is the only guarantee that works regardless
+        // of scroll speed; anything based on scroll *distance* alone (a
+        // bigger pin range, etc.) can still be outrun by a fast flick.
+        if (p >= 1 && stageRef.current < 2 && !scrollLockedRef.current) {
+          scrollLockedRef.current = true
+          document.body.style.overflow = 'hidden'
+        }
       },
     })
     stRef.current = st
 
-    return () => st.kill()
+    return () => {
+      st.kill()
+      if (scrollLockedRef.current) {
+        scrollLockedRef.current = false
+        document.body.style.overflow = ''
+      }
+    }
   }, [])
 
   // If the headline un-resolves (scrolled back before Cloud), the subhead
@@ -83,6 +107,15 @@ export function Hero() {
   useLayoutEffect(() => {
     if (charStage < 2) setStage(0)
   }, [charStage])
+
+  // Releases the hold above the instant the text sequence actually
+  // finishes (buttons visible), whether or not scroll was ever locked.
+  useLayoutEffect(() => {
+    if (stage >= 2 && scrollLockedRef.current) {
+      scrollLockedRef.current = false
+      document.body.style.overflow = ''
+    }
+  }, [stage])
 
   return (
     <section id="top" className="hero" aria-label="Introduction" ref={sectionRef}>

@@ -7,6 +7,7 @@ import { SplitHeading } from '../common/SplitHeading'
 import { Reveal } from '../common/Reveal'
 import { useSimplifiedMotion } from '../../hooks/useSimplifiedMotion'
 import { useScopedGsap } from '../../hooks/useScopedGsap'
+import pathsBg from '../../assets/paths-bg.jpg'
 import './ThreePaths.css'
 
 const PATH_ICONS = { web: WebIcon, mobile: MobileIcon, ai: AiIcon }
@@ -19,6 +20,21 @@ function PathContent({ path }) {
       <h3>{path.label}</h3>
       <p>{path.description}</p>
     </>
+  )
+}
+
+function PathCardFlip({ path }) {
+  const Graphic = PATH_ICONS[path.id]
+  return (
+    <div className="path-card__inner">
+      <div className="path-card__face path-card__face--front">
+        <PathContent path={path} />
+      </div>
+      <div className="path-card__face path-card__face--back">
+        <Graphic />
+        <h3>{path.label}</h3>
+      </div>
+    </div>
   )
 }
 
@@ -59,6 +75,14 @@ export function ThreePaths() {
       playIconIn(cards[0])
 
       let currentIndex = 0
+      const activate = (idx) => {
+        if (idx === currentIndex) return
+        const prevIdx = currentIndex
+        currentIndex = idx
+        cards[prevIdx].classList.remove('is-active')
+        cards[idx].classList.add('is-active')
+        playIconIn(cards[idx])
+      }
 
       ScrollTrigger.create({
         trigger: sectionRef.current,
@@ -67,15 +91,20 @@ export function ThreePaths() {
         pin: true,
         scrub: 1,
         onUpdate: (self) => {
-          const idx = Math.min(paths.length - 1, Math.floor(self.progress * paths.length))
-          if (idx === currentIndex) return
-          const prevIdx = currentIndex
-          currentIndex = idx
-
-          cards[prevIdx].classList.remove('is-active')
-          cards[idx].classList.add('is-active')
-          playIconIn(cards[idx])
+          activate(Math.min(paths.length - 1, Math.floor(self.progress * paths.length)))
         },
+      })
+
+      // Hovering a card makes it active immediately too — not just the
+      // scroll-driven cycle — so it isn't stuck dim/unresponsive while
+      // scroll says a different card should be current. This deliberately
+      // doesn't also move the scroll position to match: forcing scrollTop
+      // directly is exactly what caused the Lenis/ScrollTrigger desync bug
+      // elsewhere in this build (bypassing Lenis's own tracked position
+      // throws off every other section's measurements). The active card
+      // just stays put until the next real scroll naturally moves it on.
+      cards.forEach((card, idx) => {
+        card.addEventListener('pointerenter', () => activate(idx))
       })
     },
     [simplified]
@@ -84,6 +113,7 @@ export function ThreePaths() {
   if (simplified) {
     return (
       <section id="paths" className="three-paths three-paths--simplified" aria-label="What we build">
+        <div className="three-paths__bg" style={{ backgroundImage: `url(${pathsBg})` }} aria-hidden="true" />
         <div className="container">
           <p className="eyebrow">What we build</p>
           <SplitHeading as="h2" className="three-paths__title">
@@ -92,7 +122,13 @@ export function ThreePaths() {
 
           <div className="three-paths__stack">
             {paths.map((path) => (
-              <Reveal as="article" key={path.id} className="path-card path-card--static" data-cursor-hover>
+              <Reveal
+                as="article"
+                key={path.id}
+                className="path-card path-card--static"
+                style={{ '--accent': path.accent }}
+                data-cursor-hover
+              >
                 <PathContent path={path} />
               </Reveal>
             ))}
@@ -104,6 +140,7 @@ export function ThreePaths() {
 
   return (
     <section id="paths" className="three-paths" ref={sectionRef} aria-label="What we build">
+      <div className="three-paths__bg" style={{ backgroundImage: `url(${pathsBg})` }} aria-hidden="true" />
       <div className="three-paths__pin container">
         <p className="eyebrow">What we build</p>
         <SplitHeading as="h2" className="three-paths__title">
@@ -116,9 +153,10 @@ export function ThreePaths() {
               key={path.id}
               ref={(el) => (cardRefs.current[i] = el)}
               className={`path-card ${i === 0 ? 'is-active' : ''}`}
+              style={{ '--accent': path.accent }}
               data-cursor-hover
             >
-              <PathContent path={path} />
+              <PathCardFlip path={path} />
             </article>
           ))}
         </div>

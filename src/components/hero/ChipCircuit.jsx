@@ -4,6 +4,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+import { BokehPass } from 'three/addons/postprocessing/BokehPass.js'
 import { disciplines } from '../../data/disciplines'
 import './ChipCircuit.css'
 
@@ -15,6 +16,36 @@ const NODES = [
   { ...disciplines[2], pos: [1.0, 0.75] },
   { ...disciplines[3], pos: [1.5, -1.15] },
 ]
+
+const BOARD_SIZE = { w: 4.2, d: 3.4 }
+
+const GREEBLE_SPOTS = [
+  [-1.9, -1.35, 'capacitor'], [-0.75, 1.35, 'resistor'], [0.35, -1.3, 'smd'], [1.85, 1.25, 'capacitor'],
+  [-1.95, 0.15, 'resistor'], [1.95, -0.35, 'smd'], [0.55, 1.35, 'capacitor'], [-0.95, -1.2, 'resistor'],
+  [1.35, 0.05, 'smd'], [-0.1, 0.35, 'capacitor'], [1.85, -1.35, 'resistor'], [-1.6, 0.6, 'smd'],
+]
+
+// Board-space (x, z) -> board texture UV, for drawing footprint outlines
+// under each greeble on the same canvas the board mesh is textured with.
+function boardToUV(x, z, canvasW, canvasH) {
+  return {
+    u: ((x + BOARD_SIZE.w / 2) / BOARD_SIZE.w) * canvasW,
+    v: ((z + BOARD_SIZE.d / 2) / BOARD_SIZE.d) * canvasH,
+  }
+}
+
+function makeShadowTexture() {
+  const canvas = document.createElement('canvas')
+  canvas.width = 128
+  canvas.height = 128
+  const ctx = canvas.getContext('2d')
+  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64)
+  grad.addColorStop(0, 'rgba(0,0,0,0.55)')
+  grad.addColorStop(1, 'rgba(0,0,0,0)')
+  ctx.fillStyle = grad
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  return new THREE.CanvasTexture(canvas)
+}
 
 function makeChipTexture(label) {
   const canvas = document.createElement('canvas')
@@ -38,15 +69,17 @@ function makeChipTexture(label) {
 
 function makeBoardTexture() {
   const canvas = document.createElement('canvas')
-  canvas.width = 512
-  canvas.height = 512
+  canvas.width = 1024
+  canvas.height = 1024
   const ctx = canvas.getContext('2d')
   ctx.fillStyle = '#141c17'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-  ctx.strokeStyle = 'rgba(124,158,186,0.12)'
+
+  // Faint fabricator's grid, like a real PCB layer.
+  ctx.strokeStyle = 'rgba(124,158,186,0.08)'
   ctx.lineWidth = 1
-  for (let i = 0; i <= 16; i++) {
-    const p = (i / 16) * canvas.width
+  for (let i = 0; i <= 24; i++) {
+    const p = (i / 24) * canvas.width
     ctx.beginPath()
     ctx.moveTo(p, 0)
     ctx.lineTo(p, canvas.height)
@@ -56,9 +89,103 @@ function makeBoardTexture() {
     ctx.lineTo(canvas.width, p)
     ctx.stroke()
   }
+
+  // Copper-trace squiggles scattered across the board — short chained
+  // right-angle runs, like real routed signal traces between components.
+  for (let i = 0; i < 46; i++) {
+    let x = Math.random() * canvas.width
+    let y = Math.random() * canvas.height
+    ctx.strokeStyle = `rgba(157, 184, 204, ${0.1 + Math.random() * 0.14})`
+    ctx.lineWidth = 1.5 + Math.random() * 2
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+    const hops = 2 + Math.floor(Math.random() * 3)
+    for (let h = 0; h < hops; h++) {
+      if (Math.random() > 0.5) x += (Math.random() - 0.5) * 140
+      else y += (Math.random() - 0.5) * 140
+      ctx.lineTo(x, y)
+    }
+    ctx.stroke()
+  }
+
+  // Vias / mounting holes.
+  for (let i = 0; i < 60; i++) {
+    const x = Math.random() * canvas.width
+    const y = Math.random() * canvas.height
+    ctx.beginPath()
+    ctx.arc(x, y, 2.5 + Math.random() * 2, 0, Math.PI * 2)
+    ctx.fillStyle = 'rgba(200, 210, 215, 0.18)'
+    ctx.fill()
+  }
+
+  // Footprint outlines under each greeble's spot, like real labeled pads.
+  ctx.strokeStyle = 'rgba(157, 184, 204, 0.25)'
+  ctx.lineWidth = 1.5
+  GREEBLE_SPOTS.forEach(([x, z]) => {
+    const { u, v } = boardToUV(x, z, canvas.width, canvas.height)
+    ctx.strokeRect(u - 26, v - 20, 52, 40)
+  })
+
+  // Subtle vignette so the edges read as darker board material.
+  const vignette = ctx.createRadialGradient(
+    canvas.width / 2,
+    canvas.height / 2,
+    canvas.width * 0.25,
+    canvas.width / 2,
+    canvas.height / 2,
+    canvas.width * 0.72
+  )
+  vignette.addColorStop(0, 'rgba(0,0,0,0)')
+  vignette.addColorStop(1, 'rgba(0,0,0,0.45)')
+  ctx.fillStyle = vignette
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+
   const texture = new THREE.CanvasTexture(canvas)
   texture.colorSpace = THREE.SRGBColorSpace
   return texture
+}
+
+// Small non-interactive components scattered across the board purely for
+// density/realism — capacitors, resistors, tiny SMD chips. None of these
+// are part of the navigable trace; they never light up or animate. Each
+// gets a soft blurred contact shadow beneath it — a cheap stand-in for real
+// ambient occlusion that does a lot of work selling "sitting on the board".
+function addGreebles(world, shadowTex) {
+  GREEBLE_SPOTS.forEach(([x, z, kind]) => {
+    const shadow = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.34, 0.34),
+      new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })
+    )
+    shadow.rotation.x = -Math.PI / 2
+    shadow.position.set(x, 0.056, z)
+    world.add(shadow)
+
+    let mesh
+    if (kind === 'capacitor') {
+      mesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.045, 0.045, 0.12, 12),
+        new THREE.MeshStandardMaterial({ color: 0x2b2f35, metalness: 0.6, roughness: 0.35 })
+      )
+      mesh.position.y = 0.06
+    } else if (kind === 'resistor') {
+      mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.2, 0.05, 0.07),
+        new THREE.MeshStandardMaterial({ color: 0x8c7654, roughness: 0.6 })
+      )
+      mesh.position.y = 0.025
+      mesh.rotation.y = Math.random() * Math.PI
+    } else {
+      mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.16, 0.045, 0.12),
+        new THREE.MeshStandardMaterial({ color: 0x111316, metalness: 0.5, roughness: 0.4 })
+      )
+      mesh.position.y = 0.022
+      mesh.rotation.y = Math.random() * Math.PI
+    }
+    mesh.position.x = x
+    mesh.position.z = z
+    world.add(mesh)
+  })
 }
 
 // A trace segment mesh whose local origin sits at `from` — scaling it
@@ -100,10 +227,15 @@ export function ChipCircuit({ apiRef, stRef }) {
     let height = container.clientHeight
 
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(30, width / height, 0.1, 100)
-    const cameraBase = new THREE.Vector3(1.2, 3.6, 4.2)
+    // A wider FOV + closer, lower camera than a "product catalog" telephoto
+    // shot — the extra perspective distortion (near components look
+    // noticeably bigger than far ones) is what actually reads as 3D depth
+    // rather than a flat illustration, especially once the idle sway and
+    // mouse-parallax are moving that perspective around.
+    const camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 100)
+    const cameraBase = new THREE.Vector3(1.35, 3.0, 3.7)
     camera.position.copy(cameraBase)
-    camera.lookAt(0, 0, 0)
+    camera.lookAt(0, 0.05, 0)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
     const pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
@@ -114,6 +246,12 @@ export function ChipCircuit({ apiRef, stRef }) {
 
     const composer = new EffectComposer(renderer)
     composer.addPass(new RenderPass(scene, camera))
+    const bokehPass = new BokehPass(scene, camera, {
+      focus: 5.2,
+      aperture: 0.0011,
+      maxblur: 0.006,
+    })
+    composer.addPass(bokehPass)
     const bloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 0.5, 0.55, 0.85)
     composer.addPass(bloomPass)
     composer.addPass(new OutputPass())
@@ -122,20 +260,43 @@ export function ChipCircuit({ apiRef, stRef }) {
     world.scale.setScalar(0.9)
     scene.add(world)
 
+    // A dark glossy surface well below the board — low roughness so it
+    // picks up specular highlights from the lights as the scene sways,
+    // reading as "resting on a glass/lacquer surface" rather than floating
+    // against a flat background. Deliberately not a full mirror reflection
+    // (no extra render pass to keep this cheap); the sheen alone sells depth.
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(14, 14),
+      new THREE.MeshStandardMaterial({ color: 0x0a0b0d, metalness: 0.75, roughness: 0.18 })
+    )
+    floor.rotation.x = -Math.PI / 2
+    floor.position.y = -0.7
+    world.add(floor)
+
     const board = new THREE.Mesh(
       new THREE.BoxGeometry(4.2, 0.1, 3.4),
       new THREE.MeshStandardMaterial({ map: makeBoardTexture(), roughness: 0.8 })
     )
     world.add(board)
+    const shadowTex = makeShadowTexture()
+    addGreebles(world, shadowTex)
 
     const chipMeshes = NODES.map((node) => {
       const group = new THREE.Group()
       group.position.set(node.pos[0], 0.09, node.pos[1])
       world.add(group)
 
+      const chipShadow = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.85, 0.85),
+        new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false })
+      )
+      chipShadow.rotation.x = -Math.PI / 2
+      chipShadow.position.y = -0.005
+      group.add(chipShadow)
+
       const body = new THREE.Mesh(
         new THREE.BoxGeometry(0.62, 0.16, 0.62),
-        new THREE.MeshStandardMaterial({ color: 0x1a1c1f, metalness: 0.4, roughness: 0.5 })
+        new THREE.MeshStandardMaterial({ color: 0x1a1c1f, metalness: 0.55, roughness: 0.4 })
       )
       body.position.y = 0.08
       group.add(body)
@@ -186,6 +347,11 @@ export function ChipCircuit({ apiRef, stRef }) {
     const rim = new THREE.DirectionalLight(0x4c6b8a, 0.5)
     rim.position.set(-3, 2, -3)
     scene.add(rim)
+    // Warm bounce-light fill, like a second reflector card in a product
+    // shoot — keeps the far side of the board from going flat black.
+    const fill = new THREE.DirectionalLight(0xc9a988, 0.35)
+    fill.position.set(-2, 1.2, 3)
+    scene.add(fill)
 
     let frameId = null
     let targetX = 0
@@ -195,8 +361,8 @@ export function ChipCircuit({ apiRef, stRef }) {
 
     const onPointerMove = (e) => {
       const rect = container.getBoundingClientRect()
-      targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 0.4
-      targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 0.25
+      targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 0.75
+      targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 0.45
     }
     const onResize = () => {
       width = container.clientWidth
@@ -209,11 +375,21 @@ export function ChipCircuit({ apiRef, stRef }) {
     window.addEventListener('resize', onResize)
     if (!isCoarsePointer) window.addEventListener('pointermove', onPointerMove)
 
+    let idleT = 0
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     function render() {
       curX += (targetX - curX) * 0.05
       curY += (targetY - curY) * 0.05
+      // A slow continuous sway, independent of the mouse — the board reads
+      // as a real 3D object even to someone who never moves their cursor.
+      if (!reducedMotion) {
+        idleT += 0.0032
+        world.rotation.y = Math.sin(idleT) * 0.14
+        world.rotation.x = Math.sin(idleT * 0.7) * 0.04
+      }
       camera.position.set(cameraBase.x + curX, cameraBase.y + curY, cameraBase.z)
-      camera.lookAt(0, 0, 0)
+      camera.lookAt(0, 0.05, 0)
       composer.render()
       frameId = requestAnimationFrame(render)
     }
