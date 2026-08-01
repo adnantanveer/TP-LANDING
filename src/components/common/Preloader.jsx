@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Icon } from './Icon'
 import { disciplines } from '../../data/disciplines'
 import logo from '../../assets/techpotam-logo.png'
+import preloaderVideo from '../../assets/preloader-bg.mp4'
 import './Preloader.css'
 
 const PARTICLE_COUNT = 240
@@ -290,6 +291,10 @@ export function Preloader({ onComplete }) {
 
   return (
     <div className="preloader" ref={rootRef} aria-hidden="true">
+      <video className="preloader__video" autoPlay muted loop playsInline preload="auto">
+        <source src={preloaderVideo} type="video/mp4" />
+      </video>
+      <div className="preloader__scrim" />
       <canvas ref={canvasRef} className="preloader__canvas" />
 
       <div className="preloader__glow" ref={glowRef} />

@@ -6,6 +6,7 @@ import { TypewriterHeading } from './TypewriterHeading'
 import { Button } from '../common/Button'
 import { RoleCycler } from './RoleCycler'
 import { disciplines } from '../../data/disciplines'
+import heroVideo from '../../assets/bck.mp4'
 import './Hero.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -48,6 +49,13 @@ export function Hero() {
   const stageRef = useRef(stage)
   stageRef.current = stage
   const scrollLockedRef = useRef(false)
+  // Whether the AI robot's own pop-in entrance (triggered once the trace
+  // reaches the last chip, inside ChipCircuit) has finished playing — the
+  // scroll-trigger's onUpdate closure below can't read React state directly,
+  // so this ref mirrors it the same way stageRef mirrors stage.
+  const [robotReady, setRobotReady] = useState(false)
+  const robotReadyRef = useRef(robotReady)
+  robotReadyRef.current = robotReady
 
   // useLayoutEffect (not useEffect) matters here: every other pinned
   // section (ThreePaths, OurWork, etc.) measures its own ScrollTrigger via
@@ -80,12 +88,13 @@ export function Hero() {
         const p = self.progress
         setCharStage(p >= CLOUD_THRESHOLD ? 2 : p >= ENGINEERING_THRESHOLD ? 1 : 0)
 
-        // Scroll reached the end of the pin, but the text sequence (typed
-        // subhead, then buttons) hasn't actually finished yet — hold here.
-        // A real overflow lock is the only guarantee that works regardless
-        // of scroll speed; anything based on scroll *distance* alone (a
-        // bigger pin range, etc.) can still be outrun by a fast flick.
-        if (p >= 1 && stageRef.current < 2 && !scrollLockedRef.current) {
+        // Scroll reached the end of the pin, but either the text sequence
+        // (typed subhead, then buttons) or the AI robot's entrance hasn't
+        // actually finished yet — hold here. A real overflow lock is the
+        // only guarantee that works regardless of scroll speed; anything
+        // based on scroll *distance* alone (a bigger pin range, etc.) can
+        // still be outrun by a fast flick.
+        if (p >= 1 && (stageRef.current < 2 || !robotReadyRef.current) && !scrollLockedRef.current) {
           scrollLockedRef.current = true
           document.body.style.overflow = 'hidden'
         }
@@ -108,20 +117,29 @@ export function Hero() {
     if (charStage < 2) setStage(0)
   }, [charStage])
 
-  // Releases the hold above the instant the text sequence actually
-  // finishes (buttons visible), whether or not scroll was ever locked.
+  // Releases the hold above the instant both the text sequence (buttons
+  // visible) and the AI robot's entrance have actually finished, whether or
+  // not scroll was ever locked.
   useLayoutEffect(() => {
-    if (stage >= 2 && scrollLockedRef.current) {
+    if (stage >= 2 && robotReady && scrollLockedRef.current) {
       scrollLockedRef.current = false
       document.body.style.overflow = ''
     }
-  }, [stage])
+  }, [stage, robotReady])
 
   return (
-    <section id="top" className="hero" aria-label="Introduction" ref={sectionRef}>
+    <section
+      id="top"
+      className={`hero ${stage >= 2 ? 'is-ready' : ''}`}
+      aria-label="Introduction"
+      ref={sectionRef}
+    >
       <div className="hero__scene" aria-hidden="true">
+        <video className="hero__video" autoPlay muted loop playsInline preload="auto">
+          <source src={heroVideo} type="video/mp4" />
+        </video>
         <Suspense fallback={null}>
-          <ChipCircuit apiRef={apiRef} stRef={stRef} />
+          <ChipCircuit apiRef={apiRef} stRef={stRef} onRobotStateChange={setRobotReady} />
         </Suspense>
         <div className="hero__vignette" />
         <div className="hero__grain" />

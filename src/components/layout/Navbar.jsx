@@ -175,7 +175,7 @@ export function Navbar() {
             </div>
           </div>
         </div>
-      </div>
+    </div>
     </header>
   )
 }

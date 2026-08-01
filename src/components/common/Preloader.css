@@ -8,6 +8,22 @@
   will-change: transform, opacity;
 }
 
+.preloader__video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preloader__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(10, 10, 12, 0.72);
+}
+
 .preloader__canvas {
   position: absolute;
   inset: 0;
