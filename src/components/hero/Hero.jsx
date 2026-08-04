@@ -80,7 +80,17 @@ export function Hero() {
       start: 'top top',
       end: '+=100%',
       pin: true,
-      scrub: 0.4,
+      // A numeric scrub (e.g. 0.4) smooths *only* the progress value passed
+      // to onUpdate — the pin itself still releases based on the raw
+      // scroll position. On a fast scroll that gap let the page physically
+      // unpin (and the onLeave fix below caught it a beat too late,
+      // already partway into the next section) before the lagged progress
+      // ever reported reaching the end. `true` removes that lag entirely —
+      // progress tracks raw scroll 1:1, so the lock check always fires at
+      // the exact moment it needs to. ChipCircuit already re-smooths the
+      // camera dolly itself frame-by-frame, so this doesn't cost any of
+      // the visual smoothness.
+      scrub: true,
       onUpdate: (self) => {
         apiRef.current?.setProgress(self.progress)
         // Bidirectional on purpose: scrolling back up moves the headline
@@ -95,6 +105,22 @@ export function Hero() {
         // based on scroll *distance* alone (a bigger pin range, etc.) can
         // still be outrun by a fast flick.
         if (p >= 1 && (stageRef.current < 2 || !robotReadyRef.current) && !scrollLockedRef.current) {
+          scrollLockedRef.current = true
+          document.body.style.overflow = 'hidden'
+        }
+      },
+      // `scrub` smooths the *reported* progress above, but the pin itself
+      // un-pins based on the raw scroll position, not that smoothed value —
+      // on a fast scroll, the page could physically pass the end of the pin
+      // (revealing the next section) while `onUpdate`'s progress was still
+      // catching up toward 1, so the lock check above never got a chance to
+      // fire in time. onLeave fires right as raw scroll crosses that
+      // boundary, so it catches this immediately instead of relying on the
+      // lagged value.
+      onLeave: () => {
+        apiRef.current?.setProgress(1)
+        setCharStage(2)
+        if ((stageRef.current < 2 || !robotReadyRef.current) && !scrollLockedRef.current) {
           scrollLockedRef.current = true
           document.body.style.overflow = 'hidden'
         }
