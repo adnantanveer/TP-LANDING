@@ -1,14 +1,72 @@
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
-import { useRef } from "react";
+import { useRef, type SVGProps } from "react";
 import { SectionLabel } from "./primitives";
 
+function IconDesignSystems(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <circle cx="17.5" cy="17.5" r="3.5" />
+    </svg>
+  );
+}
+
+function IconFrontend(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2" />
+      <path d="M2.5 8.5h19" />
+      <path d="m8 13-2 2 2 2" />
+      <path d="m13 13 2 2-2 2" />
+    </svg>
+  );
+}
+
+function IconBackend(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <ellipse cx="12" cy="5.5" rx="8" ry="3" />
+      <path d="M4 5.5v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+      <path d="M4 11.5v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+    </svg>
+  );
+}
+
+function IconCloud(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M6.5 19a4.5 4.5 0 0 1-.5-8.98A6 6 0 0 1 17.5 8.5 4.5 4.5 0 0 1 17 19h-10.5Z" />
+    </svg>
+  );
+}
+
+function IconMobile(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="7" y="2.5" width="10" height="19" rx="2.5" />
+      <path d="M11 18.5h2" />
+    </svg>
+  );
+}
+
+function IconAI(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 2.5v3M12 18.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" />
+      <circle cx="12" cy="12" r="4" />
+    </svg>
+  );
+}
+
 const CAPABILITIES = [
-  { label: "Design Systems", description: "Tokens, components and documentation that keep teams shipping in one voice.", x: -50, y: -30, rotate: -3 },
-  { label: "Frontend", description: "React, accessible markup and animation that never costs you performance.", x: 50, y: 20, rotate: 2 },
-  { label: "Backend", description: "Reliable services and APIs built to scale with your business, not against it.", x: -30, y: 40, rotate: 3 },
-  { label: "Cloud", description: "AWS and Azure infrastructure, provisioned for resilience from day one.", x: 40, y: -40, rotate: -2 },
-  { label: "Mobile", description: "Cross-platform products that still feel entirely native.", x: -45, y: 15, rotate: 4 },
-  { label: "AI", description: "Applied machine learning that solves a real problem, not a headline.", x: 30, y: -15, rotate: -4 },
+  { label: "Design Systems", description: "Tokens, components and documentation that keep teams shipping in one voice.", icon: IconDesignSystems, x: -50, y: -30, rotate: -3 },
+  { label: "Frontend", description: "React, accessible markup and animation that never costs you performance.", icon: IconFrontend, x: 50, y: 20, rotate: 2 },
+  { label: "Backend", description: "Reliable services and APIs built to scale with your business, not against it.", icon: IconBackend, x: -30, y: 40, rotate: 3 },
+  { label: "Cloud", description: "AWS and Azure infrastructure, provisioned for resilience from day one.", icon: IconCloud, x: 40, y: -40, rotate: -2 },
+  { label: "Mobile", description: "Cross-platform products that still feel entirely native.", icon: IconMobile, x: -45, y: 15, rotate: 4 },
+  { label: "AI", description: "Applied machine learning that solves a real problem, not a headline.", icon: IconAI, x: 30, y: -15, rotate: -4 },
 ];
 
 export function Precision() {
@@ -33,6 +91,7 @@ export function Precision() {
 function PrecisionCard({
   label,
   description,
+  icon: Icon,
   x,
   y,
   rotate,
@@ -40,6 +99,7 @@ function PrecisionCard({
 }: {
   label: string;
   description: string;
+  icon: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
   x: number;
   y: number;
   rotate: number;
@@ -62,7 +122,10 @@ function PrecisionCard({
       transition={{ delay: index * 0.03 }}
       className="rounded-2xl border border-border bg-card p-8 transition-colors hover:border-primary/50"
     >
-      <h3 className="text-xl font-medium">{label}</h3>
+      <div className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary">
+        <Icon className="h-5 w-5" />
+      </div>
+      <h3 className="mt-5 text-xl font-medium">{label}</h3>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
     </motion.article>
   );

@@ -253,8 +253,6 @@ export const PHASE = {
   HOLD_END: 4700,
 };
 
-const BG = "#06070a";
-
 function staggered(elapsedInPhase: number, duration: number, lag: number): number {
   const denom = duration * (1 - lag);
   if (denom <= 0) return 1;
@@ -293,7 +291,6 @@ export class LogoMorphEngine {
   private pauseOffset = 0;
   private destroyed = false;
   private completed = false;
-  private firstFrame = true;
   private onComplete: () => void;
 
   constructor(canvas: HTMLCanvasElement, tier: Tier, onComplete: () => void) {
@@ -318,7 +315,6 @@ export class LogoMorphEngine {
     this.canvas.width = Math.round(cssWidth * dpr);
     this.canvas.height = Math.round(cssHeight * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.firstFrame = true; // repaint a full opaque background after a resize
   }
 
   start() {
@@ -359,11 +355,16 @@ export class LogoMorphEngine {
     const { ctx, width: w, height: h } = this;
     if (w === 0 || h === 0) return;
 
-    // Near-opaque clear each frame for a faint premium trail; fully opaque on
-    // the very first frame (and right after a resize) so nothing ghosts in.
-    ctx.fillStyle = this.firstFrame ? BG : "rgba(6,7,10,0.32)";
+    // Full transparent clear + a FIXED (non-accumulating) veil each frame —
+    // not the old "translucent fill without clearing" trail technique,
+    // which compounds toward fully opaque over enough frames (standard
+    // source-over alpha math) and would eventually hide the WebGL tunnel
+    // background (TunnelBackground.tsx) mounted underneath this canvas.
+    // Trades the previous subtle particle motion-trail for a guaranteed-
+    // consistent, correct composite over that background.
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "rgba(6,7,10,0.5)";
     ctx.fillRect(0, 0, w, h);
-    this.firstFrame = false;
 
     const cx = w / 2;
     const cy = h / 2;

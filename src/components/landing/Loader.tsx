@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { LogoMorph } from "@/components/LogoMorph/LogoMorph";
+import { TunnelBackground } from "@/components/LogoMorph/TunnelBackground";
 
 /**
  * Site intro: the cinematic particle logo morph (see LogoMorph) plays inside
@@ -48,6 +49,7 @@ export function Loader({ onDone }: { onDone?: () => void }) {
           transition={{ duration: 0.95, ease: [0.7, 0, 0.35, 1] }}
           aria-hidden
         >
+          <TunnelBackground />
           <LogoMorph onComplete={handleMorphComplete} />
           {/* darkens toward the far (bottom-right) edge as it rolls — that
               edge is furthest from the top-left anchor, so it travels the
