@@ -1,0 +1,360 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --radius: 0.25rem;
+
+  --background: oklch(0.14 0.012 250);
+  --foreground: oklch(0.96 0.006 90);
+  --card: oklch(0.18 0.014 250);
+  --card-foreground: oklch(0.96 0.006 90);
+  --popover: oklch(0.18 0.014 250);
+  --popover-foreground: oklch(0.96 0.006 90);
+
+  /* amber ember */
+  --primary: oklch(0.76 0.16 62);
+  --primary-foreground: oklch(0.16 0.02 60);
+  --primary-glow: oklch(0.85 0.14 78);
+
+  /* deep teal */
+  --secondary: oklch(0.62 0.1 205);
+  --secondary-foreground: oklch(0.14 0.012 250);
+
+  --muted: oklch(0.24 0.015 250);
+  --muted-foreground: oklch(0.68 0.012 250);
+  --accent: oklch(0.62 0.1 205);
+  --accent-foreground: oklch(0.14 0.012 250);
+  --destructive: oklch(0.6 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.76 0.16 62);
+
+  --chart-1: oklch(0.76 0.16 62);
+  --chart-2: oklch(0.62 0.1 205);
+  --chart-3: oklch(0.85 0.14 78);
+  --chart-4: oklch(0.5 0.08 205);
+  --chart-5: oklch(0.4 0.05 250);
+
+  --sidebar: oklch(0.18 0.014 250);
+  --sidebar-foreground: oklch(0.96 0.006 90);
+  --sidebar-primary: oklch(0.76 0.16 62);
+  --sidebar-primary-foreground: oklch(0.16 0.02 60);
+  --sidebar-accent: oklch(0.24 0.015 250);
+  --sidebar-accent-foreground: oklch(0.96 0.006 90);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.76 0.16 62);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --gradient-veil: radial-gradient(
+    120% 80% at 50% 0%,
+    color-mix(in oklab, var(--primary) 18%, transparent),
+    transparent 70%
+  );
+  --shadow-ember: 0 30px 90px -40px color-mix(in oklab, var(--primary) 60%, transparent);
+  --shadow-deep: 0 40px 120px -60px oklch(0 0 0 / 90%);
+}
+
+@theme inline {
+  --color-primary-glow: var(--primary-glow);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+  }
+}
+
+@utility text-ember {
+  background-image: var(--gradient-ember);
+  background-clip: text;
+  color: transparent;
+}
+
+@utility grain {
+  position: relative;
+}
+
+@utility perspective-scene {
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+/* ==========================================================================
+   scroll-world reskin — retheme the vendored engine (src/lib/scrub-engine.ts)
+   to this project's amber/teal/Sora palette instead of its own light-mode
+   defaults. Unlayered rules beat the engine's own `@layer sw` defaults
+   regardless of specificity/order, so only theme vars + a handful of
+   contrast fixes need to live here — none of the engine's transform/opacity/
+   position mechanics are touched. Ported from LandingPageUK/site.css
+   (the same engine's original host page), recolored from violet to amber.
+   ========================================================================== */
+
+.sw-root {
+  --sw-bg: var(--background);
+  --sw-ink: var(--foreground);
+  --sw-ink-soft: var(--muted-foreground);
+  --sw-accent: var(--primary);
+  --sw-font-display: var(--font-display);
+  --sw-font-body: var(--font-sans);
+}
+
+/* "Scroll" hint and the "01 / 04" chapter counter are generic scroll-cue /
+   section-numbering tells with no config flag to suppress — hide both. */
+.sw-hint,
+.sw-copy__num {
+  display: none !important;
+}
+
+/* The engine's topbar ships transparent (fine only over hero video); once it
+   persists across sections it needs a permanent glass backing so scrolled
+   content doesn't read as illegible fragments behind it. */
+.sw-topbar {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--background) 88%, transparent), color-mix(in oklab, var(--background) 55%, transparent));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Dark glass nav pill instead of the engine's near-white default (built for
+   a light hero, an odd pale oval on this dark page). */
+.sw-nav {
+  background: color-mix(in oklab, var(--foreground) 6%, transparent) !important;
+  border: 1px solid var(--border) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  gap: 2px !important;
+}
+.sw-nav__item {
+  font-weight: 500 !important;
+  letter-spacing: 0.01em;
+}
+
+/* The engine's active-pill state is a solid accent fill with white text — a
+   real contrast bug against a light accent. Frosted-glass pill instead:
+   translucent amber tint, blurred, inner highlight border. */
+.sw-nav__item.is-active {
+  color: #fff !important;
+  background: linear-gradient(160deg, color-mix(in oklab, var(--primary) 55%, transparent), color-mix(in oklab, var(--primary) 30%, transparent)) !important;
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Copy tag pills: frosted dark fill instead of the engine's near-solid white
+   chip default. */
+.sw-copy__tags li {
+  background: color-mix(in oklab, var(--sw-ink, #fff) 10%, transparent) !important;
+  color: var(--sw-ink, #fff) !important;
+  border: 1px solid color-mix(in oklab, var(--sw-accent) 45%, transparent) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Eyebrow: subtle two-stop gradient within the amber hue instead of a flat
+   fill — one hue, two stops, no second accent color introduced. */
+.sw-copy__eyebrow {
+  background: linear-gradient(90deg, color-mix(in oklab, var(--sw-accent) 60%, #fff), var(--sw-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Frosted panel behind the whole copy block so eyebrow/title/tags/buttons
+   stay legible over a busy, high-detail video frame regardless of what's
+   playing underneath — not just per-element text-shadow. z-index:0 on
+   .sw-copy gives it its own stacking context so the panel's negative
+   z-index stays behind this block only. */
+.sw-copy {
+  z-index: 0;
+}
+.sw-copy::before {
+  content: "";
+  position: absolute;
+  inset: -22px -26px;
+  z-index: -1;
+  background: color-mix(in oklab, var(--sw-bg, var(--background)) 60%, transparent);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border-radius: 28px;
+  border: 1px solid color-mix(in oklab, #fff 8%, transparent);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 color-mix(in oklab, #fff 12%, transparent);
+  pointer-events: none;
+}
+@media (max-width: 860px) {
+  .sw-copy::before {
+    inset: -18px -20px;
+    border-radius: 24px;
+  }
+}
+
+/* Topbar CTA + per-section CTA buttons default to white-on-near-white (since
+   --sw-ink is a light tone here). Frosted glass instead, always legible
+   regardless of what's playing underneath. */
+.sw-topcta,
+.sw-btn--ghost {
+  background: color-mix(in oklab, var(--sw-ink, #fff) 14%, transparent) !important;
+  color: var(--sw-ink, #fff) !important;
+  border: 1px solid color-mix(in oklab, var(--sw-ink, #fff) 28%, transparent) !important;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18), inset 0 1px 0 color-mix(in oklab, var(--sw-ink, #fff) 20%, transparent);
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+.sw-topcta:hover,
+.sw-btn--ghost:hover {
+  background: color-mix(in oklab, var(--sw-ink, #fff) 22%, transparent) !important;
+  border-color: color-mix(in oklab, var(--sw-ink, #fff) 42%, transparent) !important;
+  transform: translateY(-2px);
+}
+/* The primary CTA is the page's one high-commitment action — stays the
+   brightest thing on screen: a saturated amber glass fill. */
+.sw-btn--primary {
+  background: linear-gradient(160deg, color-mix(in oklab, var(--primary) 92%, white), var(--primary)) !important;
+  color: var(--primary-foreground) !important;
+  border-color: transparent !important;
+  box-shadow: 0 8px 30px color-mix(in oklab, var(--primary) 45%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+.sw-btn--primary:hover {
+  background: linear-gradient(160deg, color-mix(in oklab, var(--primary) 96%, white), color-mix(in oklab, var(--primary) 90%, white)) !important;
+  transform: translateY(-2px);
+}
+
+/* Route-dot hover label: light pill, so dark text is the legible pairing. */
+.sw-route__label {
+  background: color-mix(in oklab, #fff 82%, transparent) !important;
+  color: var(--background) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Chromium glyph-rasterization bug (see LandingPageUK/CLAUDE.md): with this
+   gradient present anywhere on the page, headings elsewhere partially fail
+   to rasterize. Purely decorative — .sw-copy::before above already gives
+   the text its own contrast panel — so removing it is a no-op visually and
+   fixes the bug. Do not reintroduce a gradient here. */
+.sw-copylayer::before {
+  background: none !important;
+}
+
+/* Release a scroll-world instance's viewport-fixed layers (copy/route/hint/
+   scrollbar) once its own scroll track has passed — ScrollWorldMount toggles
+   `sw-done` via IntersectionObserver-style scroll math. .sw-stage/.sw-sky
+   are deliberately left alone: the engine already fades each scene's own
+   opacity to 0 tied to scroll position; forcing them off here would hard-cut
+   a mid-crossfade. */
+.sw-done .sw-copylayer,
+.sw-done .sw-route,
+.sw-done .sw-hint,
+.sw-done .sw-scrollbar {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* The hero's own scroll-world topbar (brand/nav/cta) is intentionally unset
+   in Hero.tsx's config — <Nav /> is the one persistent site header, anchored
+   to the page's real sections, not just the hero's 4 internal scenes. The
+   engine still creates an (now-empty) .sw-topbar div regardless of config,
+   so hide it explicitly rather than let an empty glass bar show through. */
+.hero-world .sw-topbar {
+  display: none !important;
+}
+
+/* An embedded (mid-page) instance contributes only its video scene + copy —
+   its topbar/route-rail/hint/progress-bar would be a redundant duplicate of
+   the hero's, so hidden unconditionally. .sw-sky is the critical one: it's
+   a solid-background position:fixed div the engine always creates
+   (atmosphere:false only skips its decorative children), which would
+   otherwise permanently paint over the sections around this instance. */
+.sw-embedded .sw-topbar,
+.sw-embedded .sw-route,
+.sw-embedded .sw-hint,
+.sw-embedded .sw-scrollbar,
+.sw-embedded .sw-sky {
+  display: none !important;
+}
+
+/* The Reliability instance's video fades to fully transparent before its
+   scroll track ends (the engine pads an extra viewport-height of "runway"
+   so the last flight completes); .sw-stage has no background of its own, so
+   without this the runway is a dead gap showing straight through to the
+   page's flat background. Ease it to the same tone Contact/Footer sit on
+   instead of a hard cut. */
+.reliability-world .sw-track {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 58%,
+    color-mix(in oklab, var(--primary) 8%, var(--background)) 84%,
+    color-mix(in oklab, var(--primary) 14%, var(--background)) 100%
+  );
+}
