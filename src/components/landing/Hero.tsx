@@ -2,10 +2,13 @@ import { ScrollWorldMount } from "@/components/ScrollWorldMount";
 import type { ScrollWorldConfig } from "@/lib/scrub-engine";
 
 /**
- * Scroll-world hero: a pinned, scroll-scrubbed video flight through four
- * scenes (ported from LandingPageUK's `mountScrollWorld()` hero config,
- * reusing its pre-rendered clips as-is — reskinned to the amber theme via
- * the `.sw-root` CSS overrides in styles.css, not by touching this config).
+ * Scroll-world hero: a pinned, scroll-scrubbed flight through a single
+ * continuous shot (public/assets/vid/hero-forge → hero-core → hero-launch —
+ * split from one source clip at 10s/19.5s, the two boundaries closest to the
+ * midpoints between its three "beats" at ~7s/13s/26s). Because all three
+ * pieces come from one continuous take rather than separate AI-rendered
+ * scenes, the cuts between them are already frame-perfect — no connector
+ * clips or frame-matching needed, unlike the earlier four-scene hero.
  *
  * `accent` is set explicitly (not omitted) to the theme's --primary value:
  * the engine does `el.style.setProperty('--sw-accent', s.accent || '')`
@@ -18,6 +21,10 @@ import type { ScrollWorldConfig } from "@/lib/scrub-engine";
  * header for the entire page below the hero. `<Nav />` is the one real site
  * header, anchored to the page's actual sections — see .hero-world
  * .sw-topbar in styles.css, which hides the engine's topbar entirely.
+ *
+ * Copy below is a first draft written to match what's on screen at each
+ * beat (circuit-board sparks / crystal-core sparks / satellite in space) —
+ * swap the eyebrow/title/body/tags for real copy whenever you have it.
  */
 const ACCENT = "oklch(0.76 0.16 62)"; // must match --primary in styles.css
 
@@ -27,67 +34,53 @@ const HERO_CONFIG: ScrollWorldConfig = {
   connScroll: 0.9,
   sections: [
     {
-      id: "product",
+      id: "forge",
       accent: ACCENT,
-      label: "The Product",
-      still: "/assets/product.jpg",
-      clip: "/assets/vid/product.mp4",
-      clipMobile: "/assets/vid/product-m.mp4",
-      scroll: 2.2,
-      linger: 0.4,
+      label: "The Forge",
+      still: "/assets/hero-forge.jpg",
+      clip: "/assets/vid/hero-forge.mp4",
+      clipMobile: "/assets/vid/hero-forge-m.mp4",
+      scroll: 2.0,
+      linger: 0.35,
       eyebrow: "Product Engineering",
-      title: "We build software that just works.",
-      body: "From first commit to a live product in your users' hands. Clean architecture, fast iteration, dependable delivery.",
+      title: "Built in the forge, shipped to production.",
+      body: "From first commit to a live product in your users' hands — clean architecture, fast iteration, dependable delivery.",
       tags: ["Web & Mobile", "Cloud-native", "UK-based team"],
     },
     {
-      id: "process",
+      id: "core",
       accent: ACCENT,
-      label: "How We Work",
-      still: "/assets/process.jpg",
-      clip: "/assets/vid/process.mp4",
-      clipMobile: "/assets/vid/process-m.mp4",
-      scroll: 2.0,
-      linger: 0.35,
-      eyebrow: "How We Work",
-      title: "Every build starts with a plan.",
-      body: "We map the system before we write a line of code, so what ships matches exactly what you asked for.",
-      tags: ["Discovery", "Design", "Delivery"],
-    },
-    {
-      id: "precision",
-      accent: ACCENT,
-      label: "Precision Engineering",
-      still: "/assets/precision.jpg",
-      clip: "/assets/vid/precision.mp4",
-      clipMobile: "/assets/vid/precision-m.mp4",
-      scroll: 2.0,
-      linger: 0.35,
+      label: "The Core",
+      still: "/assets/hero-core.jpg",
+      clip: "/assets/vid/hero-core.mp4",
+      clipMobile: "/assets/vid/hero-core-m.mp4",
+      scroll: 1.8,
+      linger: 0.3,
       eyebrow: "Precision Engineering",
       title: "Every detail, considered.",
       body: "From the first keystroke to the silicon it runs on, nothing ships until it's right.",
       tags: ["Code review", "Performance budget", "Security-first"],
     },
     {
-      id: "team",
+      id: "launch",
       accent: ACCENT,
-      label: "One Team",
-      still: "/assets/team.jpg",
-      clip: "/assets/vid/team.mp4",
-      clipMobile: "/assets/vid/team-m.mp4",
+      label: "Launch",
+      still: "/assets/hero-launch.jpg",
+      clip: "/assets/vid/hero-launch.mp4",
+      clipMobile: "/assets/vid/hero-launch-m.mp4",
       scroll: 2.4,
       linger: 0.4,
-      eyebrow: "One Team",
-      title: "Not a vendor. A team that sits with you.",
-      body: "You'll talk to the people writing the code, not an account manager relaying messages. From kickoff to the day it ships.",
-      tags: ["Weekly demos", "Direct Slack access", "Decisions made with you"],
+      eyebrow: "Built To Scale",
+      title: "From first line to launch.",
+      body: "Deployed on infrastructure that holds up under real-world load — monitored, hardened, and ready from day one.",
+      tags: ["Cloud-native", "Monitored 24/7", "Global delivery"],
       cta: {
         primary: { label: "Book a call", href: "mailto:hello@techpotam.com" },
         secondary: { label: "Our approach", href: "#process" },
       },
     },
   ],
-  connectors: [null, null, null],
+  connectors: [null, null],
 };
 
 export function Hero() {
