@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import "./styles.css";
 import App from "./App.tsx";
 
@@ -12,10 +12,15 @@ if ("scrollRestoration" in history) {
 }
 window.scrollTo(0, 0);
 
+// HashRouter, not BrowserRouter: routes live at /#/reuse-component rather
+// than a clean /reuse-component path. That means every route works on any
+// static host with zero server-side rewrite config (no "index.html for
+// all paths" fallback needed), since the server only ever sees a request
+// for "/" — the part after "#" is resolved entirely client-side.
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <App />
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 );
