@@ -37,8 +37,15 @@ export function Loader({ onDone }: { onDone?: () => void }) {
           key="loader"
           className="fixed inset-0 z-[100] overflow-hidden bg-background"
           style={{ willChange: "transform, opacity" }}
-          exit={{ scale: 2.6, opacity: 0, filter: "blur(6px)" }}
-          transition={{ duration: 0.85, ease: [0.55, 0, 1, 0.45] }}
+          exit={{ scale: 4.2, opacity: 0, filter: "blur(10px)" }}
+          transition={{
+            // scale/blur keep the hard accelerating "flying forward" feel;
+            // opacity gets its own gentler curve so the hero resolves in
+            // gradually instead of snapping visible only in the last instant
+            scale: { duration: 1.15, ease: [0.55, 0, 1, 0.45] },
+            filter: { duration: 1.15, ease: [0.55, 0, 1, 0.45] },
+            opacity: { duration: 1.15, ease: [0.33, 0, 0.2, 1] },
+          }}
           aria-hidden
         >
           <TunnelBackground />
