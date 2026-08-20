@@ -48,6 +48,14 @@ function hexToVec3(hex: string): THREE.Vector3 {
   return new THREE.Vector3(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 }
 
+// Resolved sRGB hex for this theme's --primary / --background (oklch, so
+// not directly usable as a WebGL uniform) — resolved once via a canvas
+// pixel readback in a real browser. Must be kept in sync with styles.css;
+// re-resolve if those tokens change (see Hero.tsx's ACCENT for the same
+// pattern with the scroll-world engine's CSS-side theming).
+const THEME_PRIMARY = "#f8962d"; // oklch(0.76 0.16 62)
+const THEME_BG = "#060a0e"; // oklch(0.14 0.012 250)
+
 const SNOISE = `
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
@@ -274,8 +282,8 @@ export class TunnelScene {
     this.tunnelUniforms = {
       uTime: { value: 0 },
       uAppear: { value: 0 },
-      uColLow: { value: hexToVec3("#180a3a") },
-      uColHigh: { value: hexToVec3("#2bf0ff") },
+      uColLow: { value: hexToVec3(THEME_BG) },
+      uColHigh: { value: hexToVec3(THEME_PRIMARY) },
       uOpacity: { value: 1.44 },
       uSize: { value: 5 },
       uBrightness: { value: 0.4 },
@@ -318,7 +326,7 @@ export class TunnelScene {
 
     const atmoUniforms = {
       uTime: { value: 0 },
-      uColor: { value: hexToVec3("#8fe6ff") },
+      uColor: { value: hexToVec3(THEME_PRIMARY) },
       uRes: { value: new THREE.Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio) },
     };
     const atmoMat = new THREE.ShaderMaterial({
