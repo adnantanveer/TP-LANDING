@@ -33,6 +33,11 @@ export interface ScrollWorldSection {
   accent?: string;
   scroll?: number;
   linger?: number;
+  /** First section only: fraction (0..1) into this section's own scroll
+   * range before its copy starts fading in — 0 (default) keeps the
+   * original "greets on landing" behavior (visible immediately at the
+   * very top of the page). Has no effect on any other section. */
+  introAt?: number;
   eyebrow?: string;
   title?: string;
   body?: string;
@@ -362,8 +367,20 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
       const before = y < seg.start,
         after = y > seg.end;
       let cop: number;
-      if (i === 0) cop = before || after ? 0 : smooth(1 - pr / 0.62);
-      else if (i === N - 1) cop = before ? 0 : smooth(pr / 0.4);
+      if (i === 0 && !SECTIONS[i].introAt) cop = before || after ? 0 : smooth(1 - pr / 0.62);
+      else if (i === 0) {
+        // Delayed intro: same fixed-pixel fade-in/out window as a middle
+        // section (see the `else` branch below), just anchored to a point
+        // partway into this section's own range instead of its very start —
+        // copy stays hidden until the video reaches that point, then fades
+        // in, holds, and fades out approaching the section's end.
+        const introAt = clamp(SECTIONS[i].introAt ?? 0, 0, 0.95);
+        const introY = seg.start + introAt * (seg.end - seg.start);
+        const distIn = y - introY,
+          distOut = seg.end - y;
+        const fadeWindow = Math.min(0.5 * vh, (seg.end - introY) / 2);
+        cop = before || after || y < introY ? 0 : smooth(Math.min(distIn, distOut) / fadeWindow);
+      } else if (i === N - 1) cop = before ? 0 : smooth(pr / 0.4);
       else {
         const distIn = y - seg.start,
           distOut = seg.end - y;

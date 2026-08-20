@@ -42,6 +42,7 @@ const HERO_CONFIG: ScrollWorldConfig = {
       clipMobile: "/assets/vid/hero-forge-m.mp4",
       scroll: 2.0,
       linger: 0.35,
+      introAt: 0.7, // don't show copy until ~7s into this 10s clip
       eyebrow: "Product Engineering",
       title: "Built in the forge, shipped to production.",
       body: "From first commit to a live product in your users' hands — clean architecture, fast iteration, dependable delivery.",
