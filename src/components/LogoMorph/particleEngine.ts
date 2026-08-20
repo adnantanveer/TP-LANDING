@@ -1,4 +1,4 @@
-import { ICON_ASPECT, ICON_POINTS, WORDMARK_ASPECT, WORDMARK_POINTS, MINT, GRAPHITE } from "./logoData";
+import { ICON_ASPECT, ICON_POINTS, WORDMARK_ASPECT, WORDMARK_POINTS, MINT, GRAPHITE, WORD_INK, WORD_ACCENT } from "./logoData";
 
 export type Tier = "high" | "medium" | "low";
 
@@ -46,14 +46,22 @@ export function clamp01(t: number): number {
   return t < 0 ? 0 : t > 1 ? 1 : t;
 }
 
-/* ---- particle model ---- */
-export type ColorGroup = "mint" | "graphite";
+/* ---- particle model ----
+   Icon-phase and wordmark-phase colors are independent per particle: the
+   icon uses the brand logo's real mint/graphite split, the wordmark uses
+   Nav.tsx's actual header treatment (white "techpotam" + amber "."), and
+   there is no reason a mint icon particle should stay tied to one wordmark
+   color group over the other — decoupling them lets each phase sample its
+   own point cloud's natural color ratio undistorted. */
+export type IconColorGroup = "mint" | "graphite";
+export type WordColorGroup = "ink" | "accent";
 
 export interface Particle {
   // normalized (0..1) shape-local coordinates for each formation target
   icon: { x: number; y: number };
   word: { x: number; y: number };
-  color: ColorGroup;
+  iconColor: IconColorGroup;
+  wordColor: WordColorGroup;
   // per-particle organic variation
   seed: number;
   phaseLag: number; // 0..0.18 — staggers arrival so formation isn't lockstep
@@ -68,7 +76,7 @@ function seededJitter(seed: number, salt: number): number {
   return v - Math.floor(v);
 }
 
-function splitByColor(flat: number[]): { mint: { x: number; y: number }[]; graphite: { x: number; y: number }[] } {
+function splitIconByColor(flat: number[]): { mint: { x: number; y: number }[]; graphite: { x: number; y: number }[] } {
   const mint: { x: number; y: number }[] = [];
   const graphite: { x: number; y: number }[] = [];
   for (let i = 0; i < flat.length; i += 3) {
@@ -76,6 +84,14 @@ function splitByColor(flat: number[]): { mint: { x: number; y: number }[]; graph
     (flat[i + 2] === 0 ? mint : graphite).push(p);
   }
   return { mint, graphite };
+}
+
+function unpackWordPoints(flat: number[]): { x: number; y: number; group: WordColorGroup }[] {
+  const out: { x: number; y: number; group: WordColorGroup }[] = [];
+  for (let i = 0; i < flat.length; i += 3) {
+    out.push({ x: flat[i], y: flat[i + 1], group: flat[i + 2] === 1 ? "accent" : "ink" });
+  }
+  return out;
 }
 
 // Fisher-Yates so cycled/repeated sampling doesn't produce visible runs.
@@ -90,8 +106,7 @@ function shuffled<T>(arr: T[], seed: number): T[] {
 
 export function buildParticles(tier: Tier): Particle[] {
   const { particleCount } = getTierConfig(tier);
-  const icon = splitByColor(ICON_POINTS);
-  const word = splitByColor(WORDMARK_POINTS);
+  const icon = splitIconByColor(ICON_POINTS);
 
   const mintRatio = icon.mint.length / (icon.mint.length + icon.graphite.length);
   const nMint = Math.round(particleCount * mintRatio);
@@ -99,16 +114,22 @@ export function buildParticles(tier: Tier): Particle[] {
 
   const iconMint = shuffled(icon.mint, 1);
   const iconGraphite = shuffled(icon.graphite, 2);
-  const wordMint = shuffled(word.mint, 3);
-  const wordGraphite = shuffled(word.graphite, 4);
+
+  // One shuffled pool of ALL wordmark points (not pre-split by color) so
+  // each particle's word target — and the ink/accent ratio that results —
+  // reflects the wordmark's own natural distribution, independent of which
+  // icon-color group that particle belongs to.
+  const wordAll = shuffled(unpackWordPoints(WORDMARK_POINTS), 3);
+  let wordCursor = 0;
+  const nextWord = () => wordAll[wordCursor++ % wordAll.length];
 
   const particles: Particle[] = [];
 
-  const push = (count: number, iconSrc: { x: number; y: number }[], wordSrc: { x: number; y: number }[], color: ColorGroup, salt: number) => {
+  const push = (count: number, iconSrc: { x: number; y: number }[], iconColor: IconColorGroup, salt: number) => {
     for (let i = 0; i < count; i++) {
       const seed = i * 0.6180339887 + salt;
       const iconP = iconSrc[i % iconSrc.length];
-      const wordP = wordSrc[i % wordSrc.length];
+      const wordP = nextWord();
       // tiny per-particle jitter so repeated/cycled source points (when
       // particleCount > sample count) don't stack in perfectly identical spots
       const jx = (seededJitter(seed, 11) - 0.5) * 0.012;
@@ -116,7 +137,8 @@ export function buildParticles(tier: Tier): Particle[] {
       particles.push({
         icon: { x: iconP.x + jx, y: iconP.y + jy },
         word: { x: wordP.x + jx * 0.5, y: wordP.y + jy * 0.5 },
-        color,
+        iconColor,
+        wordColor: wordP.group,
         seed,
         phaseLag: seededJitter(seed, 33) * 0.18,
         curveSign: seededJitter(seed, 44) > 0.5 ? 1 : -1,
@@ -127,8 +149,8 @@ export function buildParticles(tier: Tier): Particle[] {
     }
   };
 
-  push(nMint, iconMint, wordMint, "mint", 100);
-  push(nGraphite, iconGraphite, wordGraphite, "graphite", 200);
+  push(nMint, iconMint, "mint", 100);
+  push(nGraphite, iconGraphite, "graphite", 200);
 
   return particles;
 }
@@ -477,6 +499,9 @@ export class LogoMorphEngine {
 
     for (const p of this.particles) {
       let ox: number, oy: number, oz: number, opacity: number;
+      const iconHex = p.iconColor === "mint" ? MINT : GRAPHITE;
+      const wordHex = p.wordColor === "accent" ? WORD_ACCENT : WORD_INK;
+      let colorHex = iconHex;
 
       if (t < PHASE.DARK_END) {
         continue; // not yet awakened
@@ -520,6 +545,7 @@ export class LogoMorphEngine {
         oy = lerp(from.oy, to.oy, eased) + ny * bow + jitter.y * cfg.turbulence * (1 - eased) * 6;
         oz = lerp(p.zLane * cfg.depth * 0.3, -cfg.depth * 0.5, Math.sin(Math.PI * eased)) + p.zLane * cfg.depth * 0.15;
         opacity = 1;
+        colorHex = lerpHex(iconHex, wordHex, eased);
       } else if (t < PHASE.WORDMARK_END) {
         const local = staggered(t - PHASE.MORPH_END, PHASE.WORDMARK_END - PHASE.MORPH_END, p.phaseLag * 0.3);
         const eased = easeSettle(Math.min(local, 1));
@@ -528,6 +554,7 @@ export class LogoMorphEngine {
         oy = to.oy;
         oz = lerp(p.zLane * cfg.depth * 0.15, p.zLane * cfg.depth * 0.12, eased);
         opacity = 1;
+        colorHex = wordHex;
       } else {
         const to = wordWorldOffset(p.word.x, p.word.y, w);
         const breathe = Math.sin(t * 0.0016 + p.seed) * 0.8;
@@ -535,6 +562,7 @@ export class LogoMorphEngine {
         oy = to.oy + breathe * 0.3;
         oz = p.zLane * cfg.depth * 0.12;
         opacity = 1;
+        colorHex = wordHex;
       }
 
       // subtle Y-axis-style tilt (rotate the ox/oz plane) during the morph —
@@ -555,7 +583,7 @@ export class LogoMorphEngine {
 
       ctx.beginPath();
       ctx.arc(sx, sy, radius, 0, Math.PI * 2);
-      ctx.fillStyle = hexToRgba(p.color === "mint" ? MINT : GRAPHITE, opacity * clamp01(perspective * 1.15));
+      ctx.fillStyle = hexToRgba(colorHex, opacity * clamp01(perspective * 1.15));
       ctx.fill();
     }
   }
@@ -580,6 +608,23 @@ function hexToRgba(hex: string, alpha: number): string {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return `rgba(${r},${g},${b},${clamp01(alpha).toFixed(3)})`;
+}
+
+function toHex2(v: number): string {
+  return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0");
+}
+
+// Crossfades two "#rrggbb" colors — returns the same hex format so callers
+// can keep using hexToRgba() uniformly regardless of whether a particle's
+// color came from a fixed group or mid-morph interpolation.
+function lerpHex(hexA: string, hexB: string, t: number): string {
+  const ax = parseInt(hexA.slice(1, 3), 16),
+    ay = parseInt(hexA.slice(3, 5), 16),
+    az = parseInt(hexA.slice(5, 7), 16);
+  const bx = parseInt(hexB.slice(1, 3), 16),
+    by = parseInt(hexB.slice(3, 5), 16),
+    bz = parseInt(hexB.slice(5, 7), 16);
+  return `#${toHex2(lerp(ax, bx, t))}${toHex2(lerp(ay, by, t))}${toHex2(lerp(az, bz, t))}`;
 }
 
 // Traces one glyph's outline into the canvas's current path (caller strokes
