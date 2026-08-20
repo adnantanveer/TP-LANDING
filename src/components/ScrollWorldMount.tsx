@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { mountScrollWorld, type ScrollWorldConfig } from "@/lib/scrub-engine";
+import { mountScrollWorld, type ScrollWorldConfig, type ScrollWorldControls } from "@/lib/scrub-engine";
 
 /**
  * Mounts a scroll-world instance into a plain div. `config` is only read on
@@ -10,17 +10,25 @@ export function ScrollWorldMount({
   config,
   className,
   embedded = false,
+  autoIntroReady = false,
 }: {
   config: ScrollWorldConfig;
   className?: string;
   embedded?: boolean;
+  /** Flip true to fire config.autoIntroSeconds's auto-intro (e.g. once a
+   * page-level loader has actually finished revealing this section — the
+   * engine itself never self-triggers this). No-op if the config doesn't
+   * set autoIntroSeconds. */
+  autoIntroReady?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<ScrollWorldControls | null>(null);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    const destroy = mountScrollWorld(node, config);
+    const controls = mountScrollWorld(node, config);
+    controlsRef.current = controls;
 
     // Release the engine's viewport-fixed layers (copy/route/hint/scrollbar)
     // once this instance's own scroll track has fully passed — without this
@@ -45,12 +53,17 @@ export function ScrollWorldMount({
     updateRelease();
 
     return () => {
-      destroy();
+      controlsRef.current = null;
+      controls.destroy();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", updateRelease);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (autoIntroReady) controlsRef.current?.startAutoIntro();
+  }, [autoIntroReady]);
 
   return <div ref={ref} className={`${embedded ? "sw-embedded" : ""} ${className || ""}`.trim()} />;
 }

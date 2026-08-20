@@ -167,11 +167,23 @@
   --sw-font-body: var(--font-sans);
 }
 
-/* "Scroll" hint and the "01 / 04" chapter counter are generic scroll-cue /
-   section-numbering tells with no config flag to suppress — hide both. */
+/* The "01 / 04" chapter counter is a generic section-numbering tell with no
+   config flag to suppress — hide it everywhere. The "scroll" hint is hidden
+   by default too (same reasoning), except in the hero, where it's the
+   deliberate "scroll to dive in" prompt shown after the auto-intro autoplay
+   (see Hero.tsx's autoIntroMs/hint and this engine's introActive gating). */
 .sw-hint,
 .sw-copy__num {
   display: none !important;
+}
+.hero-world .sw-hint {
+  display: flex !important;
+  color: var(--foreground) !important;
+  font-weight: 600;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+.hero-world .sw-hint i {
+  border-color: color-mix(in oklab, var(--foreground) 55%, transparent) !important;
 }
 
 /* The engine's topbar ships transparent (fine only over hero video); once it
@@ -228,33 +240,10 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Frosted panel behind the whole copy block so eyebrow/title/tags/buttons
-   stay legible over a busy, high-detail video frame regardless of what's
-   playing underneath — not just per-element text-shadow. z-index:0 on
-   .sw-copy gives it its own stacking context so the panel's negative
-   z-index stays behind this block only. */
-.sw-copy {
-  z-index: 0;
-}
-.sw-copy::before {
-  content: "";
-  position: absolute;
-  inset: -22px -26px;
-  z-index: -1;
-  background: color-mix(in oklab, var(--sw-bg, var(--background)) 60%, transparent);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
-  border-radius: 28px;
-  border: 1px solid color-mix(in oklab, #fff 8%, transparent);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 color-mix(in oklab, #fff 12%, transparent);
-  pointer-events: none;
-}
-@media (max-width: 860px) {
-  .sw-copy::before {
-    inset: -18px -20px;
-    border-radius: 24px;
-  }
-}
+/* No frosted card panel behind the copy — deliberately just heading + body
+   text directly over the video, relying on the engine's own built-in
+   per-element text-shadow (.sw-copy__title/.sw-copy__body, baked into
+   injectCSS()) for legibility rather than a background panel. */
 
 /* Topbar CTA + per-section CTA buttons default to white-on-near-white (since
    --sw-ink is a light tone here). Frosted glass instead, always legible

@@ -12,7 +12,7 @@ import { TunnelBackground } from "@/components/LogoMorph/TunnelBackground";
  * underneath. One continuous sequence ("Phase 6"), not "loader finishes,
  * then site appears".
  */
-export function Loader({ onDone }: { onDone?: () => void }) {
+export function Loader({ onDone, onRevealed }: { onDone?: () => void; onRevealed?: () => void }) {
   const [open, setOpen] = useState(true);
 
   const handleMorphComplete = useCallback(() => {
@@ -31,7 +31,7 @@ export function Loader({ onDone }: { onDone?: () => void }) {
   }, [open]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onRevealed}>
       {open && (
         <motion.div
           key="loader"

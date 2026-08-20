@@ -60,6 +60,26 @@ export interface ScrollWorldConfig {
   sections: ScrollWorldSection[];
   connectors?: (string | null)[];
   connectorsMobile?: (string | null)[];
+  /** Plays the first section's clip forward natively (slow motion, not
+   * scroll-driven) once *externally triggered* (see `startAutoIntro` on
+   * mountScrollWorld's returned controls — this does NOT self-trigger on
+   * load, so a host page can time it to when its own intro/loader actually
+   * finishes) until the clip's own currentTime reaches this many seconds,
+   * then pauses and reveals the `hint` text. Any scroll during that window
+   * cuts it short and hands off to normal scroll-scrubbing immediately.
+   * Omit (default) to keep the original behavior — frozen on frame 0 until
+   * the user scrolls. */
+  autoIntroSeconds?: number;
+  /** Playback rate during the auto-intro window. Default 0.5 (slow motion). */
+  autoIntroRate?: number;
+}
+
+export interface ScrollWorldControls {
+  destroy: () => void;
+  /** No-op if autoIntroSeconds isn't set, it's already run, or the user has
+   * already scrolled away from the top. Safe to call before the first
+   * section's clip has finished loading — it'll start as soon as it's ready. */
+  startAutoIntro: () => void;
 }
 
 interface Segment {
@@ -83,13 +103,18 @@ interface Segment {
   cur: number;
   target: number;
   visible: boolean;
+  /** Set once the auto-intro finishes: the video-progress fraction it was
+   * playing at when paused. Scroll position 0 for this segment then maps to
+   * this fraction instead of true frame 0, so scroll-scrub picks up from
+   * where playback stopped instead of rewinding. */
+  introFloor?: number;
 }
 
 interface SectionWithSeg extends ScrollWorldSection {
   _seg?: Segment;
 }
 
-export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConfig): () => void {
+export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConfig): ScrollWorldControls {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const coarse = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   const smallMQ = window.matchMedia("(max-width: 860px)");
@@ -104,7 +129,7 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
   let destroyed = false;
   const cleanupFns: Array<() => void> = [];
 
-  if (!N) return () => {};
+  if (!N) return { destroy: () => {}, startAutoIntro: () => {} };
 
   injectCSS();
   container.classList.add("sw-root");
@@ -264,6 +289,89 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
     const c = x - 0.5;
     return (1 - L) * x + L * (4 * c * c * c + 0.5);
   };
+  // Auto-intro: play SEGMENTS[0]'s clip natively for config.autoIntroMs once
+  // it's *externally triggered* (via the returned controls' startAutoIntro,
+  // not on load — a host page times that call to when its own intro/loader
+  // actually finishes, not to whenever this clip happens to finish loading
+  // in the background, which could be well before the loader is done).
+  // `introActive` gates raf()'s scroll-scrub forcing off that segment while
+  // it's playing natively, and read()'s hint opacity (hidden during
+  // playback, revealed once it stops).
+  let introActive = false;
+  let introTriggered = false;
+  let introRequested = false;
+  function startAutoIntro() {
+    if (introRequested || !config.autoIntroSeconds) return;
+    introRequested = true;
+    tryStartAutoIntro();
+  }
+  function tryStartAutoIntro() {
+    if (introTriggered || !introRequested || !config.autoIntroSeconds) return;
+    const first = SEGMENTS[0];
+    if (!first?.video || !first.ready) return; // will retry from the clip's own ready path
+    if ((window.scrollY || window.pageYOffset) > 40) return; // already scrolled past the top
+    introTriggered = true;
+    introActive = true;
+    const targetSeconds = config.autoIntroSeconds;
+    first.video.playbackRate = config.autoIntroRate ?? 0.5;
+    first.video.play().catch(() => {
+      introActive = false; // autoplay was blocked — fall back to normal scroll-scrub immediately
+    });
+    let introRaf = 0;
+    const endIntro = (clampToTarget: boolean) => {
+      if (!introActive) return;
+      introActive = false;
+      cancelAnimationFrame(introRaf);
+      try {
+        if (first.video) {
+          // `timeupdate` only fires every ~250ms in most engines — by the
+          // time it (or this rAF poll) observes currentTime >= target, the
+          // video has already drifted past it, and .pause() itself isn't
+          // instant either. Force the exact frame instead of trusting
+          // wherever playback happened to be caught, but only when we
+          // stopped BECAUSE we reached the target — a scroll interrupt
+          // should freeze wherever the user actually saw it stop, not jump.
+          if (clampToTarget) first.video.currentTime = Math.min(targetSeconds, first.video.duration || targetSeconds);
+          first.video.pause();
+          first.video.playbackRate = 1;
+        }
+        // Without this, the very next raf()/read() tick would compute
+        // target from actual scroll position (still ~0) and yank the video
+        // straight back to frame 0 — a full rewind, not a "stop". Anchoring
+        // scroll position 0 to the fraction it actually paused at (and
+        // matching `cur` so there's nothing to lerp away from) makes
+        // scroll-scrub continue from here instead of restarting.
+        if (first.video && first.video.duration) {
+          first.introFloor = clamp(first.video.currentTime / first.video.duration, 0, 0.98);
+          first.cur = first.introFloor;
+        }
+      } catch {
+        /* noop */
+      }
+      window.removeEventListener("scroll", onScrollDuringIntro);
+      // read() is otherwise only ever called from a scroll/layout event —
+      // without this, the hint would stay hidden until the user's first
+      // scroll tick instead of appearing the instant playback stops.
+      read();
+    };
+    // Video-time-based, not a wall-clock timer — "stop at 1.5s of the clip's
+    // own timing" should hold regardless of playbackRate. Polled per-frame
+    // (not `timeupdate`, which fires too coarsely to catch the target
+    // precisely) so the clamp above only ever needs to correct a
+    // sub-frame's worth of drift.
+    const pollIntro = () => {
+      if (!introActive) return;
+      if (first.video && first.video.currentTime >= targetSeconds) {
+        endIntro(true);
+        return;
+      }
+      introRaf = requestAnimationFrame(pollIntro);
+    };
+    introRaf = requestAnimationFrame(pollIntro);
+    const onScrollDuringIntro = () => endIntro(false);
+    window.addEventListener("scroll", onScrollDuringIntro, { passive: true, once: true });
+  }
+
   let vh = window.innerHeight,
     stageX = 0,
     totalW = 0,
@@ -312,6 +420,7 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
         v.addEventListener("loadedmetadata", () => {
           s.ready = true;
           read();
+          if (s === SEGMENTS[0]) tryStartAutoIntro();
         });
         v.addEventListener(
           "seeked",
@@ -321,10 +430,16 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
           { once: true }
         );
         v.addEventListener("loadeddata", () => {
-          try {
-            v.pause();
-          } catch {
-            /* noop */
+          // Don't undo the auto-intro's own play() — this handler normally
+          // keeps every freshly-loaded clip paused/static until scroll-scrub
+          // takes over, but segment 0 mid-auto-intro is deliberately playing
+          // itself natively.
+          if (!(introActive && s === SEGMENTS[0])) {
+            try {
+              v.pause();
+            } catch {
+              /* noop */
+            }
           }
           if (userReady) primeVideo(v);
         });
@@ -347,7 +462,13 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
       const s = SEGMENTS[i];
       if (y > s.start - 1.6 * vh && y < s.end + 1.6 * vh) loadClip(s);
       const local = clamp((y - s.start) / (s.end - s.start), 0, 1);
-      s.target = s.linger ? lingerEase(local, s.linger) : local;
+      // linger first (guaranteed f(0)=0, f(1)=1 on the raw 0..1 scroll
+      // fraction), THEN rescale into the introFloor..1 range — the other
+      // order (rescale first, then linger) breaks that f(0)=0 guarantee,
+      // since lingerEase(introFloor, L) != introFloor for L>0, which
+      // reintroduced exactly the rewind/jump introFloor exists to prevent.
+      const eased = s.linger ? lingerEase(local, s.linger) : local;
+      s.target = s.introFloor ? s.introFloor + (1 - s.introFloor) * eased : eased;
       let outside = 0;
       if (y < s.start) outside = s.start - y;
       else if (y > s.end) outside = y - s.end;
@@ -406,7 +527,14 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
       container.style.setProperty("--sw-accent", SECTIONS[near].accent || "");
     }
     scrollbarFill.style.transform = `scaleX(${clamp((y - base) / (totalW * vh))})`;
-    hint.style.opacity = String(clamp(1 - y / (0.5 * vh)));
+    // Hidden for the auto-intro's own duration (the clip is playing itself,
+    // not asking to be scrolled yet). Once it stops, stays at full opacity
+    // for this instance's ENTIRE scroll range — not just a fade within the
+    // first half-viewport of scroll — and only fades out over the final
+    // stretch as the whole section is actually finishing.
+    const distFromEnd = base + totalW * vh - y;
+    const hintFadeWindow = 0.6 * vh;
+    hint.style.opacity = introActive ? "0" : String(clamp(distFromEnd / hintFadeWindow));
     if (particles) particles.style.transform = `translate3d(0, ${-y * 0.05}px, 0)`;
     ticking = false;
   }
@@ -416,6 +544,7 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
     const eps = isMobile() ? 0.02 : 0.008;
     for (let i = 0; i < NSEG; i++) {
       const s = SEGMENTS[i];
+      if (introActive && s === SEGMENTS[0]) continue; // playing natively — don't fight it with scroll-scrub
       if (!s.hasClip || !s.ready || !s.video) continue;
       if (s.video.seeking) continue;
       if (!s.visible && Math.abs(s.cur - s.target) < 0.002) continue;
@@ -505,25 +634,29 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
     return h;
   }
 
-  return () => {
-    destroyed = true;
-    cleanupFns.forEach((fn) => fn());
-    SEGMENTS.forEach((s) => {
-      if (s.video) {
-        try {
-          URL.revokeObjectURL(s.video.src);
-        } catch {
-          /* noop */
+  return {
+    startAutoIntro,
+    destroy: () => {
+      destroyed = true;
+      cleanupFns.forEach((fn) => fn());
+      SEGMENTS.forEach((s) => {
+        if (s.video) {
+          try {
+            URL.revokeObjectURL(s.video.src);
+          } catch {
+            /* noop */
+          }
         }
-      }
-    });
-    // Remove every top-level node this call appended to `container` — without
-    // this, a remount (React StrictMode's dev-only double-invoke, Fast
-    // Refresh, or any real unmount/remount) stacks a second full copy of the
-    // topbar/copylayer/route rail on top of the first instead of replacing
-    // it, since container.appendChild() never clears existing children.
-    [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach((n) => n.remove());
-    container.classList.remove("sw-root");
+      });
+      // Remove every top-level node this call appended to `container` —
+      // without this, a remount (React StrictMode's dev-only double-invoke,
+      // Fast Refresh, or any real unmount/remount) stacks a second full copy
+      // of the topbar/copylayer/route rail on top of the first instead of
+      // replacing it, since container.appendChild() never clears existing
+      // children.
+      [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach((n) => n.remove());
+      container.classList.remove("sw-root");
+    },
   };
 }
 

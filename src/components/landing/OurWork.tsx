@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform, useSpring } from "motion/react";
-import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useLayoutEffect, useRef, useState } from "react";
 import workAtlas from "@/assets/work-atlas.jpg";
 import workMeridian from "@/assets/work-meridian.jpg";
 import workHarborline from "@/assets/work-harborline.jpg";
@@ -11,49 +11,93 @@ const WORK = [
   {
     img: workAtlas,
     client: "Healthcare · Patient Portal",
-    title: "Atlas Health — a calmer way to manage care",
+    title: "Atlas Health",
+    caption: "A calmer way to manage care, built for patients and clinicians alike.",
     meta: ["React", "Node", "HIPAA-ready"],
   },
   {
     img: workMeridian,
     client: "Finance · Investor Platform",
-    title: "Meridian Capital — data-dense made effortless",
+    title: "Meridian Capital",
+    caption: "A precise, data-dense product made to feel effortless.",
     meta: ["Next-gen data", "Realtime", "AWS"],
   },
   {
     img: workHarborline,
     client: "Logistics · Operations Dashboard",
-    title: "Harborline — fleet visibility, rebuilt from the ground up",
+    title: "Harborline",
+    caption: "Real-time visibility across a fleet, redesigned from the ground up.",
     meta: ["Maps", "Realtime", "Azure"],
   },
   {
     img: workCivica,
     client: "Government · Citizen Services",
-    title: "Civica Council Services — public sector that feels modern",
+    title: "Civica Council Services",
+    caption: "A public-sector portal that finally feels like a modern product.",
     meta: ["Accessibility", "GDS", "GOV.UK"],
   },
   {
     img: workNorthfield,
     client: "Retail · Commerce Platform",
-    title: "Northfield Retail — an editorial storefront built to move fast",
+    title: "Northfield Retail",
+    caption: "An editorial storefront built to move fast without losing polish.",
     meta: ["Headless", "Next.js", "Stripe"],
   },
 ];
 
+/**
+ * Pinned horizontal-scroll gallery — same sticky-pin + scroll-driven x-track
+ * mechanic as Sections.tsx's Process (proven pattern in this codebase),
+ * applied to the work cards instead of process steps. Matches the
+ * interaction on techpotam-landing's (5173) "Our Work Speaks" section —
+ * cards changing on scroll via parallax inside a pinned section — reskinned
+ * to this project's amber/teal theme rather than porting its own tokens.
+ *
+ * The track travels an exact pixel distance (trackWidth - viewportWidth,
+ * the same calculation 5173's own GSAP version used), not an approximated
+ * percentage — a fixed percentage either overshoots into dead scroll space
+ * after the last card or undershoots and never fully reveals it. The
+ * wrapper's own height is set to match that same distance 1:1
+ * (100vh + distance, not a fixed guess like h-[320vh]) so the pinned
+ * scroll range's length always equals exactly what the track needs — the
+ * last card finishes arriving exactly as the pin releases, continuing
+ * straight into the next section with no dead scroll either way.
+ */
 export function OurWork() {
-  return (
-    <section id="work" className="relative py-32">
-      <div className="mx-auto mb-16 max-w-6xl px-6">
-        <SectionLabel>Selected work</SectionLabel>
-        <h2 className="mt-6 max-w-2xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">
-          Our Work <span className="text-ember">Speaks</span>.
-        </h2>
-      </div>
+  const ref = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [distance, setDistance] = useState(0);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const x = useTransform(scrollYProgress, [0, 1], [0, -distance]);
 
-      <div className="space-y-24">
-        {WORK.map((w, i) => (
-          <WorkCard key={w.title} {...w} index={i} />
-        ))}
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (trackRef.current) setDistance(Math.max(0, trackRef.current.scrollWidth - window.innerWidth));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  return (
+    <section id="work" ref={ref} className="relative" style={{ height: distance ? `calc(100vh + ${distance}px)` : "100vh" }}>
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="mx-auto mb-12 w-full max-w-6xl px-6">
+          <SectionLabel>Selected work</SectionLabel>
+          <h2 className="mt-6 max-w-2xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">
+            Our Work <span className="text-ember">Speaks</span>.
+          </h2>
+        </div>
+
+        <motion.div
+          ref={trackRef}
+          style={{ x }}
+          className="flex gap-6 pl-6 pr-6 md:pl-[max(1.5rem,calc((100vw-72rem)/2))] md:pr-[max(1.5rem,calc((100vw-72rem)/2))]"
+        >
+          {WORK.map((w, i) => (
+            <WorkCard key={w.title} {...w} index={i} />
+          ))}
+        </motion.div>
       </div>
     </section>
   );
@@ -63,61 +107,45 @@ function WorkCard({
   img,
   client,
   title,
+  caption,
   meta,
   index,
 }: {
   img: string;
   client: string;
   title: string;
+  caption: string;
   meta: string[];
   index: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 24, mass: 0.4 });
-
-  const rotateX = useTransform(smooth, [0, 0.5, 1], [12, 0, -8]);
-  const rotateZ = useTransform(smooth, [0, 1], [index % 2 ? 2 : -2, 0]);
-  const scale = useTransform(smooth, [0, 0.5, 1], [0.88, 1, 0.94]);
-  const imgY = useTransform(smooth, [0, 1], ["-12%", "12%"]);
-  const glow = useTransform(smooth, [0, 0.5, 1], [0, 0.7, 0]);
-
   return (
-    <div ref={ref} className="perspective-scene mx-auto max-w-6xl px-6">
-      <motion.article
-        style={{ rotateX, rotateZ, scale, transformStyle: "preserve-3d" }}
-        className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-deep)]"
-      >
-        <motion.div
-          style={{ opacity: glow }}
-          className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(80%_60%_at_50%_0%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)]"
-          aria-hidden
-        />
-        <div className="relative h-[52vh] min-h-[320px] overflow-hidden">
-          <motion.img
-            src={img}
-            alt={title}
-            loading="lazy"
-            width={1200}
-            height={900}
-            style={{ y: imgY, scale: 1.25 }}
-            className="h-full w-full object-cover"
-          />
-        </div>
-        <div className="relative z-20 flex flex-wrap items-end justify-between gap-6 border-t border-border bg-card/80 p-8 backdrop-blur">
-          <div>
-            <p className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-primary">{client}</p>
-            <h3 className="mt-3 max-w-xl text-2xl font-medium md:text-3xl">{title}</h3>
-          </div>
-          <ul className="flex flex-wrap gap-2">
-            {meta.map((m) => (
-              <li key={m} className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">
-                {m}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </motion.article>
-    </div>
+    <article className="group relative aspect-[4/5] w-[80vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-card md:aspect-[16/10] md:w-[46vw]">
+      <img
+        src={img}
+        alt={title}
+        loading="lazy"
+        width={1200}
+        height={900}
+        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent" />
+
+      <span className="absolute right-6 top-6 font-mono text-xs text-primary/80">{String(index + 1).padStart(2, "0")}</span>
+
+      <div className="absolute inset-x-0 bottom-0 p-8">
+        <p className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-primary">{client}</p>
+        <h3 className="mt-3 text-2xl font-medium md:text-3xl">{title}</h3>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+          {caption}
+        </p>
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {meta.map((m) => (
+            <li key={m} className="rounded-full border border-border bg-background/40 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
+              {m}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </article>
   );
 }

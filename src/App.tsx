@@ -33,6 +33,14 @@ function App() {
     }
   });
 
+  // Gates the hero's auto-intro (see Hero.tsx/scrub-engine.ts): if there's no
+  // loader to wait for (intro already seen this session), the hero can start
+  // its own auto-intro immediately. Otherwise it waits for Loader's
+  // onRevealed — fired only once the loader's exit animation has fully
+  // finished, not when it merely starts — so the slomo playback begins right
+  // as the hero actually becomes visible, not while still hidden behind it.
+  const [heroReady, setHeroReady] = useState(() => !showIntro);
+
   return (
     <main id="top" className="relative bg-background">
       {showIntro && (
@@ -44,12 +52,13 @@ function App() {
               /* noop */
             }
           }}
+          onRevealed={() => setHeroReady(true)}
         />
       )}
       <CursorField />
       <Nav />
 
-      <Hero />
+      <Hero autoIntroReady={heroReady} />
 
       <Marquee />
       <SceneEnter>
@@ -59,9 +68,7 @@ function App() {
       </SceneEnter>
 
       <SceneEnter>
-        <ReactiveTilt strength={4}>
-          <OurWork />
-        </ReactiveTilt>
+        <OurWork />
       </SceneEnter>
 
       <SceneEnter>
