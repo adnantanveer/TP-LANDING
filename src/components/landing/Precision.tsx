@@ -71,7 +71,10 @@ const CAPABILITIES = [
 
 export function Precision() {
   return (
-    <section id="precision" className="relative py-32">
+    <section
+      id="precision"
+      className="relative py-32 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+    >
       <div className="mx-auto max-w-6xl px-6">
         <SectionLabel>Capabilities</SectionLabel>
         <h2 className="mt-6 max-w-2xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">

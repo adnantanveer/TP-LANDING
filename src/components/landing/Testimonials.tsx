@@ -33,7 +33,11 @@ export function Testimonials() {
   const p = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 });
 
   return (
-    <section id="testimonials" ref={ref} className="relative h-[280vh]">
+    <section
+      id="testimonials"
+      ref={ref}
+      className="relative h-[280vh] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+    >
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6">
         <div className="mb-16 text-center">
           <SectionLabel>In their words</SectionLabel>

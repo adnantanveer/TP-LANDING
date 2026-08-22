@@ -32,7 +32,7 @@ export function CursorField() {
     <div className="pointer-events-none fixed inset-0 z-50" aria-hidden>
       <motion.div
         style={{ x: gx, y: gy }}
-        className="absolute -left-[22rem] -top-[22rem] h-[44rem] w-[44rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_12%,transparent),transparent)] mix-blend-screen"
+        className="absolute -left-[9rem] -top-[9rem] h-[18rem] w-[18rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--primary)_25%,transparent),transparent)]"
       />
       <motion.div
         style={{ x: rx, y: ry }}

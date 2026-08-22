@@ -295,14 +295,26 @@
 
 /* Release a scroll-world instance's viewport-fixed layers (copy/route/hint/
    scrollbar) once its own scroll track has passed — ScrollWorldMount toggles
-   `sw-done` via IntersectionObserver-style scroll math. .sw-stage/.sw-sky
-   are deliberately left alone: the engine already fades each scene's own
-   opacity to 0 tied to scroll position; forcing them off here would hard-cut
-   a mid-crossfade. */
+   `sw-done` via IntersectionObserver-style scroll math. .sw-stage is left
+   alone: the engine already fades each scene's own opacity to 0 tied to
+   scroll position; forcing it off here would hard-cut a mid-crossfade. */
 .sw-done .sw-copylayer,
 .sw-done .sw-route,
 .sw-done .sw-hint,
 .sw-done .sw-scrollbar {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* .sw-sky IS safe to release once sw-done fires (unlike the layers above,
+   it isn't part of any crossfade — it's a static solid-background
+   position:fixed backdrop, always fully opaque). Left on, it permanently
+   blankets the whole page — including the site-wide CosmicDustBackground
+   canvas behind it — for every section below the hero, not just while the
+   hero itself is on screen. */
+.sw-done .sw-sky {
   opacity: 0 !important;
   visibility: hidden;
   pointer-events: none;

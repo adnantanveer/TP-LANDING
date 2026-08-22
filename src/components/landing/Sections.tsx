@@ -44,7 +44,11 @@ export function Process() {
   const x = useTransform(scrollYProgress, [0, 1], ["2%", "-62%"]);
 
   return (
-    <section id="process" ref={ref} className="relative h-[300vh]">
+    <section
+      id="process"
+      ref={ref}
+      className="relative h-[300vh] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+    >
       <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
         <div className="mx-auto mb-14 w-full max-w-6xl px-6">
           <SectionLabel>How we work</SectionLabel>
@@ -122,7 +126,11 @@ export function Marquee() {
 
 export function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden py-40">
+    <section
+      id="contact"
+      className="relative overflow-hidden py-40 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_85%,transparent)_0%,color-mix(in_oklab,var(--primary)_14%,transparent)_55%,color-mix(in_oklab,var(--background)_88%,transparent)_100%)]"
+    >
+      <div className="pointer-events-none absolute inset-0" style={{ background: "#00000095" }} aria-hidden />
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_100%,color-mix(in_oklab,var(--primary)_20%,transparent),transparent_70%)]"
         aria-hidden
@@ -155,36 +163,209 @@ export function Contact() {
         className="pointer-events-none absolute bottom-[14%] left-[16%] hidden h-20 w-20 object-contain opacity-60 md:block"
       />
 
-      <div className="relative mx-auto max-w-4xl px-6 text-center">
-        <Reveal>
-          <h2 className="text-[clamp(2.2rem,7vw,5rem)] font-semibold leading-[0.98]">
-            Let's build the <span className="text-ember">next one</span> together.
-          </h2>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <p className="mx-auto mt-8 max-w-lg text-muted-foreground">
-            Tell us what you're planning. We'll come back within one working day with a view on
-            scope, timeline and cost.
-          </p>
-        </Reveal>
-        <Reveal delay={0.2}>
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="mailto:hello@techpotam.com"
-              className="rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.04]"
-            >
-              hello@techpotam.com
-            </a>
-            <a
-              href="https://www.techpotam.com/"
-              className="rounded-full border border-border px-8 py-4 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
-            >
-              Book a discovery call
-            </a>
-          </div>
+      <div className="relative mx-auto grid max-w-6xl gap-16 px-6 md:grid-cols-2 md:items-center">
+        <div className="text-left">
+          <Reveal>
+            <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-semibold leading-[0.98]">
+              Let's build the <span className="text-ember">next one</span> together.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-8 max-w-lg text-muted-foreground">
+              Tell us what you're planning. We'll come back within one working day with a view on
+              scope, timeline and cost.
+            </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <div className="mt-12 flex flex-wrap items-center gap-4">
+              <a
+                href="mailto:info@techpotam.com"
+                className="rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.04]"
+              >
+                info@techpotam.com
+              </a>
+              <a
+                href="https://www.techpotam.com/"
+                className="rounded-full border border-border px-8 py-4 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
+              >
+                Book a discovery call
+              </a>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.28}>
+            <div className="mt-10 space-y-5">
+              {CONTACT_DETAILS.map((d) => (
+                <div key={d.label} className="flex items-start gap-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/40 text-primary">
+                    {d.icon}
+                  </span>
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{d.label}</p>
+                    <div className="mt-1 flex items-center gap-2 text-sm text-foreground">
+                      {d.href ? (
+                        <a href={d.href} className="transition-colors hover:text-primary">
+                          {d.value}
+                        </a>
+                      ) : (
+                        <span>{d.value}</span>
+                      )}
+                      {d.whatsapp && (
+                        <a
+                          href={d.whatsapp}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="Chat on WhatsApp"
+                          className="flex h-6 w-6 items-center justify-center rounded-full bg-[#25D366] text-white transition-transform hover:scale-110"
+                        >
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                            <path d="M17.5 14.4c-.3-.1-1.6-.8-1.9-.9-.2-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.6.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.3-.8.8-.8 1.9s.8 2.2 1 2.4c.1.2 1.6 2.5 4 3.5.5.2 1 .4 1.3.5.5.2 1 .1 1.4.1.4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1z" />
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+
+        <Reveal delay={0.15}>
+          <ContactForm />
         </Reveal>
       </div>
     </section>
+  );
+}
+
+const CONTACT_DETAILS = [
+  {
+    label: "Address",
+    value: "C1-301, Sector 16C, Noida, India 201318",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path
+          d="M12 21s7-6.4 7-11.5A7 7 0 0 0 5 9.5C5 14.6 12 21 12 21Z"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    ),
+  },
+  {
+    label: "Call us",
+    value: "+91 99583 37775",
+    href: "tel:+919958337775",
+    whatsapp: "https://wa.me/919958337775",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path
+          d="M6.5 3h2.4l1.2 4-2 1.3a11.5 11.5 0 0 0 5.6 5.6l1.3-2 4 1.2v2.4c0 1-.9 1.8-1.9 1.6-6-1-10.5-5.5-11.5-11.5C5 4.4 5.6 3 6.5 3Z"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    label: "Email us",
+    value: "info@techpotam.com",
+    href: "mailto:info@techpotam.com",
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.6" />
+        <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+];
+
+const BUDGETS = ["Under £10k", "£10k – £25k", "£25k – £75k", "£75k+", "Not sure yet"];
+const COUNTRY_CODES = [
+  { flag: "🇬🇧", code: "+44" },
+  { flag: "🇺🇸", code: "+1" },
+  { flag: "🇦🇪", code: "+971" },
+  { flag: "🇮🇳", code: "+91" },
+  { flag: "🇪🇺", code: "+353" },
+];
+
+const fieldClass =
+  "w-full rounded-xl border border-border bg-background/95 px-5 py-4 text-sm text-foreground placeholder:text-muted-foreground/70 outline-none transition-colors focus:border-primary";
+
+function ChevronDown() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+    >
+      <path d="M2.5 4.5 7 9l4.5-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ContactForm() {
+  return (
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className="space-y-4 rounded-2xl border border-border bg-background/90 p-6 backdrop-blur-md shadow-[var(--shadow-deep)] sm:p-8"
+    >
+      <div className="flex gap-3">
+        <input type="text" name="name" placeholder="Enter your name" required className={fieldClass} />
+        <div className="relative w-[6.5rem] shrink-0">
+          <select
+            name="countryCode"
+            defaultValue="+44"
+            className={`${fieldClass} appearance-none pr-8 text-center`}
+          >
+            {COUNTRY_CODES.map((c) => (
+              <option key={c.code} value={c.code} className="bg-background text-foreground">
+                {c.flag} {c.code}
+              </option>
+            ))}
+          </select>
+          <ChevronDown />
+        </div>
+      </div>
+
+      <input type="email" name="email" placeholder="Enter your email" required className={fieldClass} />
+
+      <div className="relative">
+        <select name="budget" defaultValue="" className={`${fieldClass} appearance-none`}>
+          <option value="" disabled className="bg-background text-muted-foreground">
+            Select your budget
+          </option>
+          {BUDGETS.map((b) => (
+            <option key={b} value={b} className="bg-background text-foreground">
+              {b}
+            </option>
+          ))}
+        </select>
+        <ChevronDown />
+      </div>
+
+      <textarea
+        name="message"
+        placeholder="Enter your message"
+        required
+        rows={5}
+        className={`${fieldClass} resize-none`}
+      />
+
+      <button
+        type="submit"
+        className="w-full rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.02] sm:w-auto"
+      >
+        Submit
+      </button>
+    </form>
   );
 }
 

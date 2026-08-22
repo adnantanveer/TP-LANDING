@@ -61,7 +61,11 @@ export function TechStack() {
   const yShift = useTransform(smooth, [0, 0.5, 1], [120, 0, -60]);
 
   return (
-    <section id="stack" ref={ref} className="relative mx-auto max-w-6xl px-6 py-32">
+    <section
+      id="stack"
+      ref={ref}
+      className="relative mx-auto max-w-6xl px-6 py-32 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+    >
       <div className="perspective-scene">
         <motion.div
           style={{
@@ -78,7 +82,7 @@ export function TechStack() {
               <SectionLabel>Stack we master</SectionLabel>
               <h2 className="mt-5 max-w-xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">
                 A full-spectrum{" "}
-                <span className="text-ember">technology stack</span>, deployed with UK precision.
+                <span className="text-ember">technology stack</span>, deployed with precision.
               </h2>
             </div>
             <p className="max-w-sm text-sm text-muted-foreground">

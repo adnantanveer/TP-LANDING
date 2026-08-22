@@ -58,7 +58,7 @@ export function ScrollWorld() {
 
   return (
     <section ref={ref} className="relative h-[700vh]">
-      <div className="sticky top-0 h-screen overflow-hidden bg-background">
+      <div className="sticky top-0 h-screen overflow-hidden bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_92%,transparent)_0%,color-mix(in_oklab,var(--primary)_14%,transparent)_50%,color-mix(in_oklab,var(--background)_92%,transparent)_100%)]">
         {/* wireframe tunnel */}
         <motion.img
           src={grid}

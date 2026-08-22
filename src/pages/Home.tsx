@@ -7,7 +7,6 @@ import { Services } from "@/components/landing/Services";
 import { OurWork } from "@/components/landing/OurWork";
 import { Precision } from "@/components/landing/Precision";
 import { TechStack } from "@/components/landing/TechStack";
-import { ScrollWorld } from "@/components/landing/ScrollWorld";
 import { UkSection } from "@/components/landing/UkSection";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { Process, Marquee, Contact, Footer } from "@/components/landing/Sections";
@@ -41,7 +40,7 @@ export function Home() {
   const [heroReady, setHeroReady] = useState(() => !showIntro);
 
   return (
-    <main id="top" className="relative bg-background">
+    <main id="top" className="relative">
       {showIntro && (
         <Loader
           onDone={() => {
@@ -77,7 +76,6 @@ export function Home() {
       <SceneEnter>
         <TechStack />
       </SceneEnter>
-      <ScrollWorld />
       <UkSection />
 
       <Testimonials />

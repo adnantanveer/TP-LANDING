@@ -46,7 +46,11 @@ export function Services() {
   const lineHeight = useTransform(scrollYProgress, [0.1, 0.85], ["0%", "100%"]);
 
   return (
-    <section id="services" ref={ref} className="relative mx-auto max-w-6xl px-6 py-32">
+    <section
+      id="services"
+      ref={ref}
+      className="relative mx-auto max-w-6xl px-6 py-32 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+    >
       <div className="mb-20 flex flex-wrap items-end justify-between gap-6">
         <h2 className="max-w-xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">
           Everything a UK team needs, under one roof.

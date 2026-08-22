@@ -80,7 +80,12 @@ export function OurWork() {
   }, []);
 
   return (
-    <section id="work" ref={ref} className="relative" style={{ height: distance ? `calc(100vh + ${distance}px)` : "100vh" }}>
+    <section
+      id="work"
+      ref={ref}
+      className="relative bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+      style={{ height: distance ? `calc(100vh + ${distance}px)` : "100vh" }}
+    >
       <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
         <div className="mx-auto mb-12 w-full max-w-6xl px-6">
           <SectionLabel>Selected work</SectionLabel>
