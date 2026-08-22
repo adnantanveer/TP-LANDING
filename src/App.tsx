@@ -11,7 +11,15 @@ import { CosmicDustBackground } from "@/components/background/CosmicDustBackgrou
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
+    // styles.css sets html{scroll-behavior:smooth} for in-page anchor
+    // scrolling — bypass it here so a route change snaps to top instantly
+    // instead of visibly animating down from wherever the previous page
+    // was scrolled to.
+    const root = document.documentElement;
+    const prevBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
     window.scrollTo(0, 0);
+    root.style.scrollBehavior = prevBehavior;
   }, [pathname]);
   return null;
 }

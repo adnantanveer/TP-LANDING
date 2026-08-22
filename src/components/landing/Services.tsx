@@ -49,27 +49,30 @@ export function Services() {
     <section
       id="services"
       ref={ref}
-      className="relative mx-auto max-w-6xl px-6 py-32 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+      className="relative bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)] py-32"
     >
-      <div className="mb-20 flex flex-wrap items-end justify-between gap-6">
-        <h2 className="max-w-xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">
-          Everything a UK team needs, under one roof.
-        </h2>
-        <p className="max-w-sm text-sm text-muted-foreground">
-          Cross-functional squads embedded with your business — discovery, delivery and long-term
-          support.
-        </p>
-      </div>
-
-      <div className="relative">
-        <div className="absolute left-0 top-0 hidden h-full w-px bg-border md:block">
-          <motion.div style={{ height: lineHeight }} className="w-px bg-primary" />
+      <div className="pointer-events-none absolute inset-0" style={{ background: "#00000090" }} aria-hidden />
+      <div className="relative mx-auto max-w-6xl px-6">
+        <div className="mb-20 flex flex-wrap items-end justify-between gap-6">
+          <h2 className="max-w-xl text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">
+            Everything a UK team needs, under one roof.
+          </h2>
+          <p className="max-w-sm text-sm text-muted-foreground">
+            Cross-functional squads embedded with your business — discovery, delivery and long-term
+            support.
+          </p>
         </div>
 
-        <div className="md:pl-12">
-          {SERVICES.map((s, i) => (
-            <ServiceRow key={s.n} {...s} index={i} />
-          ))}
+        <div className="relative">
+          <div className="absolute left-0 top-0 hidden h-full w-px bg-border md:block">
+            <motion.div style={{ height: lineHeight }} className="w-px bg-primary" />
+          </div>
+
+          <div className="md:pl-12">
+            {SERVICES.map((s, i) => (
+              <ServiceRow key={s.n} {...s} index={i} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -64,9 +64,9 @@ export function TechStack() {
     <section
       id="stack"
       ref={ref}
-      className="relative mx-auto max-w-6xl px-6 py-32 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+      className="relative bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)] py-32"
     >
-      <div className="perspective-scene">
+      <div className="perspective-scene relative mx-auto max-w-6xl px-6">
         <motion.div
           style={{
             rotateX,

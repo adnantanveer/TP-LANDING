@@ -186,6 +186,36 @@
   border-color: color-mix(in oklab, var(--foreground) 55%, transparent) !important;
 }
 
+/* Light theme-matching vignette over the hero video — a soft dark fade at
+   the very top (under the nav) and a soft amber fade at the very bottom
+   (handing off into the page's own black-gold section gradients), both
+   subtle so the video stays the focus. Sits above .sw-stage (z:10, the
+   video) but below .sw-copylayer (z:20, the heading/body text) so it tints
+   the footage without ever dimming the copy. Fixed + viewport-sized like
+   the engine's own overlays, and released via the same sw-done toggle
+   ScrollWorldMount already flips once the hero's scroll track has passed
+   (see the .sw-done .sw-sky rule below) — otherwise it would float over
+   every section for the rest of the page. */
+.hero-world::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--background) 32%, transparent) 0%,
+    transparent 22%,
+    transparent 78%,
+    color-mix(in oklab, var(--primary) 16%, transparent) 100%
+  );
+  transition: opacity 0.4s ease;
+}
+.hero-world.sw-done::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
 /* The engine's topbar ships transparent (fine only over hero video); once it
    persists across sections it needs a permanent glass backing so scrolled
    content doesn't read as illegible fragments behind it. */
