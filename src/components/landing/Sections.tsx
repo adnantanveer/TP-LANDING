@@ -317,12 +317,14 @@ function ContactForm() {
       onSubmit={(e) => e.preventDefault()}
       className="space-y-4 rounded-2xl border border-border bg-background/90 p-6 backdrop-blur-md shadow-[var(--shadow-deep)] sm:p-8"
     >
+      <input type="text" name="name" placeholder="Enter your name" required className={fieldClass} />
+
       <div className="flex gap-3">
-        <input type="text" name="name" placeholder="Enter your name" required className={fieldClass} />
         <div className="relative w-[6.5rem] shrink-0">
           <select
             name="countryCode"
             defaultValue="+44"
+            required
             className={`${fieldClass} appearance-none pr-8 text-center`}
           >
             {COUNTRY_CODES.map((c) => (
@@ -333,12 +335,20 @@ function ContactForm() {
           </select>
           <ChevronDown />
         </div>
+        <input
+          type="tel"
+          name="phone"
+          placeholder="Enter your phone number"
+          required
+          pattern="[0-9 ()+-]{6,}"
+          className={`${fieldClass} flex-1`}
+        />
       </div>
 
       <input type="email" name="email" placeholder="Enter your email" required className={fieldClass} />
 
       <div className="relative">
-        <select name="budget" defaultValue="" className={`${fieldClass} appearance-none`}>
+        <select name="budget" defaultValue="" required className={`${fieldClass} appearance-none`}>
           <option value="" disabled className="bg-background text-muted-foreground">
             Select your budget
           </option>
@@ -355,6 +365,7 @@ function ContactForm() {
         name="message"
         placeholder="Enter your message"
         required
+        minLength={10}
         rows={5}
         className={`${fieldClass} resize-none`}
       />

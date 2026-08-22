@@ -1,49 +1,8 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useLayoutEffect, useRef, useState } from "react";
-import workAtlas from "@/assets/work-atlas.jpg";
-import workMeridian from "@/assets/work-meridian.jpg";
-import workHarborline from "@/assets/work-harborline.jpg";
-import workCivica from "@/assets/work-civica.jpg";
-import workNorthfield from "@/assets/work-northfield.jpg";
+import { Link } from "react-router-dom";
+import { WORK } from "@/data/work";
 import { SectionLabel } from "./primitives";
-
-const WORK = [
-  {
-    img: workAtlas,
-    client: "Healthcare · Patient Portal",
-    title: "Atlas Health",
-    caption: "A calmer way to manage care, built for patients and clinicians alike.",
-    meta: ["React", "Node", "HIPAA-ready"],
-  },
-  {
-    img: workMeridian,
-    client: "Finance · Investor Platform",
-    title: "Meridian Capital",
-    caption: "A precise, data-dense product made to feel effortless.",
-    meta: ["Next-gen data", "Realtime", "AWS"],
-  },
-  {
-    img: workHarborline,
-    client: "Logistics · Operations Dashboard",
-    title: "Harborline",
-    caption: "Real-time visibility across a fleet, redesigned from the ground up.",
-    meta: ["Maps", "Realtime", "Azure"],
-  },
-  {
-    img: workCivica,
-    client: "Government · Citizen Services",
-    title: "Civica Council Services",
-    caption: "A public-sector portal that finally feels like a modern product.",
-    meta: ["Accessibility", "GDS", "GOV.UK"],
-  },
-  {
-    img: workNorthfield,
-    client: "Retail · Commerce Platform",
-    title: "Northfield Retail",
-    caption: "An editorial storefront built to move fast without losing polish.",
-    meta: ["Headless", "Next.js", "Stripe"],
-  },
-];
 
 /**
  * Pinned horizontal-scroll gallery — same sticky-pin + scroll-driven x-track
@@ -109,6 +68,7 @@ export function OurWork() {
 }
 
 function WorkCard({
+  slug,
   img,
   client,
   title,
@@ -116,6 +76,7 @@ function WorkCard({
   meta,
   index,
 }: {
+  slug: string;
   img: string;
   client: string;
   title: string;
@@ -124,7 +85,10 @@ function WorkCard({
   index: number;
 }) {
   return (
-    <article className="group relative aspect-[4/5] w-[80vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-card md:aspect-[16/10] md:w-[46vw]">
+    <Link
+      to={`/work/${slug}`}
+      className="group relative block aspect-[4/5] w-[80vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-card md:aspect-[16/10] md:w-[46vw]"
+    >
       <img
         src={img}
         alt={title}
@@ -149,8 +113,11 @@ function WorkCard({
               {m}
             </li>
           ))}
+          <li className="rounded-full border border-primary/40 px-3 py-1 text-xs text-primary opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+            View case study →
+          </li>
         </ul>
       </div>
-    </article>
+    </Link>
   );
 }
