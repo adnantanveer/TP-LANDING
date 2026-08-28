@@ -177,7 +177,9 @@
   display: none !important;
 }
 .hero-world .sw-hint {
-  display: flex !important;
+  display: block !important;
+}
+.hero-world .sw-hint > span {
   color: var(--foreground) !important;
   font-weight: 600;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.85);
@@ -394,4 +396,32 @@
     color-mix(in oklab, var(--primary) 8%, var(--background)) 84%,
     color-mix(in oklab, var(--primary) 14%, var(--background)) 100%
   );
+}
+
+/* BackgroundRippleEffect (Contact section) — grid cells rebuilt from the
+   idea at ui.aceternity.com/components/background-ripple-effect, retheme
+   to this site's dark/amber palette. Each cell sits at a faint resting
+   border; a ripple briefly brightens both border and fill in amber, with
+   React supplying only the per-cell animation-delay (see the component). */
+.rb-cell {
+  border: 1px solid color-mix(in oklab, var(--primary) 10%, transparent);
+}
+@keyframes rb-ripple {
+  0% {
+    background-color: transparent;
+    border-color: color-mix(in oklab, var(--primary) 10%, transparent);
+  }
+  50% {
+    background-color: color-mix(in oklab, var(--primary) 20%, transparent);
+    border-color: color-mix(in oklab, var(--primary) 55%, transparent);
+  }
+  100% {
+    background-color: transparent;
+    border-color: color-mix(in oklab, var(--primary) 10%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rb-cell {
+    animation: none !important;
+  }
 }

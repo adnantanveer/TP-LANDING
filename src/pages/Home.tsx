@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Loader } from "@/components/landing/Loader";
 import { Nav } from "@/components/landing/Nav";
-import { CursorField, ReactiveTilt } from "@/components/landing/CursorField";
+import { ReactiveTilt } from "@/components/landing/CursorField";
 import { Hero } from "@/components/landing/Hero";
 import { Services } from "@/components/landing/Services";
 import { OurWork } from "@/components/landing/OurWork";
 import { Precision } from "@/components/landing/Precision";
 import { TechStack } from "@/components/landing/TechStack";
-import { UkSection } from "@/components/landing/UkSection";
 import { Testimonials } from "@/components/landing/Testimonials";
-import { Process, Marquee, Contact, Footer } from "@/components/landing/Sections";
+import { Marquee, Contact, Footer } from "@/components/landing/Sections";
 import { SceneEnter } from "@/components/landing/primitives";
 
 const INTRO_SEEN_KEY = "techpotam-intro-seen";
@@ -53,7 +52,6 @@ export function Home() {
           onRevealed={() => setHeroReady(true)}
         />
       )}
-      <CursorField />
       <Nav />
 
       <Hero autoIntroReady={heroReady} />
@@ -76,13 +74,8 @@ export function Home() {
       <SceneEnter>
         <TechStack />
       </SceneEnter>
-      <UkSection />
 
       <Testimonials />
-
-      <SceneEnter>
-        <Process />
-      </SceneEnter>
 
       <SceneEnter>
         <Contact />

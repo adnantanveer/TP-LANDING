@@ -285,12 +285,6 @@ function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-function iconWorldOffset(nx: number, ny: number, w: number, h: number) {
-  const iconH = Math.min(w, h) * 0.32;
-  const iconW = iconH * ICON_ASPECT;
-  return { ox: (nx - 0.5) * iconW, oy: (ny - 0.5) * iconH - h * 0.015 };
-}
-
 function wordWorldOffset(nx: number, ny: number, w: number) {
   const wordW = Math.min(w * 0.7, 640);
   const wordH = wordW / WORDMARK_ASPECT;
@@ -506,46 +500,49 @@ export class LogoMorphEngine {
       if (t < PHASE.DARK_END) {
         continue; // not yet awakened
       } else if (t < PHASE.AWAKEN_END) {
+        // Fly straight from the scattered start to the wordmark target — no
+        // intermediate "TP icon" formation. Was: animate toward
+        // iconWorldOffset() here, hold as the icon through ICON_END, then
+        // bow/flow across to the wordmark through MORPH_END. Removed per
+        // request ("no first animation of tp coming") — particles now
+        // resolve directly into the wordmark, and the two phases below
+        // (still named for the old icon/morph timing so drawOrbs/drawIcons'
+        // and tiltAngle's appearance timing stays unchanged) just continue
+        // holding/settling at that same wordmark target instead of an icon
+        // shape or a bow-path flow between two shapes.
         const local = staggered(t - PHASE.DARK_END, PHASE.AWAKEN_END - PHASE.DARK_END, p.phaseLag);
         const eased = easeApproach(local);
         const startOx = (seededStart(p.seed, 1) - 0.5) * w * 1.1;
         const startOy = (seededStart(p.seed, 2) - 0.5) * h * 1.1;
         const startOz = (seededStart(p.seed, 3) - 0.5) * cfg.depth * 2.4;
-        const target = iconWorldOffset(p.icon.x, p.icon.y, w, h);
+        const target = wordWorldOffset(p.word.x, p.word.y, w);
         ox = lerp(startOx, target.ox, eased);
         oy = lerp(startOy, target.oy, eased);
-        oz = lerp(startOz, p.zLane * cfg.depth * 0.3, eased);
+        oz = lerp(startOz, p.zLane * cfg.depth * 0.15, eased);
         opacity = clamp01(local / 0.25);
+        colorHex = lerpHex(iconHex, wordHex, eased);
       } else if (t < PHASE.ICON_END) {
         const local = staggered(t - PHASE.AWAKEN_END, PHASE.ICON_END - PHASE.AWAKEN_END, p.phaseLag * 0.4);
         const eased = easeSettle(Math.min(local, 1));
-        const target = iconWorldOffset(p.icon.x, p.icon.y, w, h);
+        const target = wordWorldOffset(p.word.x, p.word.y, w);
         const breathe = local > 0.6 ? Math.sin(t * 0.004 + p.seed) * 1.4 : 0;
-        const jitterScale = (local > 0.85 ? 2.2 : 0.4) * cfg.turbulence;
+        const jitterScale = (local > 0.85 ? 1.1 : 0.25) * cfg.turbulence;
         const jitter = organicJitter(p.seed, t);
         ox = target.ox + jitter.x * jitterScale * eased;
         oy = target.oy + breathe + jitter.y * jitterScale * eased;
-        oz = p.zLane * cfg.depth * 0.3;
+        oz = p.zLane * cfg.depth * 0.15;
         opacity = 1;
+        colorHex = wordHex;
       } else if (t < PHASE.MORPH_END) {
         const local = staggered(t - PHASE.ICON_END, PHASE.MORPH_END - PHASE.ICON_END, p.phaseLag);
-        const eased = easeApproach(local);
-        const from = iconWorldOffset(p.icon.x, p.icon.y, w, h);
+        const eased = easeSettle(Math.min(local, 1));
         const to = wordWorldOffset(p.word.x, p.word.y, w);
-        // quadratic bezier bow, perpendicular to the direct path, plus a
-        // toward-camera z bulge — the "flow" instead of a straight dissolve
-        const dx = to.ox - from.ox;
-        const dy = to.oy - from.oy;
-        const dist = Math.hypot(dx, dy) || 1;
-        const nx = -dy / dist;
-        const ny = dx / dist;
-        const bow = p.curveSign * p.curveMag * Math.min(dist * 0.22, 90) * Math.sin(Math.PI * eased);
         const jitter = organicJitter(p.seed, t);
-        ox = lerp(from.ox, to.ox, eased) + nx * bow + jitter.x * cfg.turbulence * (1 - eased) * 6;
-        oy = lerp(from.oy, to.oy, eased) + ny * bow + jitter.y * cfg.turbulence * (1 - eased) * 6;
-        oz = lerp(p.zLane * cfg.depth * 0.3, -cfg.depth * 0.5, Math.sin(Math.PI * eased)) + p.zLane * cfg.depth * 0.15;
+        ox = to.ox + jitter.x * cfg.turbulence * 0.2 * (1 - eased);
+        oy = to.oy + jitter.y * cfg.turbulence * 0.2 * (1 - eased);
+        oz = lerp(p.zLane * cfg.depth * 0.15, p.zLane * cfg.depth * 0.12, eased);
         opacity = 1;
-        colorHex = lerpHex(iconHex, wordHex, eased);
+        colorHex = wordHex;
       } else if (t < PHASE.WORDMARK_END) {
         const local = staggered(t - PHASE.MORPH_END, PHASE.WORDMARK_END - PHASE.MORPH_END, p.phaseLag * 0.3);
         const eased = easeSettle(Math.min(local, 1));

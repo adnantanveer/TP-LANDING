@@ -1,16 +1,15 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Nav } from "@/components/landing/Nav";
-import { CursorField } from "@/components/landing/CursorField";
 import { Footer } from "@/components/landing/Sections";
 import { Reveal, SectionLabel } from "@/components/landing/primitives";
-import { WORK, getWorkBySlug } from "@/data/work";
+import { getWorkBySlug } from "@/data/work";
 
 /**
  * Detail page for a single "Our Work Speaks" project — linked from each
  * card in OurWork.tsx (/work/:slug). Same theme/chrome as the rest of the
- * site (Nav, CursorField, Footer, Reveal/SectionLabel primitives) but no
- * Loader — that cinematic intro is specific to the homepage's first
- * impression, matching the precedent set by ReuseComponent.tsx.
+ * site (Nav, Footer, Reveal/SectionLabel primitives) but no Loader — that
+ * cinematic intro is specific to the homepage's first impression, matching
+ * the precedent set by ReuseComponent.tsx.
  */
 export function CaseStudy() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,12 +17,9 @@ export function CaseStudy() {
 
   if (!project) return <Navigate to="/" replace />;
 
-  const more = WORK.filter((w) => w.slug !== project.slug).slice(0, 3);
-
   return (
     <main className="relative">
-      <CursorField />
-      <Nav />
+      <Nav progressAxis="y" />
 
       {/* hero */}
       <section className="relative overflow-hidden pb-16 pt-32">
@@ -144,38 +140,11 @@ export function CaseStudy() {
         </div>
       </section>
 
-      {/* more work + CTA */}
+      {/* closing CTA */}
       <section className="relative py-28">
         <div className="mx-auto max-w-6xl px-6">
           <Reveal>
-            <SectionLabel>More work</SectionLabel>
-          </Reveal>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            {more.map((w, i) => (
-              <Reveal key={w.slug} delay={0.08 * i}>
-                <Link
-                  to={`/work/${w.slug}`}
-                  className="group block overflow-hidden rounded-2xl border border-border bg-card"
-                >
-                  <img
-                    src={w.img}
-                    alt={w.title}
-                    loading="lazy"
-                    width={800}
-                    height={520}
-                    className="h-40 w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                  <div className="p-5">
-                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-primary">{w.client}</p>
-                    <h3 className="mt-2 font-medium">{w.title}</h3>
-                  </div>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={0.2}>
-            <div className="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-border bg-card p-10">
+            <div className="flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-border bg-card p-10">
               <h3 className="max-w-md text-2xl font-semibold leading-tight">
                 Want a result like this for <span className="text-ember">your product</span>?
               </h3>

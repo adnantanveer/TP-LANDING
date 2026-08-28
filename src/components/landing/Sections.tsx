@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { SectionLabel, Reveal } from "./primitives";
+import { BackgroundRippleEffect } from "./BackgroundRippleEffect";
 import sceneLayers from "@/assets/scene-layers.jpg";
 import sceneRibbon from "@/assets/scene-ribbon.jpg";
 import sceneTerrain from "@/assets/scene-terrain.jpg";
@@ -131,38 +132,11 @@ export function Contact() {
       className="relative overflow-hidden py-40 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_85%,transparent)_0%,color-mix(in_oklab,var(--primary)_14%,transparent)_55%,color-mix(in_oklab,var(--background)_88%,transparent)_100%)]"
     >
       <div className="pointer-events-none absolute inset-0" style={{ background: "#00000095" }} aria-hidden />
+      <BackgroundRippleEffect />
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_100%,color-mix(in_oklab,var(--primary)_20%,transparent),transparent_70%)]"
         aria-hidden
       />
-      <motion.img
-        src={iconTorus}
-        alt=""
-        loading="lazy"
-        aria-hidden
-        animate={{ y: [0, -22, 0], rotate: [0, 12, 0] }}
-        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute left-[6%] top-[18%] hidden h-28 w-28 object-contain opacity-70 md:block"
-      />
-      <motion.img
-        src={iconOrb}
-        alt=""
-        loading="lazy"
-        aria-hidden
-        animate={{ y: [0, 26, 0], rotate: [0, -14, 0] }}
-        transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute right-[8%] top-[26%] hidden h-24 w-24 object-contain opacity-70 md:block"
-      />
-      <motion.img
-        src={iconCube}
-        alt=""
-        loading="lazy"
-        aria-hidden
-        animate={{ y: [0, -18, 0], rotate: [0, -18, 0] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute bottom-[14%] left-[16%] hidden h-20 w-20 object-contain opacity-60 md:block"
-      />
-
       <div className="relative mx-auto grid max-w-6xl gap-16 px-6 md:grid-cols-2 md:items-center">
         <div className="text-left">
           <Reveal>

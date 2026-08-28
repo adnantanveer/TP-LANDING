@@ -87,36 +87,37 @@ function WorkCard({
   return (
     <Link
       to={`/work/${slug}`}
-      className="group relative block aspect-[4/5] w-[80vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-card md:aspect-[16/10] md:w-[46vw]"
+      className="group relative block w-[78vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-300 hover:border-primary/50 md:w-[34vw]"
     >
-      <img
-        src={img}
-        alt={title}
-        loading="lazy"
-        width={1200}
-        height={900}
-        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent" />
-
-      <span className="absolute right-6 top-6 font-mono text-xs text-primary/80">{String(index + 1).padStart(2, "0")}</span>
-
-      <div className="absolute inset-x-0 bottom-0 p-8">
-        <p className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-primary">{client}</p>
-        <h3 className="mt-3 text-2xl font-medium md:text-3xl">{title}</h3>
-        <p className="mt-2 max-w-md text-sm text-muted-foreground opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-          {caption}
-        </p>
-        <ul className="mt-4 flex flex-wrap gap-2">
+      <div className="relative h-44 overflow-hidden">
+        <img
+          src={img}
+          alt={title}
+          loading="lazy"
+          width={1200}
+          height={900}
+          className="h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
+      </div>
+      <div className="p-10 pt-6">
+        <span className="font-mono text-xs text-primary">0{index + 1}</span>
+        <p className="mt-4 font-mono text-[0.7rem] uppercase tracking-[0.3em] text-primary/80">{client}</p>
+        <h3 className="mt-3 text-3xl font-medium">{title}</h3>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{caption}</p>
+        <ul className="mt-6 flex flex-wrap gap-2">
           {meta.map((m) => (
             <li key={m} className="rounded-full border border-border bg-background/40 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
               {m}
             </li>
           ))}
-          <li className="rounded-full border border-primary/40 px-3 py-1 text-xs text-primary opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-            View case study →
-          </li>
         </ul>
+        <div className="mt-10 flex items-center justify-between">
+          <div className="h-px w-full bg-gradient-to-r from-primary/70 to-transparent" />
+          <span className="shrink-0 pl-4 text-xs text-primary opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+            View case study →
+          </span>
+        </div>
       </div>
     </Link>
   );

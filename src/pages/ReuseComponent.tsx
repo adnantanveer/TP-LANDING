@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom";
 import { Nav } from "@/components/landing/Nav";
-import { CursorField } from "@/components/landing/CursorField";
 import { Reliability } from "@/components/landing/Reliability";
 import { ScrollWorld } from "@/components/landing/ScrollWorld";
-import { Footer } from "@/components/landing/Sections";
+import { UkSection } from "@/components/landing/UkSection";
+import { Process, Footer } from "@/components/landing/Sections";
 
 /**
  * Standalone route for sections pulled off the homepage but kept around for
  * reuse elsewhere — Reliability ("Enterprise-grade infrastructure. Every
- * time.") and ScrollWorld ("Scroll into the machine"). No Loader here: that
- * cinematic intro is specific to the homepage's first impression, not every
- * route.
+ * time."), ScrollWorld ("Scroll into the machine"), UkSection ("A delivery
+ * partner that works on British time."), and Process ("A delivery model
+ * built for certainty."). No Loader here: that cinematic intro is specific
+ * to the homepage's first impression, not every route.
  */
 export function ReuseComponent() {
   return (
     <main className="relative">
-      <CursorField />
       <Nav />
 
       <div className="relative z-10 px-6 pt-32">
@@ -29,6 +29,8 @@ export function ReuseComponent() {
 
       <Reliability />
       <ScrollWorld />
+      <UkSection />
+      <Process />
 
       <Footer />
     </main>

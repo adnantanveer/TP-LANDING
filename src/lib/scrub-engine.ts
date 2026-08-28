@@ -72,6 +72,12 @@ export interface ScrollWorldConfig {
   autoIntroSeconds?: number;
   /** Playback rate during the auto-intro window. Default 0.5 (slow motion). */
   autoIntroRate?: number;
+  /** Extra scroll track appended after the last section, in viewport
+   * heights, so its final crossfade/settle fully completes before the pin
+   * releases into whatever comes next. Default 1 (a full viewport height)
+   * — lower it (e.g. 0.3) for an instance where that default reads as a
+   * long dead gap of unchanging content before the next section arrives. */
+  runwayVh?: number;
 }
 
 export interface ScrollWorldControls {
@@ -392,7 +398,7 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
       s.end = base + off * vh;
     });
     totalW = off;
-    track.style.height = totalW * vh + vh + "px";
+    track.style.height = totalW * vh + (config.runwayVh ?? 1) * vh + "px";
     read();
   }
 
@@ -742,11 +748,11 @@ function injectCSS() {
   .sw-route__dot.is-active i{background:var(--sw-accent);transform:scale(1.4);box-shadow:0 0 0 5px color-mix(in srgb,var(--sw-accent) 22%,transparent);}
   .sw-route__label{position:absolute;right:24px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--sw-ink);background:color-mix(in srgb,#fff 85%,transparent);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border:1px solid color-mix(in srgb,var(--sw-accent) 14%,transparent);}
   .sw-route__dot:hover .sw-route__label,.sw-route__dot.is-active .sw-route__label{opacity:1;transform:translateY(-50%) translateX(0);}
-  .sw-hint{--sw-hint-bottom:26px;position:fixed;left:50%;top:50%;z-index:30;transform:translate(-50%,calc(50vh - var(--sw-hint-bottom) - 100%));display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink-soft);transition:opacity .3s,transform .5s cubic-bezier(.22,1,.36,1),font-size .5s ease,gap .5s ease;}
-  .sw-hint--idle{transform:translate(-50%,-50%);font-size:1.05rem;gap:14px;}
-  .sw-hint i{width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);position:relative;transition:width .5s ease,height .5s ease;}
-  .sw-hint--idle i{width:28px;height:42px;}
-  .sw-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
+  .sw-hint{--sw-hint-bottom:26px;position:fixed;inset:0;z-index:30;pointer-events:none;transition:opacity .3s;}
+  .sw-hint>span{position:absolute;left:50%;bottom:calc(var(--sw-hint-bottom) + 44px);transform:translate(-50%,0);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink-soft);white-space:nowrap;transition:bottom .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1),font-size .9s ease;}
+  .sw-hint--idle>span{bottom:50%;transform:translate(-50%,50%);font-size:1.5rem;letter-spacing:.08em;}
+  .sw-hint>i{position:absolute;left:50%;bottom:var(--sw-hint-bottom);transform:translateX(-50%);width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);}
+  .sw-hint>i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
   @keyframes sw-wheel{0%{opacity:0;top:6px}40%{opacity:1}100%{opacity:0;top:17px}}
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
   @media (max-width:860px){
@@ -767,7 +773,7 @@ function injectCSS() {
     .sw-route__dot{width:28px;height:28px;}
     .sw-btn{padding:15px 26px;}
   }
-  @media (prefers-reduced-motion:reduce){ .sw-hint i::after{animation:none;} .sw-hint,.sw-hint i{transition:opacity .3s;} .sw-pt{display:none;} }
+  @media (prefers-reduced-motion:reduce){ .sw-hint i::after{animation:none;} .sw-hint{transition:opacity .3s;} .sw-pt{display:none;} }
   `;
   const style = document.createElement("style");
   style.id = "sw-css";

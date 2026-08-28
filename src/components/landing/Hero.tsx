@@ -37,6 +37,12 @@ const HERO_CONFIG: ScrollWorldConfig = {
   autoIntroSeconds: 1.5,
   autoIntroRate: 0.5, // slow motion
   hint: "Scroll to Experience",
+  // Default runway (a full extra viewport height after the last scene) read
+  // as a long dead gap before Marquee/Services arrived — the "launch" scene
+  // is already fully settled well before that point, so there's nothing new
+  // happening on screen for that whole stretch. Shrunk to a still-enough
+  // cushion for its crossfade to finish without the long empty scroll.
+  runwayVh: 0.3,
   sections: [
     {
       id: "forge",
