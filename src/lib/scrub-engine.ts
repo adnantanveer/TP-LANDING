@@ -222,7 +222,7 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
   const stage = el("div", "sw-stage");
   const copylayer = el("div", "sw-copylayer");
   const route = el("div", "sw-route");
-  const hint = el("div", "sw-hint");
+  const hint = el("div", "sw-hint sw-hint--idle");
   const hintText = el("span");
   hintText.textContent = config.hint || "scroll";
   hint.appendChild(hintText);
@@ -592,14 +592,28 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
 
   seedParticles(particles, reduce || coarse);
 
+  // The hint sits centered (larger, ".sw-hint--idle") whenever the user
+  // isn't actively scrolling, and drops down to its normal corner position
+  // the moment they start — purely based on scroll activity, independent of
+  // the opacity fade above (which still governs overall show/hide). A
+  // scroll event clears the idle state immediately; idle resumes once no
+  // further scroll event has arrived for HINT_IDLE_MS.
+  const HINT_IDLE_MS = 260;
+  let hintIdleTimer: ReturnType<typeof setTimeout> | undefined;
   const onScroll = () => {
+    hint.classList.remove("sw-hint--idle");
+    clearTimeout(hintIdleTimer);
+    hintIdleTimer = setTimeout(() => hint.classList.add("sw-hint--idle"), HINT_IDLE_MS);
     if (!ticking) {
       ticking = true;
       requestAnimationFrame(read);
     }
   };
   window.addEventListener("scroll", onScroll, { passive: true });
-  cleanupFns.push(() => window.removeEventListener("scroll", onScroll));
+  cleanupFns.push(() => {
+    window.removeEventListener("scroll", onScroll);
+    clearTimeout(hintIdleTimer);
+  });
 
   function onResize() {
     if (coarse && window.innerWidth === laidOutW) return;
@@ -728,8 +742,10 @@ function injectCSS() {
   .sw-route__dot.is-active i{background:var(--sw-accent);transform:scale(1.4);box-shadow:0 0 0 5px color-mix(in srgb,var(--sw-accent) 22%,transparent);}
   .sw-route__label{position:absolute;right:24px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--sw-ink);background:color-mix(in srgb,#fff 85%,transparent);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border:1px solid color-mix(in srgb,var(--sw-accent) 14%,transparent);}
   .sw-route__dot:hover .sw-route__label,.sw-route__dot.is-active .sw-route__label{opacity:1;transform:translateY(-50%) translateX(0);}
-  .sw-hint{position:fixed;left:50%;bottom:26px;z-index:30;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink-soft);transition:opacity .3s;}
-  .sw-hint i{width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);position:relative;}
+  .sw-hint{--sw-hint-bottom:26px;position:fixed;left:50%;top:50%;z-index:30;transform:translate(-50%,calc(50vh - var(--sw-hint-bottom) - 100%));display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink-soft);transition:opacity .3s,transform .5s cubic-bezier(.22,1,.36,1),font-size .5s ease,gap .5s ease;}
+  .sw-hint--idle{transform:translate(-50%,-50%);font-size:1.05rem;gap:14px;}
+  .sw-hint i{width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);position:relative;transition:width .5s ease,height .5s ease;}
+  .sw-hint--idle i{width:28px;height:42px;}
   .sw-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
   @keyframes sw-wheel{0%{opacity:0;top:6px}40%{opacity:1}100%{opacity:0;top:17px}}
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
@@ -740,7 +756,7 @@ function injectCSS() {
     .sw-copy{bottom:calc(clamp(56px,12dvh,110px) + env(safe-area-inset-bottom));}
     .sw-copy__title{font-size:clamp(1.9rem,7.5vw,2.7rem);}
     .sw-copy__body{max-width:none;font-size:clamp(.98rem,3.6vw,1.1rem);} .sw-scene__video,.sw-scene__still{object-position:center 46%;}
-    .sw-hint{bottom:calc(20px + env(safe-area-inset-bottom));}
+    .sw-hint{--sw-hint-bottom:calc(20px + env(safe-area-inset-bottom));}
     .sw-route{gap:16px;right:6px;} .sw-route__label{display:none;}
   }
   @media (max-width:860px) and (orientation:portrait){
@@ -751,7 +767,7 @@ function injectCSS() {
     .sw-route__dot{width:28px;height:28px;}
     .sw-btn{padding:15px 26px;}
   }
-  @media (prefers-reduced-motion:reduce){ .sw-hint i::after{animation:none;} .sw-pt{display:none;} }
+  @media (prefers-reduced-motion:reduce){ .sw-hint i::after{animation:none;} .sw-hint,.sw-hint i{transition:opacity .3s;} .sw-pt{display:none;} }
   `;
   const style = document.createElement("style");
   style.id = "sw-css";

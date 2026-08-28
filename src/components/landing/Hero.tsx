@@ -36,7 +36,7 @@ const HERO_CONFIG: ScrollWorldConfig = {
   connScroll: 0.9,
   autoIntroSeconds: 1.5,
   autoIntroRate: 0.5, // slow motion
-  hint: "Scroll to dive in deep",
+  hint: "Scroll to Experience",
   sections: [
     {
       id: "forge",

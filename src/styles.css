@@ -360,6 +360,12 @@
   display: none !important;
 }
 
+/* Scene-indicator rail ("The Forge" / "The Core" / "Launch" dots + labels) —
+   commented out per request, not deleted: uncomment to bring it back. */
+.hero-world .sw-route {
+  display: none !important;
+}
+
 /* An embedded (mid-page) instance contributes only its video scene + copy —
    its topbar/route-rail/hint/progress-bar would be a redundant duplicate of
    the hero's, so hidden unconditionally. .sw-sky is the critical one: it's
