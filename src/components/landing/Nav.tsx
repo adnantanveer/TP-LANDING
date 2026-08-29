@@ -1,6 +1,23 @@
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL as string;
+
+type MenuLink = { label: string; href: string; active: boolean };
+type MenuContent = { links: MenuLink[]; ctaLabel: string; ctaHref: string; ctaActive: boolean };
+
+const DEFAULT_MENU: MenuContent = {
+  links: [
+    { href: "#services", label: "Services", active: true },
+    { href: "#work", label: "Work", active: true },
+    { href: "#precision", label: "Capabilities", active: true },
+    { href: "#testimonials", label: "Testimonials", active: true },
+  ],
+  ctaLabel: "Contact",
+  ctaHref: "#contact",
+  ctaActive: true,
+};
+
 /**
  * The one persistent header for the whole page — anchors through the actual
  * sections below, not just the hero's own internal scroll-world scenes
@@ -17,6 +34,14 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
   const [visible, setVisible] = useState(false);
+  const [menu, setMenu] = useState<MenuContent>(DEFAULT_MENU);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/menu`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => data && setMenu(data))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const hero = document.querySelector<HTMLElement>(".hero-world");
@@ -66,12 +91,7 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
     };
   }, []);
 
-  const links = [
-    { href: "#services", label: "Services" },
-    { href: "#work", label: "Work" },
-    { href: "#precision", label: "Capabilities" },
-    { href: "#testimonials", label: "Testimonials" },
-  ];
+  const activeLinks = menu.links.filter((l) => l.active);
 
   return (
     <>
@@ -87,7 +107,7 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
             techpotam<span className="text-primary">.</span>
           </a>
           <nav className="hidden gap-2 rounded-full border border-border bg-foreground/5 p-1.5 backdrop-blur-md md:flex">
-            {links.map((l) => (
+            {activeLinks.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
@@ -97,12 +117,14 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
               </a>
             ))}
           </nav>
-          <a
-            href="#contact"
-            className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary"
-          >
-            Contact
-          </a>
+          {menu.ctaActive && (
+            <a
+              href={menu.ctaHref}
+              className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary"
+            >
+              {menu.ctaLabel}
+            </a>
+          )}
         </div>
         {progressAxis === "x" && (
           <motion.div style={{ scaleX: progress }} className="h-px origin-left bg-primary" />

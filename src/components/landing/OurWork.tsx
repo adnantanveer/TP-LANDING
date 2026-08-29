@@ -1,8 +1,11 @@
 import { motion, useScroll, useTransform } from "motion/react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { WORK } from "@/data/work";
 import { SectionLabel } from "./primitives";
+
+const API_URL = import.meta.env.VITE_API_URL as string;
+
+type WorkItem = { slug: string; img: string; client: string; title: string; caption: string; meta: string[] };
 
 /**
  * Pinned horizontal-scroll gallery — same sticky-pin + scroll-driven x-track
@@ -26,8 +29,16 @@ export function OurWork() {
   const ref = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [distance, setDistance] = useState(0);
+  const [work, setWork] = useState<WorkItem[]>([]);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0, 1], [0, -distance]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/case-studies`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => data && setWork(data.caseStudies))
+      .catch(() => {});
+  }, []);
 
   useLayoutEffect(() => {
     const measure = () => {
@@ -36,7 +47,7 @@ export function OurWork() {
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, []);
+  }, [work]);
 
   return (
     <section
@@ -58,7 +69,7 @@ export function OurWork() {
           style={{ x }}
           className="flex gap-6 pl-6 pr-6 md:pl-[max(1.5rem,calc((100vw-72rem)/2))] md:pr-[max(1.5rem,calc((100vw-72rem)/2))]"
         >
-          {WORK.map((w, i) => (
+          {work.map((w, i) => (
             <WorkCard key={w.title} {...w} index={i} />
           ))}
         </motion.div>

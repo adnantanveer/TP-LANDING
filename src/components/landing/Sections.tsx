@@ -1,7 +1,11 @@
 import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { SectionLabel, Reveal } from "./primitives";
 import { BackgroundRippleEffect } from "./BackgroundRippleEffect";
+import { getRecaptchaConfig, getRecaptchaTokenV3, type RecaptchaConfig } from "@/lib/recaptcha";
+import { RecaptchaCheckbox } from "@/components/RecaptchaCheckbox";
+import { COUNTRY_CODES } from "@/lib/countryCodes";
 import sceneLayers from "@/assets/scene-layers.jpg";
 import sceneRibbon from "@/assets/scene-ribbon.jpg";
 import sceneTerrain from "@/assets/scene-terrain.jpg";
@@ -11,38 +15,47 @@ import iconCube from "@/assets/icon-cube.png";
 import iconTorus from "@/assets/icon-torus.png";
 import iconRocket from "@/assets/icon-rocket.png";
 
-const STEPS = [
-  {
-    k: "Discover",
-    img: sceneLayers,
-    icon: iconCube,
-    d: "Two weeks of workshops, technical audit and a costed delivery roadmap you own outright.",
-  },
-  {
-    k: "Design",
-    img: sceneRibbon,
-    icon: iconOrb,
-    d: "Prototypes and design systems validated with your users before a line of production code.",
-  },
-  {
-    k: "Build",
-    img: studio,
-    icon: iconTorus,
-    d: "Two-week sprints, demo every Friday, working software in your environment from week three.",
-  },
-  {
-    k: "Scale",
-    img: sceneTerrain,
-    icon: iconRocket,
-    d: "Monitoring, SLAs and an embedded squad that keeps shipping long after launch.",
-  },
+// Images/icons are fixed art, not admin-editable — only heading/item
+// title+body come from the CMS (see /api/content/process), matched to
+// these 4 slots by index.
+const STEP_ART = [
+  { img: sceneLayers, icon: iconCube },
+  { img: sceneRibbon, icon: iconOrb },
+  { img: studio, icon: iconTorus },
+  { img: sceneTerrain, icon: iconRocket },
 ];
 
+const DEFAULT_PROCESS_CONTENT = {
+  visible: true,
+  heading: "A delivery model built for certainty.",
+  items: [
+    { title: "Discover", body: "Two weeks of workshops, technical audit and a costed delivery roadmap you own outright." },
+    { title: "Design", body: "Prototypes and design systems validated with your users before a line of production code." },
+    { title: "Build", body: "Two-week sprints, demo every Friday, working software in your environment from week three." },
+    { title: "Scale", body: "Monitoring, SLAs and an embedded squad that keeps shipping long after launch." },
+  ],
+};
 
 export function Process() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0, 1], ["2%", "-62%"]);
+  const [content, setContent] = useState(DEFAULT_PROCESS_CONTENT);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/process`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => data && setContent(data))
+      .catch(() => {});
+  }, []);
+
+  const steps = content.items.map((item, i) => ({
+    k: item.title,
+    d: item.body,
+    ...STEP_ART[i],
+  }));
+
+  if (!content.visible) return null;
 
   return (
     <section
@@ -54,12 +67,12 @@ export function Process() {
         <div className="mx-auto mb-14 w-full max-w-6xl px-6">
           <SectionLabel>How we work</SectionLabel>
           <h2 className="mt-6 max-w-xl text-[clamp(2rem,5vw,3.4rem)] font-semibold leading-[1.02]">
-            A delivery model built for certainty.
+            {content.heading}
           </h2>
         </div>
 
         <motion.div style={{ x }} className="flex gap-8 pl-6 md:pl-[max(1.5rem,calc((100vw-72rem)/2))]">
-          {STEPS.map((s, i) => (
+          {steps.map((s, i) => (
             <article
               key={s.k}
               className="group relative w-[78vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-card md:w-[34vw]"
@@ -96,15 +109,32 @@ export function Process() {
   );
 }
 
+const DEFAULT_MARQUEE_ITEMS = [
+  "Web platforms",
+  "Mobile apps",
+  "AI systems",
+  "Cloud migration",
+  "Design systems",
+  "Data engineering",
+];
+
 export function Marquee() {
-  const items = [
-    "Web platforms",
-    "Mobile apps",
-    "AI systems",
-    "Cloud migration",
-    "Design systems",
-    "Data engineering",
-  ];
+  const [visible, setVisible] = useState(true);
+  const [items, setItems] = useState<string[]>(DEFAULT_MARQUEE_ITEMS);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/marquee`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setVisible(data.visible ?? true);
+        if (Array.isArray(data.items) && data.items.length > 0) setItems(data.items);
+      })
+      .catch(() => {});
+  }, []);
+
+  if (!visible) return null;
+
   return (
     <div className="relative overflow-hidden border-y border-border py-6">
       <motion.div
@@ -125,7 +155,77 @@ export function Marquee() {
   );
 }
 
+type ContactDetail = { type: "address" | "phone" | "email"; label: string; value: string; href?: string; whatsapp?: string };
+type ContactContent = {
+  visible: boolean;
+  heading: string;
+  body: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+  details: ContactDetail[];
+};
+
+const DEFAULT_CONTACT_CONTENT: ContactContent = {
+  visible: true,
+  heading: "Let's build the next one together.",
+  body: "Tell us what you're planning. We'll come back within one working day with a view on scope, timeline and cost.",
+  primaryCtaLabel: "info@techpotam.com",
+  primaryCtaHref: "mailto:info@techpotam.com",
+  secondaryCtaLabel: "Book a discovery call",
+  secondaryCtaHref: "https://www.techpotam.com/",
+  details: [
+    { type: "address", label: "Address", value: "C1-301, Sector 16C, Noida, India 201318" },
+    { type: "phone", label: "Call us", value: "+91 99583 37775", href: "tel:+919958337775", whatsapp: "https://wa.me/919958337775" },
+    { type: "email", label: "Email us", value: "info@techpotam.com", href: "mailto:info@techpotam.com" },
+  ],
+};
+
+// Icons are fixed art per detail type, not admin-editable — only
+// label/value/href/whatsapp come from the CMS (see /api/content/contact).
+const DETAIL_ICONS: Record<ContactDetail["type"], ReactNode> = {
+  address: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 21s7-6.4 7-11.5A7 7 0 0 0 5 9.5C5 14.6 12 21 12 21Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  ),
+  phone: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M6.5 3h2.4l1.2 4-2 1.3a11.5 11.5 0 0 0 5.6 5.6l1.3-2 4 1.2v2.4c0 1-.9 1.8-1.9 1.6-6-1-10.5-5.5-11.5-11.5C5 4.4 5.6 3 6.5 3Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  email: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+};
+
 export function Contact() {
+  const [content, setContent] = useState<ContactContent>(DEFAULT_CONTACT_CONTENT);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/contact`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => data && setContent(data))
+      .catch(() => {});
+  }, []);
+
+  if (!content.visible) return null;
+
   return (
     <section
       id="contact"
@@ -140,39 +240,34 @@ export function Contact() {
       <div className="relative mx-auto grid max-w-6xl gap-16 px-6 md:grid-cols-2 md:items-center">
         <div className="text-left">
           <Reveal>
-            <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-semibold leading-[0.98]">
-              Let's build the <span className="text-ember">next one</span> together.
-            </h2>
+            <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-semibold leading-[0.98]">{content.heading}</h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-8 max-w-lg text-muted-foreground">
-              Tell us what you're planning. We'll come back within one working day with a view on
-              scope, timeline and cost.
-            </p>
+            <p className="mt-8 max-w-lg text-muted-foreground">{content.body}</p>
           </Reveal>
           <Reveal delay={0.2}>
             <div className="mt-12 flex flex-wrap items-center gap-4">
               <a
-                href="mailto:info@techpotam.com"
+                href={content.primaryCtaHref}
                 className="rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.04]"
               >
-                info@techpotam.com
+                {content.primaryCtaLabel}
               </a>
               <a
-                href="https://www.techpotam.com/"
+                href={content.secondaryCtaHref}
                 className="rounded-full border border-border px-8 py-4 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
               >
-                Book a discovery call
+                {content.secondaryCtaLabel}
               </a>
             </div>
           </Reveal>
 
           <Reveal delay={0.28}>
             <div className="mt-10 space-y-5">
-              {CONTACT_DETAILS.map((d) => (
+              {content.details.map((d) => (
                 <div key={d.label} className="flex items-start gap-4">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/40 text-primary">
-                    {d.icon}
+                    {DETAIL_ICONS[d.type]}
                   </span>
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{d.label}</p>
@@ -213,59 +308,9 @@ export function Contact() {
   );
 }
 
-const CONTACT_DETAILS = [
-  {
-    label: "Address",
-    value: "C1-301, Sector 16C, Noida, India 201318",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path
-          d="M12 21s7-6.4 7-11.5A7 7 0 0 0 5 9.5C5 14.6 12 21 12 21Z"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-        />
-        <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" strokeWidth="1.6" />
-      </svg>
-    ),
-  },
-  {
-    label: "Call us",
-    value: "+91 99583 37775",
-    href: "tel:+919958337775",
-    whatsapp: "https://wa.me/919958337775",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path
-          d="M6.5 3h2.4l1.2 4-2 1.3a11.5 11.5 0 0 0 5.6 5.6l1.3-2 4 1.2v2.4c0 1-.9 1.8-1.9 1.6-6-1-10.5-5.5-11.5-11.5C5 4.4 5.6 3 6.5 3Z"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinejoin="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    label: "Email us",
-    value: "info@techpotam.com",
-    href: "mailto:info@techpotam.com",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect x="3.5" y="5.5" width="17" height="13" rx="2" stroke="currentColor" strokeWidth="1.6" />
-        <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-];
+const API_URL = import.meta.env.VITE_API_URL as string;
 
 const BUDGETS = ["Under £10k", "£10k – £25k", "£25k – £75k", "£75k+", "Not sure yet"];
-const COUNTRY_CODES = [
-  { flag: "🇬🇧", code: "+44" },
-  { flag: "🇺🇸", code: "+1" },
-  { flag: "🇦🇪", code: "+971" },
-  { flag: "🇮🇳", code: "+91" },
-  { flag: "🇪🇺", code: "+353" },
-];
 
 const fieldClass =
   "w-full rounded-xl border border-border bg-background/95 px-5 py-4 text-sm text-foreground placeholder:text-muted-foreground/70 outline-none transition-colors focus:border-primary";
@@ -286,11 +331,83 @@ function ChevronDown() {
 }
 
 function ContactForm() {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [recaptchaConfig, setRecaptchaConfig] = useState<RecaptchaConfig | null>(null);
+  const [v2Token, setV2Token] = useState<string | null>(null);
+
+  useEffect(() => {
+    getRecaptchaConfig().then(setRecaptchaConfig);
+  }, []);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    // Honeypot: real users never fill this hidden field.
+    if (data.get("company")) return;
+
+    if (recaptchaConfig?.active && recaptchaConfig.version === "v2" && !v2Token) {
+      setStatus("error");
+      setErrorMessage("Please complete the reCAPTCHA check.");
+      return;
+    }
+
+    setStatus("submitting");
+    setErrorMessage("");
+
+    try {
+      const recaptchaToken =
+        recaptchaConfig?.active && recaptchaConfig.version === "v2" ? v2Token! : await getRecaptchaTokenV3("contact");
+
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          countryCode: data.get("countryCode"),
+          phone: data.get("phone"),
+          email: data.get("email"),
+          budget: data.get("budget"),
+          message: data.get("message"),
+          recaptchaToken,
+        }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Something went wrong. Please try again later.");
+
+      setStatus("success");
+      form.reset();
+    } catch (err) {
+      setStatus("error");
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again later.");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="rounded-2xl border border-border bg-background/90 p-6 text-center backdrop-blur-md shadow-[var(--shadow-deep)] sm:p-8">
+        <p className="text-sm font-medium text-foreground">Thanks — we've got your message and will be in touch shortly.</p>
+      </div>
+    );
+  }
+
   return (
     <form
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={handleSubmit}
       className="space-y-4 rounded-2xl border border-border bg-background/90 p-6 backdrop-blur-md shadow-[var(--shadow-deep)] sm:p-8"
     >
+      <input
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
+
       <input type="text" name="name" placeholder="Enter your name" required className={fieldClass} />
 
       <div className="flex gap-3">
@@ -314,7 +431,7 @@ function ContactForm() {
           name="phone"
           placeholder="Enter your phone number"
           required
-          pattern="[0-9 ()+-]{6,}"
+          pattern="[0-9 \(\)+\-]{6,}"
           className={`${fieldClass} flex-1`}
         />
       </div>
@@ -344,22 +461,99 @@ function ContactForm() {
         className={`${fieldClass} resize-none`}
       />
 
+      {recaptchaConfig?.active && recaptchaConfig.version === "v2" && (
+        <RecaptchaCheckbox siteKey={recaptchaConfig.siteKey} onChange={setV2Token} />
+      )}
+
+      {status === "error" && <p className="text-sm text-destructive">{errorMessage}</p>}
+
       <button
         type="submit"
-        className="w-full rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.02] sm:w-auto"
+        disabled={status === "submitting"}
+        className="w-full rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.02] disabled:opacity-60 disabled:hover:scale-100 sm:w-auto"
       >
-        Submit
+        {status === "submitting" ? "Sending..." : "Submit"}
       </button>
     </form>
   );
 }
 
+type FooterContactDetail = { label: string; value: string; href?: string; active: boolean };
+type FooterSocialLink = { platform: string; url: string; active: boolean };
+
 export function Footer() {
+  const [contactDetails, setContactDetails] = useState<FooterContactDetail[]>([]);
+  const [social, setSocial] = useState<FooterSocialLink[]>([]);
+  const [copyrightName, setCopyrightName] = useState("Techpotam Ltd — United Kingdom");
+  const [copyrightActive, setCopyrightActive] = useState(true);
+  const [tagline, setTagline] = useState("London · Remote-first");
+  const [taglineActive, setTaglineActive] = useState(true);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/footer`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setContactDetails(data.contactDetails ?? []);
+        setSocial(data.social ?? []);
+        if (data.copyrightName) setCopyrightName(data.copyrightName);
+        setCopyrightActive(data.copyrightActive ?? true);
+        if (data.tagline) setTagline(data.tagline);
+        setTaglineActive(data.taglineActive ?? true);
+      })
+      .catch(() => {});
+  }, []);
+
+  const activeContactDetails = contactDetails.filter((d) => d.active);
+  const activeSocial = social.filter((s) => s.active);
+
   return (
     <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-10 text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} Techpotam Ltd — United Kingdom</p>
-        <p className="font-mono uppercase tracking-[0.3em]">London · Remote-first</p>
+      <div className="mx-auto max-w-6xl px-6 py-10 text-xs text-muted-foreground">
+        {(activeContactDetails.length > 0 || activeSocial.length > 0) && (
+          <div className="mb-8 flex flex-wrap items-start justify-between gap-8 border-b border-border pb-8">
+            {activeContactDetails.length > 0 && (
+              <div className="flex flex-wrap gap-x-8 gap-y-2">
+                {activeContactDetails.map((d) =>
+                  d.href ? (
+                    <a key={d.label} href={d.href} className="transition-colors hover:text-primary">
+                      {d.label}: {d.value}
+                    </a>
+                  ) : (
+                    <span key={d.label}>
+                      {d.label}: {d.value}
+                    </span>
+                  ),
+                )}
+              </div>
+            )}
+            {activeSocial.length > 0 && (
+              <div className="flex flex-wrap gap-x-6 gap-y-2">
+                {activeSocial.map((s) => (
+                  <a
+                    key={s.platform}
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-colors hover:text-primary"
+                  >
+                    {s.platform}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {(copyrightActive || taglineActive) && (
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {copyrightActive && (
+              <p>
+                © {new Date().getFullYear()} {copyrightName}
+              </p>
+            )}
+            {taglineActive && <p className="font-mono uppercase tracking-[0.3em]">{tagline}</p>}
+          </div>
+        )}
       </div>
     </footer>
   );

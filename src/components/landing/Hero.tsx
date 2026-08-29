@@ -1,5 +1,11 @@
+import { useEffect, useState } from "react";
 import { ScrollWorldMount } from "@/components/ScrollWorldMount";
 import type { ScrollWorldConfig } from "@/lib/scrub-engine";
+
+const API_URL = import.meta.env.VITE_API_URL as string;
+
+type HeroCopy = { title: string; body: string };
+type HeroContent = { visible: boolean; forge: HeroCopy; core: HeroCopy; launch: HeroCopy };
 
 /**
  * Scroll-world hero: a pinned, scroll-scrubbed flight through a single
@@ -30,64 +36,129 @@ import type { ScrollWorldConfig } from "@/lib/scrub-engine";
  */
 const ACCENT = "oklch(0.76 0.16 62)"; // must match --primary in styles.css
 
-const HERO_CONFIG: ScrollWorldConfig = {
-  nav: false,
-  diveScroll: 1.3,
-  connScroll: 0.9,
-  autoIntroSeconds: 1.5,
-  autoIntroRate: 0.5, // slow motion
-  hint: "Scroll to Experience",
-  // Default runway (a full extra viewport height after the last scene) read
-  // as a long dead gap before Marquee/Services arrived — the "launch" scene
-  // is already fully settled well before that point, so there's nothing new
-  // happening on screen for that whole stretch. Shrunk to a still-enough
-  // cushion for its crossfade to finish without the long empty scroll.
-  runwayVh: 0.3,
-  sections: [
-    {
-      id: "forge",
-      accent: ACCENT,
-      label: "The Forge",
-      still: "/assets/hero-forge.jpg",
-      clip: "/assets/vid/hero-forge.mp4",
-      clipMobile: "/assets/vid/hero-forge-m.mp4",
-      scroll: 2.0,
-      linger: 0.35,
-      // scroll position 0 now starts at video-time 1.5s (the auto-intro's
-      // own end point, via introFloor), not true 0 — 0.65 (not 0.7) is
-      // recalibrated so the copy still lands around the ~7s beat from there
-      introAt: 0.65,
-      title: "Built in the forge, shipped to production.",
-      body: "From first commit to a live product in your users' hands — clean architecture, fast iteration, dependable delivery.",
-    },
-    {
-      id: "core",
-      accent: ACCENT,
-      label: "The Core",
-      still: "/assets/hero-core.jpg",
-      clip: "/assets/vid/hero-core.mp4",
-      clipMobile: "/assets/vid/hero-core-m.mp4",
-      scroll: 1.8,
-      linger: 0.3,
-      title: "Every detail, considered.",
-      body: "From the first keystroke to the silicon it runs on, nothing ships until it's right.",
-    },
-    {
-      id: "launch",
-      accent: ACCENT,
-      label: "Launch",
-      still: "/assets/hero-launch.jpg",
-      clip: "/assets/vid/hero-launch.mp4",
-      clipMobile: "/assets/vid/hero-launch-m.mp4",
-      scroll: 2.4,
-      linger: 0.4,
-      title: "From first line to launch.",
-      body: "Deployed on infrastructure that holds up under real-world load — monitored, hardened, and ready from day one.",
-    },
-  ],
-  connectors: [null, null],
+const DEFAULT_HERO_CONTENT: HeroContent = {
+  visible: true,
+  forge: {
+    title: "Built in the forge, shipped to production.",
+    body: "From first commit to a live product in your users' hands — clean architecture, fast iteration, dependable delivery.",
+  },
+  core: {
+    title: "Every detail, considered.",
+    body: "From the first keystroke to the silicon it runs on, nothing ships until it's right.",
+  },
+  launch: {
+    title: "From first line to launch.",
+    body: "Deployed on infrastructure that holds up under real-world load — monitored, hardened, and ready from day one.",
+  },
 };
 
+// title/body come from the CMS (see /api/content/hero) keyed by section id —
+// everything else (video clips, timing, images) stays fixed here, since it's
+// choreographed frame-by-frame to these specific clips.
+function buildHeroConfig(content: HeroContent): ScrollWorldConfig {
+  return {
+    nav: false,
+    diveScroll: 1.3,
+    connScroll: 0.9,
+    autoIntroSeconds: 1.5,
+    autoIntroRate: 0.5, // slow motion
+    hint: "Scroll to Experience",
+    // Default runway (a full extra viewport height after the last scene) read
+    // as a long dead gap before Marquee/Services arrived — the "launch" scene
+    // is already fully settled well before that point, so there's nothing new
+    // happening on screen for that whole stretch. Shrunk to a still-enough
+    // cushion for its crossfade to finish without the long empty scroll.
+    runwayVh: 0.3,
+    sections: [
+      {
+        id: "forge",
+        accent: ACCENT,
+        label: "The Forge",
+        still: "/assets/hero-forge.jpg",
+        clip: "/assets/vid/hero-forge.mp4",
+        clipMobile: "/assets/vid/hero-forge-m.mp4",
+        scroll: 2.0,
+        linger: 0.35,
+        // scroll position 0 now starts at video-time 1.5s (the auto-intro's
+        // own end point, via introFloor), not true 0 — 0.65 (not 0.7) is
+        // recalibrated so the copy still lands around the ~7s beat from there
+        introAt: 0.65,
+        title: content.forge.title,
+        body: content.forge.body,
+      },
+      {
+        id: "core",
+        accent: ACCENT,
+        label: "The Core",
+        still: "/assets/hero-core.jpg",
+        clip: "/assets/vid/hero-core.mp4",
+        clipMobile: "/assets/vid/hero-core-m.mp4",
+        scroll: 1.8,
+        linger: 0.3,
+        title: content.core.title,
+        body: content.core.body,
+      },
+      {
+        id: "launch",
+        accent: ACCENT,
+        label: "Launch",
+        still: "/assets/hero-launch.jpg",
+        clip: "/assets/vid/hero-launch.mp4",
+        clipMobile: "/assets/vid/hero-launch-m.mp4",
+        scroll: 2.4,
+        linger: 0.4,
+        title: content.launch.title,
+        body: content.launch.body,
+      },
+    ],
+    connectors: [null, null],
+  };
+}
+
+// ScrollWorldMount only reads `config` once, at mount (it drives an
+// imperative scroll-scrubbed video engine, not a reactive React tree) — so
+// unlike every other CMS-backed section, this one has to wait for the fetch
+// to resolve *before* mounting rather than updating in place afterward.
+// Bounded to 2500ms: on a slow/down API the hero falls back to its default
+// copy and mounts anyway, rather than blocking the homepage indefinitely.
+// (Needs real margin, not just typical-case latency — e.g. the backend's
+// first Prisma query after a cold start/restart can take over a second.)
+const CONTENT_FETCH_TIMEOUT_MS = 2500;
+
 export function Hero({ autoIntroReady = false }: { autoIntroReady?: boolean }) {
-  return <ScrollWorldMount config={HERO_CONFIG} className="hero-world" autoIntroReady={autoIntroReady} />;
+  const [content, setContent] = useState<HeroContent | null>(null);
+
+  useEffect(() => {
+    let settled = false;
+    const timeout = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        setContent(DEFAULT_HERO_CONTENT);
+      }
+    }, CONTENT_FETCH_TIMEOUT_MS);
+
+    fetch(`${API_URL}/api/content/hero`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
+        setContent(data ?? DEFAULT_HERO_CONTENT);
+      })
+      .catch(() => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeout);
+        setContent(DEFAULT_HERO_CONTENT);
+      });
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  if (!content) return <div className="hero-world h-screen bg-background" />;
+  if (!content.visible) return null;
+
+  return (
+    <ScrollWorldMount config={buildHeroConfig(content)} className="hero-world" autoIntroReady={autoIntroReady} />
+  );
 }

@@ -1,8 +1,28 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Sections";
 import { Reveal, SectionLabel } from "@/components/landing/primitives";
-import { getWorkBySlug } from "@/data/work";
+
+const API_URL = import.meta.env.VITE_API_URL as string;
+
+type WorkResult = { stat: string; label: string };
+type WorkItem = {
+  slug: string;
+  img: string;
+  client: string;
+  title: string;
+  caption: string;
+  meta: string[];
+  overview: string;
+  challenge: string;
+  approach: string;
+  results: WorkResult[];
+  stack: string[];
+  testimonialQuote: string;
+  testimonialName: string;
+  testimonialRole: string;
+};
 
 /**
  * Detail page for a single "Our Work Speaks" project — linked from each
@@ -13,8 +33,18 @@ import { getWorkBySlug } from "@/data/work";
  */
 export function CaseStudy() {
   const { slug } = useParams<{ slug: string }>();
-  const project = getWorkBySlug(slug);
+  const [all, setAll] = useState<WorkItem[] | null>(null);
 
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/case-studies`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setAll(data?.caseStudies ?? []))
+      .catch(() => setAll([]));
+  }, []);
+
+  if (all === null) return null;
+
+  const project = all.find((w) => w.slug === slug);
   if (!project) return <Navigate to="/" replace />;
 
   return (
@@ -131,10 +161,10 @@ export function CaseStudy() {
         <div className="mx-auto max-w-3xl px-6 text-center">
           <Reveal>
             <p className="text-[clamp(1.4rem,3.2vw,2.2rem)] font-medium leading-snug">
-              “{project.testimonial.quote}”
+              “{project.testimonialQuote}”
             </p>
             <p className="mt-6 text-sm text-muted-foreground">
-              {project.testimonial.name} · {project.testimonial.role}
+              {project.testimonialName} · {project.testimonialRole}
             </p>
           </Reveal>
         </div>

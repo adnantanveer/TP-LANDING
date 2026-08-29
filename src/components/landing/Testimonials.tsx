@@ -1,26 +1,32 @@
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SectionLabel } from "./primitives";
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "They treated our product like it was their own. The craft shows in every screen, every transition, every detail.",
-    name: "Operations Director",
-    org: "UK Healthcare Provider",
-  },
-  {
-    quote:
-      "What impressed us most was the restraint — nothing in the product feels unnecessary. It just works, beautifully.",
-    name: "Head of Digital",
-    org: "UK Financial Services Firm",
-  },
-  {
-    quote: "From discovery to launch, the process felt calm and considered. The result speaks for itself.",
-    name: "Founder",
-    org: "UK Logistics Startup",
-  },
-];
+const API_URL = import.meta.env.VITE_API_URL as string;
+
+const DEFAULT_CONTENT = {
+  visible: true,
+  heading: "Trusted By Ambitious Teams.",
+  items: [
+    {
+      quote:
+        "They treated our product like it was their own. The craft shows in every screen, every transition, every detail.",
+      name: "Operations Director",
+      org: "UK Healthcare Provider",
+    },
+    {
+      quote:
+        "What impressed us most was the restraint — nothing in the product feels unnecessary. It just works, beautifully.",
+      name: "Head of Digital",
+      org: "UK Financial Services Firm",
+    },
+    {
+      quote: "From discovery to launch, the process felt calm and considered. The result speaks for itself.",
+      name: "Founder",
+      org: "UK Logistics Startup",
+    },
+  ],
+};
 
 /**
  * Pinned quote crossfade: same "act" mechanic as the hero (progress-driven
@@ -31,6 +37,16 @@ export function Testimonials() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const p = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 });
+  const [content, setContent] = useState(DEFAULT_CONTENT);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/content/testimonials`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => data && setContent(data))
+      .catch(() => {});
+  }, []);
+
+  if (!content.visible) return null;
 
   return (
     <section
@@ -41,18 +57,16 @@ export function Testimonials() {
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6">
         <div className="mb-16 text-center">
           <SectionLabel>In their words</SectionLabel>
-          <h2 className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">
-            Trusted By <span className="text-ember">Ambitious Teams</span>.
-          </h2>
+          <h2 className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">{content.heading}</h2>
         </div>
 
         <div className="perspective-scene relative h-[40vh] w-full max-w-3xl">
-          {TESTIMONIALS.map((t, i) => (
-            <Quote key={t.name} {...t} index={i} total={TESTIMONIALS.length} progress={p} />
+          {content.items.map((t, i) => (
+            <Quote key={t.name} {...t} index={i} total={content.items.length} progress={p} />
           ))}
         </div>
 
-        <Dots progress={p} total={TESTIMONIALS.length} />
+        <Dots progress={p} total={content.items.length} />
       </div>
     </section>
   );
