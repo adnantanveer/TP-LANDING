@@ -1,0 +1,141 @@
+/* ==========================================================================
+   Concept: Signal — light, Swiss-editorial-kinetic, single cobalt accent.
+   Self-hosted (woff2, latin subset) under custom family names so this
+   concept's type never collides with the live site's Sora/Manrope or with
+   the Vantage concept's own faces. Scoped entirely under .concept-signal —
+   every token below is a local override of the same variable names the
+   rest of the app already reads (styles.css), so existing var(--x)-based
+   utilities (bg-background, text-primary, .text-ember, --shadow-ember...)
+   re-theme automatically for anything mounted inside this wrapper, with no
+   need to touch the global stylesheet.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Signal Display";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("/fonts/signal-space-grotesk-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Signal Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/signal-ibm-plex-sans-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Signal Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/signal-ibm-plex-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Signal Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/signal-ibm-plex-mono-500.woff2") format("woff2");
+}
+.concept-signal {
+  --radius: 0.125rem;
+
+  --background: oklch(0.985 0.003 240);
+  --foreground: oklch(0.17 0.012 250);
+  --card: oklch(0.965 0.004 240);
+  --card-foreground: oklch(0.17 0.012 250);
+  --popover: oklch(0.985 0.003 240);
+  --popover-foreground: oklch(0.17 0.012 250);
+
+  --primary: oklch(0.52 0.21 260);
+  --primary-foreground: oklch(0.99 0.002 240);
+  --primary-glow: oklch(0.62 0.19 258);
+
+  --secondary: oklch(0.32 0.02 255);
+  --secondary-foreground: oklch(0.98 0 0);
+
+  --muted: oklch(0.94 0.005 240);
+  --muted-foreground: oklch(0.45 0.016 250);
+  --accent: oklch(0.93 0.03 258);
+  --accent-foreground: oklch(0.3 0.06 258);
+  --destructive: oklch(0.56 0.21 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.17 0.012 250 / 12%);
+  --input: oklch(0.17 0.012 250 / 18%);
+  --ring: oklch(0.52 0.21 260);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --gradient-veil: radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 70%);
+  --shadow-ember: 0 24px 60px -28px color-mix(in oklab, var(--primary) 50%, transparent);
+  --shadow-deep: 0 30px 90px -55px oklch(0.17 0.012 250 / 35%);
+
+  --font-display: "Signal Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Signal Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Signal Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-signal h1,
+.concept-signal h2,
+.concept-signal h3,
+.concept-signal h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.concept-signal ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Hairline index numerals used throughout Signal's editorial list/work
+   sections — one consistent oversized-numeral treatment instead of ad-hoc
+   font sizes per section. */
+.signal-index {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Film-grain texture, the one place this page departs from flat color —
+   fixed + pointer-events-none per the perf rule (6.E): a static image, no
+   per-frame repaint cost, never applied to a scrolling container. */
+.concept-signal::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Kinetic word reveal (Manifesto section, marquee stroke type) — mask
+   parent clips each word's own translateY entrance. */
+.signal-word-mask {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* One deliberate "color block" chapter (Contact) — a light page is
+   otherwise the whole point of this concept, so this is a single
+   intentional section-level swap with its own clear entry/exit, not a
+   random alternation. Same --primary throughout (the Color Consistency
+   Lock only asks for one accent, not one background). */
+.signal-dark-chapter {
+  --background: oklch(0.16 0.014 258);
+  --foreground: oklch(0.96 0.006 90);
+  --card: oklch(0.205 0.017 258);
+  --card-foreground: oklch(0.96 0.006 90);
+  --muted-foreground: oklch(0.68 0.015 258);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  background-color: var(--background);
+  color: var(--foreground);
+}

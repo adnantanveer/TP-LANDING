@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Concept: Shell — dark, developer-terminal aesthetic (reference:
+   shankar.io). Warm charcoal + off-white + single amber accent, condensed
+   bold display type, monospace command-style eyebrows throughout. Same
+   token-override scoping as the other concepts.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Shell Display";
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url("/fonts/shell-big-shoulders-display-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Shell Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/shell-work-sans-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Shell Mono";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/shell-red-hat-mono-variable.woff2") format("woff2");
+}
+
+.concept-shell {
+  --radius: 0.375rem;
+
+  --background: oklch(0.17 0.008 55);
+  --foreground: oklch(0.96 0.005 70);
+  --card: oklch(0.215 0.01 55);
+  --card-foreground: oklch(0.96 0.005 70);
+  --popover: oklch(0.215 0.01 55);
+  --popover-foreground: oklch(0.96 0.005 70);
+
+  --primary: oklch(0.78 0.16 75);
+  --primary-foreground: oklch(0.16 0.02 70);
+  --primary-glow: oklch(0.86 0.13 85);
+
+  --secondary: oklch(0.5 0.01 55);
+  --secondary-foreground: oklch(0.97 0 0);
+
+  --muted: oklch(0.235 0.01 55);
+  --muted-foreground: oklch(0.68 0.012 60);
+  --accent: oklch(0.27 0.03 75);
+  --accent-foreground: oklch(0.85 0.13 78);
+  --destructive: oklch(0.62 0.21 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.78 0.16 75);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --gradient-veil: radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%);
+  --shadow-ember: 0 24px 60px -28px color-mix(in oklab, var(--primary) 50%, transparent);
+  --shadow-deep: 0 30px 90px -55px oklch(0 0 0 / 60%);
+
+  --font-display: "Shell Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Shell Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Shell Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-shell h1,
+.concept-shell h2,
+.concept-shell h3,
+.concept-shell h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.concept-shell ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Command-style eyebrow: "$ whoami", "$ git log" etc — a hairline plus a
+   literal shell prompt instead of a generic uppercase-tracked label. */
+.shell-cmd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted-foreground);
+}
+.shell-cmd::before {
+  content: "";
+  display: inline-block;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--primary);
+}
+.shell-cmd b {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* One deliberate light "color block" chapter (a real device on the
+   reference site too: its Deployments section flips to a warm paper
+   tone). Used once, own tokens, own foreground/background pairing. */
+.shell-light-chapter {
+  --background: oklch(0.95 0.006 75);
+  --foreground: oklch(0.18 0.01 60);
+  --card: oklch(0.985 0.003 75);
+  --card-foreground: oklch(0.18 0.01 60);
+  --muted-foreground: oklch(0.42 0.014 60);
+  --border: oklch(0.18 0.01 60 / 12%);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Dot-grid backdrop for the skills graph. */
+.shell-graph-grid {
+  background-image: radial-gradient(color-mix(in oklab, var(--foreground) 14%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Blinking terminal cursor, next to the scrambled/decoded name in the
+   Statement section. Height matched via font-size em so it tracks the
+   heading's own responsive clamp() size. */
+.shell-cursor {
+  height: 0.78em;
+  animation: shell-blink 1s step-end infinite;
+}
+@keyframes shell-blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell-cursor {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Hovering any node in a column lights up that whole column's spine, not
+   just the one node's own connector nub — closer to the reference's
+   "highlighted dependency path" feel. :has() rather than a group-hover
+   class since the direction is child-hover -> ancestor-style, which
+   Tailwind's group/peer variants don't cover on their own. */
+.shell-graph-column:has(.shell-graph-node:hover) {
+  border-color: color-mix(in oklab, var(--primary) 70%, transparent);
+}
+

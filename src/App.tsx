@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Home } from "@/pages/Home";
 import { ReuseComponent } from "@/pages/ReuseComponent";
@@ -8,6 +8,18 @@ import { JobDetail } from "@/pages/JobDetail";
 import { JobApply } from "@/pages/JobApply";
 import { NotFound } from "@/pages/NotFound";
 import { CosmicDustBackground } from "@/components/background/CosmicDustBackground";
+
+// Redesign concepts (review branch only) — lazy-loaded so their fonts/CSS
+// never ship in the main site's bundle unless one of these routes is hit.
+const ConceptsIndex = lazy(() => import("@/concepts/ConceptsIndex").then((m) => ({ default: m.ConceptsIndex })));
+const SignalPage = lazy(() => import("@/concepts/signal/SignalPage").then((m) => ({ default: m.SignalPage })));
+const VantagePage = lazy(() => import("@/concepts/vantage/VantagePage").then((m) => ({ default: m.VantagePage })));
+const VertexPage = lazy(() => import("@/concepts/vertex/VertexPage").then((m) => ({ default: m.VertexPage })));
+const ConcretePage = lazy(() => import("@/concepts/concrete/ConcretePage").then((m) => ({ default: m.ConcretePage })));
+const SurgePage = lazy(() => import("@/concepts/surge/SurgePage").then((m) => ({ default: m.SurgePage })));
+const AirPage = lazy(() => import("@/concepts/air/AirPage").then((m) => ({ default: m.AirPage })));
+const ShellPage = lazy(() => import("@/concepts/shell/ShellPage").then((m) => ({ default: m.ShellPage })));
+const IndexConceptPage = lazy(() => import("@/concepts/index-concept/IndexConceptPage").then((m) => ({ default: m.IndexConceptPage })));
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -90,6 +102,78 @@ function App() {
         <Route path="/careers" element={<Jobs />} />
         <Route path="/careers/apply" element={<JobApply />} />
         <Route path="/careers/:slug" element={<JobDetail />} />
+        <Route
+          path="/concepts"
+          element={
+            <Suspense fallback={null}>
+              <ConceptsIndex />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/signal"
+          element={
+            <Suspense fallback={null}>
+              <SignalPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/vantage"
+          element={
+            <Suspense fallback={null}>
+              <VantagePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/vertex"
+          element={
+            <Suspense fallback={null}>
+              <VertexPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/concrete"
+          element={
+            <Suspense fallback={null}>
+              <ConcretePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/surge"
+          element={
+            <Suspense fallback={null}>
+              <SurgePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/air"
+          element={
+            <Suspense fallback={null}>
+              <AirPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/shell"
+          element={
+            <Suspense fallback={null}>
+              <ShellPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/index"
+          element={
+            <Suspense fallback={null}>
+              <IndexConceptPage />
+            </Suspense>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

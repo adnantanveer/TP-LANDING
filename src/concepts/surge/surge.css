@@ -1,0 +1,91 @@
+/* ==========================================================================
+   Concept: Surge — dark, maximalist/constantly-moving. Single hot-magenta
+   accent (with its own warm-orange gradient partner, not a second unrelated
+   accent), full-pill radius, motion as the whole personality of the page.
+   Same token-override scoping as the other concepts.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Surge Display";
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url("/fonts/surge-unbounded-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Surge Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/surge-onest-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Surge Mono";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/fonts/surge-martian-mono-variable.woff2") format("woff2");
+}
+
+.concept-surge {
+  --radius: 999px;
+
+  --background: oklch(0.14 0.02 335);
+  --foreground: oklch(0.97 0.005 100);
+  --card: oklch(0.19 0.025 335);
+  --card-foreground: oklch(0.97 0.005 100);
+  --popover: oklch(0.19 0.025 335);
+  --popover-foreground: oklch(0.97 0.005 100);
+
+  --primary: oklch(0.66 0.27 345);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-glow: oklch(0.75 0.19 65);
+
+  --secondary: oklch(0.55 0.02 335);
+  --secondary-foreground: oklch(0.98 0 0);
+
+  --muted: oklch(0.24 0.02 335);
+  --muted-foreground: oklch(0.72 0.02 335);
+  --accent: oklch(0.28 0.06 345);
+  --accent-foreground: oklch(0.88 0.15 345);
+  --destructive: oklch(0.62 0.21 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(1 0 0 / 18%);
+  --ring: oklch(0.66 0.27 345);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --gradient-veil: radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--primary) 20%, transparent), transparent 70%);
+  --shadow-ember: 0 20px 60px -20px color-mix(in oklab, var(--primary) 55%, transparent);
+  --shadow-deep: 0 30px 90px -50px oklch(0 0 0 / 80%);
+
+  --font-display: "Surge Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Surge Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Surge Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-surge h1,
+.concept-surge h2,
+.concept-surge h3,
+.concept-surge h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.concept-surge ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.surge-gradient-text {
+  background-image: linear-gradient(100deg, var(--primary), var(--primary-glow));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}

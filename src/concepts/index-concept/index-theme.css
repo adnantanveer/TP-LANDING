@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Concept: Index — light, bold editorial (reference: webisoft.com). Near-
+   white + near-black + one bold coral accent used as a real "color block"
+   chapter (not just a small highlight), huge condensed impact display
+   type, monospace index labels ("S/001"), dashed dividers. Signature
+   section: a scroll-driven accordion services list — each item collapses
+   to a title-only bar once scrolled past while the one in focus expands
+   ("losing one on other", per the brief). Same token-override scoping as
+   every other concept.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Index Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/idx-anton-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Index Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/idx-figtree-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Index Mono";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/idx-overpass-mono-variable.woff2") format("woff2");
+}
+
+.concept-index {
+  --radius: 0.25rem;
+
+  --background: oklch(0.985 0.002 30);
+  --foreground: oklch(0.12 0.005 30);
+  --card: oklch(0.97 0.003 30);
+  --card-foreground: oklch(0.12 0.005 30);
+  --popover: oklch(0.985 0.002 30);
+  --popover-foreground: oklch(0.12 0.005 30);
+
+  --primary: oklch(0.64 0.17 32);
+  --primary-foreground: oklch(0.12 0.01 30);
+  --primary-glow: oklch(0.72 0.14 40);
+
+  --secondary: oklch(0.12 0.005 30);
+  --secondary-foreground: oklch(0.99 0 0);
+
+  --muted: oklch(0.94 0.004 30);
+  --muted-foreground: oklch(0.42 0.008 30);
+  --accent: oklch(0.93 0.03 32);
+  --accent-foreground: oklch(0.35 0.13 30);
+  --destructive: oklch(0.56 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.12 0.005 30 / 14%);
+  --input: oklch(0.12 0.005 30 / 18%);
+  --ring: oklch(0.64 0.17 32);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --shadow-ember: 0 24px 60px -28px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-deep: 0 30px 90px -55px oklch(0.12 0.005 30 / 25%);
+
+  --font-display: "Index Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Index Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Index Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-index h1,
+.concept-index h2,
+.concept-index h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.concept-index ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* The brand's bold coral used as a real "color block" chapter (Statement,
+   Footer) bookending the page — not just a small accent, matching the
+   reference's own hero/footer treatment. Foreground flips to near-black
+   for AA contrast against the coral; --primary itself is unchanged (Color
+   Consistency Lock: one accent, used identically everywhere). */
+.index-color-chapter {
+  --background: var(--primary);
+  --foreground: oklch(0.12 0.005 30);
+  --card: oklch(0.99 0 0 / 92%);
+  --card-foreground: oklch(0.12 0.005 30);
+  --muted-foreground: oklch(0.3 0.03 30);
+  --border: oklch(0.12 0.005 30 / 22%);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Numbered index label ("S/001") + dashed row divider, used throughout —
+   the reference's own recurring motif. */
+.index-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+.index-dashed {
+  border-top: 1px dashed var(--border);
+}
+
+/* Outline-only display text (reference: inngest.com's hollow-letter
+   headline pairing) — used once, paired with a solid line of the same
+   heading, not as a default treatment. */
+.index-outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--foreground);
+}
