@@ -86,6 +86,23 @@
   color: var(--primary-foreground);
 }
 
+/* The shared hero engine (src/styles.css) reads its "scroll" hint color
+   and its title/body/eyebrow ink (--sw-ink, set on .sw-root) straight from
+   --foreground — tuned for the dark-mode base site where that's already
+   near-white. This concept's --foreground is near-black (light-mode
+   page), so left alone the hero copy renders as dark text over its own
+   dark drop-shadow on top of the video — illegible. Force both back to
+   white here, scoped to this concept only. .sw-root redeclares --sw-ink
+   on itself, which shadows any override from an ancestor, so this has to
+   target .sw-root directly (not just .hero-world) to actually win. */
+.concept-index .hero-world .sw-hint > span {
+  color: #fff !important;
+}
+.concept-index .sw-root {
+  --sw-ink: oklch(0.98 0.004 30);
+  --sw-ink-soft: oklch(0.88 0.008 30);
+}
+
 /* The brand's bold coral used as a real "color block" chapter (Statement,
    Footer) bookending the page — not just a small accent, matching the
    reference's own hero/footer treatment. Foreground flips to near-black

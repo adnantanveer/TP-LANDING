@@ -20,6 +20,8 @@ const SurgePage = lazy(() => import("@/concepts/surge/SurgePage").then((m) => ({
 const AirPage = lazy(() => import("@/concepts/air/AirPage").then((m) => ({ default: m.AirPage })));
 const ShellPage = lazy(() => import("@/concepts/shell/ShellPage").then((m) => ({ default: m.ShellPage })));
 const IndexConceptPage = lazy(() => import("@/concepts/index-concept/IndexConceptPage").then((m) => ({ default: m.IndexConceptPage })));
+const IndexContactPage = lazy(() => import("@/concepts/index-concept/ContactPage").then((m) => ({ default: m.IndexContactPage })));
+const CrestPage = lazy(() => import("@/concepts/crest/CrestPage").then((m) => ({ default: m.CrestPage })));
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -171,6 +173,22 @@ function App() {
           element={
             <Suspense fallback={null}>
               <IndexConceptPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/index/contact"
+          element={
+            <Suspense fallback={null}>
+              <IndexContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/crest"
+          element={
+            <Suspense fallback={null}>
+              <CrestPage />
             </Suspense>
           }
         />

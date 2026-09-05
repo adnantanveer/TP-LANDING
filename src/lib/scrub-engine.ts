@@ -603,8 +603,12 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
   // the moment they start — purely based on scroll activity, independent of
   // the opacity fade above (which still governs overall show/hide). A
   // scroll event clears the idle state immediately; idle resumes once no
-  // further scroll event has arrived for HINT_IDLE_MS.
-  const HINT_IDLE_MS = 260;
+  // further scroll event has arrived for HINT_IDLE_MS. 3s (not the previous
+  // 260ms) so a normal short pause between scroll gestures — reading a
+  // line, a moment's hesitation — doesn't read as the hint restlessly
+  // floating up and dropping back on every little break; it only resets
+  // once the user has genuinely stopped.
+  const HINT_IDLE_MS = 3000;
   let hintIdleTimer: ReturnType<typeof setTimeout> | undefined;
   const onScroll = () => {
     hint.classList.remove("sw-hint--idle");

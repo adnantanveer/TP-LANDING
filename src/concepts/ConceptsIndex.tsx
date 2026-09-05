@@ -50,20 +50,26 @@ const CONCEPTS = [
     tagline: "Light, bold editorial. Scroll-driven accordion services list, coral color-block chapters, huge impact type.",
     tokens: ["Light mode", "Anton / Figtree", "Coral", "Full depth"],
   },
+  {
+    href: "/concepts/crest",
+    name: "Crest",
+    tagline: "Light, cursor-reactive studio aesthetic. Spotlight-lit manifesto, custom cursor, cursor-tracked work preview, drag-driven testimonials.",
+    tokens: ["Light mode", "Outfit / Familjen Grotesk", "Deep violet", "Full depth"],
+  },
 ];
 
 /** Plain switcher page, not itself one of the design concepts — kept
- * neutral so it doesn't bias comparison between them. All six are full
+ * neutral so it doesn't bias comparison between them. All nine are full
  * depth: hero, capabilities, work, process, stack, testimonials, contact,
- * footer. Signal/Vantage keep the scroll-driven video hero; the other
- * four each have their own signature hero treatment instead. */
+ * footer, and all nine share the same scroll-driven video hero — each
+ * concept's own signature treatment lives in the sections below it instead. */
 export function ConceptsIndex() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center bg-background px-6 py-24 text-foreground">
       <div className="w-full max-w-5xl">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">Redesign concepts</p>
         <h1 className="mt-4 max-w-2xl text-[clamp(2rem,4.5vw,3rem)] font-semibold leading-[1.05]">
-          Eight directions for the new Techpotam site.
+          Nine directions for the new Techpotam site.
         </h1>
         <p className="mt-4 max-w-lg text-sm text-muted-foreground">
           Every concept is built out in full, with its own hero, capabilities, work, process, stack,
