@@ -425,3 +425,54 @@
     animation: none !important;
   }
 }
+
+/* Rich text saved from the admin's Quill editor (Job description, Case
+   Study overview/challenge/approach) — Tailwind's reset strips default
+   list/heading/link styling, so it needs to be restored here to render as
+   actually formatted rather than a wall of unstyled text. */
+.rich-text-content {
+  /* Quill can encode a run of spaces as consecutive &nbsp; (non-breaking) —
+     without this, a long paragraph like that has no valid break point and
+     overflows its column width instead of wrapping normally. */
+  overflow-wrap: anywhere;
+}
+.rich-text-content p {
+  margin: 0 0 1em;
+}
+.rich-text-content p:last-child {
+  margin-bottom: 0;
+}
+.rich-text-content ul,
+.rich-text-content ol {
+  margin: 0 0 1em;
+  padding-left: 1.5em;
+}
+.rich-text-content ul {
+  list-style: disc;
+}
+.rich-text-content ol {
+  list-style: decimal;
+}
+.rich-text-content blockquote {
+  margin: 0 0 1em;
+  padding-left: 1em;
+  border-left: 2px solid var(--border);
+  font-style: italic;
+}
+.rich-text-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rich-text-content h1,
+.rich-text-content h2,
+.rich-text-content h3 {
+  margin: 1.2em 0 0.5em;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.rich-text-content h1:first-child,
+.rich-text-content h2:first-child,
+.rich-text-content h3:first-child {
+  margin-top: 0;
+}

@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Sections";
 import { Reveal, SectionLabel } from "@/components/landing/primitives";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -45,6 +46,7 @@ export function CaseStudy() {
   if (all === null) return null;
 
   const project = all.find((w) => w.slug === slug);
+  console.log("[DEBUG CaseStudy] slug:", JSON.stringify(slug), "all slugs:", all.map((w) => w.slug), "found:", !!project);
   if (!project) return <Navigate to="/" replace />;
 
   return (
@@ -107,15 +109,15 @@ export function CaseStudy() {
         <div className="mx-auto grid max-w-6xl gap-14 px-6 md:grid-cols-3">
           <Reveal>
             <SectionLabel>Overview</SectionLabel>
-            <p className="mt-5 text-muted-foreground">{project.overview}</p>
+            <div className="rich-text-content mt-5 text-muted-foreground" dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.overview) }} />
           </Reveal>
           <Reveal delay={0.1}>
             <SectionLabel>The challenge</SectionLabel>
-            <p className="mt-5 text-muted-foreground">{project.challenge}</p>
+            <div className="rich-text-content mt-5 text-muted-foreground" dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.challenge) }} />
           </Reveal>
           <Reveal delay={0.2}>
             <SectionLabel>Our approach</SectionLabel>
-            <p className="mt-5 text-muted-foreground">{project.approach}</p>
+            <div className="rich-text-content mt-5 text-muted-foreground" dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.approach) }} />
           </Reveal>
         </div>
       </section>

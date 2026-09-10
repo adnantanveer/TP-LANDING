@@ -4,6 +4,7 @@ import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Sections";
 import { Reveal, SectionLabel } from "@/components/landing/primitives";
 import { ApplyForm } from "@/components/careers/ApplyForm";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -108,7 +109,7 @@ export function JobDetail() {
         <div className="mx-auto max-w-3xl space-y-14 px-6">
           <Reveal>
             <SectionLabel>About the role</SectionLabel>
-            <p className="mt-5 whitespace-pre-wrap text-muted-foreground">{job.description}</p>
+            <div className="rich-text-content mt-5 text-muted-foreground" dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.description) }} />
           </Reveal>
 
           {job.attachments.length > 0 && (

@@ -6,6 +6,7 @@ import { BackgroundRippleEffect } from "./BackgroundRippleEffect";
 import { getRecaptchaConfig, getRecaptchaTokenV3, type RecaptchaConfig } from "@/lib/recaptcha";
 import { RecaptchaCheckbox } from "@/components/RecaptchaCheckbox";
 import { COUNTRY_CODES } from "@/lib/countryCodes";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 import sceneLayers from "@/assets/scene-layers.jpg";
 import sceneRibbon from "@/assets/scene-ribbon.jpg";
 import sceneTerrain from "@/assets/scene-terrain.jpg";
@@ -243,7 +244,7 @@ export function Contact() {
             <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-semibold leading-[0.98]">{content.heading}</h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-8 max-w-lg text-muted-foreground">{content.body}</p>
+            <div className="rich-text-content mt-8 max-w-lg text-muted-foreground" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content.body) }} />
           </Reveal>
           <Reveal delay={0.2}>
             <div className="mt-12 flex flex-wrap items-center gap-4">

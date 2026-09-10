@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Sections";
 import { Reveal, SectionLabel } from "@/components/landing/primitives";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -58,7 +59,7 @@ export function NotFound() {
             <h1 className="mt-6 max-w-2xl text-[clamp(2.4rem,7vw,5rem)] font-semibold leading-[0.98]">
               {content.heading} <span className="text-ember">{content.headingEmphasis}</span>.
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">{content.body}</p>
+            <div className="rich-text-content mt-6 max-w-xl text-lg text-muted-foreground" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content.body) }} />
           </Reveal>
 
           <Reveal delay={0.1}>
