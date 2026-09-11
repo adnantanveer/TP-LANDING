@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Home } from "@/pages/Home";
 import { ReuseComponent } from "@/pages/ReuseComponent";
@@ -6,8 +6,31 @@ import { CaseStudy } from "@/pages/CaseStudy";
 import { Jobs } from "@/pages/Jobs";
 import { JobDetail } from "@/pages/JobDetail";
 import { JobApply } from "@/pages/JobApply";
+import { ContactPage } from "@/pages/Contact";
 import { NotFound } from "@/pages/NotFound";
 import { CosmicDustBackground } from "@/components/background/CosmicDustBackground";
+
+// Redesign concepts (review branch only) — lazy-loaded so their fonts/CSS
+// never ship in the main site's bundle unless one of these routes is hit.
+const ConceptsIndex = lazy(() => import("@/concepts/ConceptsIndex").then((m) => ({ default: m.ConceptsIndex })));
+const SignalPage = lazy(() => import("@/concepts/signal/SignalPage").then((m) => ({ default: m.SignalPage })));
+const SignalContactPage = lazy(() => import("@/concepts/signal/ContactPage").then((m) => ({ default: m.SignalContactPage })));
+const VantagePage = lazy(() => import("@/concepts/vantage/VantagePage").then((m) => ({ default: m.VantagePage })));
+const VantageContactPage = lazy(() => import("@/concepts/vantage/ContactPage").then((m) => ({ default: m.VantageContactPage })));
+const VertexPage = lazy(() => import("@/concepts/vertex/VertexPage").then((m) => ({ default: m.VertexPage })));
+const VertexContactPage = lazy(() => import("@/concepts/vertex/ContactPage").then((m) => ({ default: m.VertexContactPage })));
+const ConcretePage = lazy(() => import("@/concepts/concrete/ConcretePage").then((m) => ({ default: m.ConcretePage })));
+const ConcreteContactPage = lazy(() => import("@/concepts/concrete/ContactPage").then((m) => ({ default: m.ConcreteContactPage })));
+const SurgePage = lazy(() => import("@/concepts/surge/SurgePage").then((m) => ({ default: m.SurgePage })));
+const SurgeContactPage = lazy(() => import("@/concepts/surge/ContactPage").then((m) => ({ default: m.SurgeContactPage })));
+const AirPage = lazy(() => import("@/concepts/air/AirPage").then((m) => ({ default: m.AirPage })));
+const AirContactPage = lazy(() => import("@/concepts/air/ContactPage").then((m) => ({ default: m.AirContactPage })));
+const ShellPage = lazy(() => import("@/concepts/shell/ShellPage").then((m) => ({ default: m.ShellPage })));
+const ShellContactPage = lazy(() => import("@/concepts/shell/ContactPage").then((m) => ({ default: m.ShellContactPage })));
+const IndexConceptPage = lazy(() => import("@/concepts/index-concept/IndexConceptPage").then((m) => ({ default: m.IndexConceptPage })));
+const IndexContactPage = lazy(() => import("@/concepts/index-concept/ContactPage").then((m) => ({ default: m.IndexContactPage })));
+const CrestPage = lazy(() => import("@/concepts/crest/CrestPage").then((m) => ({ default: m.CrestPage })));
+const CrestContactPage = lazy(() => import("@/concepts/crest/ContactPage").then((m) => ({ default: m.CrestContactPage })));
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -85,11 +108,164 @@ function App() {
       <GlobalScripts />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/reuse-component" element={<ReuseComponent />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/careers" element={<Jobs />} />
         <Route path="/careers/apply" element={<JobApply />} />
         <Route path="/careers/:slug" element={<JobDetail />} />
+        <Route
+          path="/concepts"
+          element={
+            <Suspense fallback={null}>
+              <ConceptsIndex />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/signal"
+          element={
+            <Suspense fallback={null}>
+              <SignalPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/signal/contact"
+          element={
+            <Suspense fallback={null}>
+              <SignalContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/vantage"
+          element={
+            <Suspense fallback={null}>
+              <VantagePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/vantage/contact"
+          element={
+            <Suspense fallback={null}>
+              <VantageContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/vertex"
+          element={
+            <Suspense fallback={null}>
+              <VertexPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/vertex/contact"
+          element={
+            <Suspense fallback={null}>
+              <VertexContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/concrete"
+          element={
+            <Suspense fallback={null}>
+              <ConcretePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/concrete/contact"
+          element={
+            <Suspense fallback={null}>
+              <ConcreteContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/surge"
+          element={
+            <Suspense fallback={null}>
+              <SurgePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/surge/contact"
+          element={
+            <Suspense fallback={null}>
+              <SurgeContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/air"
+          element={
+            <Suspense fallback={null}>
+              <AirPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/air/contact"
+          element={
+            <Suspense fallback={null}>
+              <AirContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/shell"
+          element={
+            <Suspense fallback={null}>
+              <ShellPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/shell/contact"
+          element={
+            <Suspense fallback={null}>
+              <ShellContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/index"
+          element={
+            <Suspense fallback={null}>
+              <IndexConceptPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/index/contact"
+          element={
+            <Suspense fallback={null}>
+              <IndexContactPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/crest"
+          element={
+            <Suspense fallback={null}>
+              <CrestPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/concepts/crest/contact"
+          element={
+            <Suspense fallback={null}>
+              <CrestContactPage />
+            </Suspense>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

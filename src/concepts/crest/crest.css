@@ -1,0 +1,312 @@
+/* ==========================================================================
+   Concept: Crest — the synthesis concept. Light, premium studio aesthetic,
+   one deep violet accent, built around a single throughline: the page
+   reacts to where the cursor actually is (a spotlight-lit manifesto, a
+   project list with a cursor-tracked image preview, a drag-driven quote
+   carousel) rather than only reacting to scroll position like the other
+   eight concepts. Same token-override scoping as every other concept.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Crest Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/crest-outfit-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Display";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/crest-outfit-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Display";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/crest-outfit-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Display";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/crest-outfit-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Display";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/crest-outfit-800.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/crest-familjen-grotesk-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/crest-familjen-grotesk-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/crest-familjen-grotesk-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/crest-familjen-grotesk-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/crest-azeret-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/crest-azeret-mono-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Crest Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/crest-azeret-mono-600.woff2") format("woff2");
+}
+
+.concept-crest {
+  --radius: 0.75rem;
+
+  --background: oklch(0.985 0.004 290);
+  --foreground: oklch(0.17 0.02 290);
+  --card: oklch(0.97 0.006 290);
+  --card-foreground: oklch(0.17 0.02 290);
+  --popover: oklch(0.97 0.006 290);
+  --popover-foreground: oklch(0.17 0.02 290);
+
+  --primary: oklch(0.48 0.19 295);
+  --primary-foreground: oklch(0.98 0.01 295);
+  --primary-glow: oklch(0.72 0.17 295);
+
+  --secondary: oklch(0.9 0.01 290);
+  --secondary-foreground: oklch(0.17 0.02 290);
+
+  --muted: oklch(0.94 0.008 290);
+  --muted-foreground: oklch(0.46 0.02 290);
+  --accent: oklch(0.92 0.03 295);
+  --accent-foreground: oklch(0.48 0.19 295);
+  --destructive: oklch(0.58 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.17 0.02 290 / 10%);
+  --input: oklch(0.17 0.02 290 / 14%);
+  --ring: oklch(0.48 0.19 295);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --gradient-veil: radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 70%);
+  --shadow-ember: 0 24px 60px -30px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-deep: 0 30px 90px -55px oklch(0.17 0.02 290 / 25%);
+
+  --font-display: "Crest Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Crest Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Crest Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-crest h1,
+.concept-crest h2,
+.concept-crest h3,
+.concept-crest h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.concept-crest ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Toggled on/off by CustomCursor.tsx once it confirms a fine pointer is
+   actually present — never set unconditionally, so a JS failure leaves the
+   normal OS cursor rather than no cursor at all. */
+.crest-cursor-none,
+.crest-cursor-none * {
+  cursor: none;
+}
+
+/* The shared hero engine's "scroll" hint (src/styles.css) reads its color
+   from --foreground, tuned for the dark-mode base site where that's
+   already near-white. Crest's --foreground is near-black (light-mode
+   page), so left alone the hint would render as dark text over its own
+   dark drop-shadow on top of the hero video — illegible. Force it back to
+   white here, scoped to this concept only. */
+.concept-crest .hero-world .sw-hint > span {
+  color: #fff !important;
+}
+
+/* Same problem, bigger stakes: the engine's own .sw-root sets --sw-ink
+   (the color every hero title/body/eyebrow/tag reads) straight from
+   --foreground too (see styles.css's .sw-root block) — dark-on-dark-video
+   for the same reason as the hint above. .sw-root redeclares --sw-ink on
+   itself, which shadows any override from an ancestor, so this has to
+   target .sw-root directly (not just .hero-world) to actually win. */
+.concept-crest .sw-root {
+  --sw-ink: oklch(0.98 0.004 290);
+  --sw-ink-soft: oklch(0.88 0.01 290);
+}
+
+/* Small tracked label, used in place of a generic eyebrow: a short dash
+   instead of a full rule, kept quiet so it doesn't compete with the
+   cursor-reactive sections that are this concept's real signature. */
+.crest-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+.crest-eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 1.1rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+/* Inverted "chapter" tokens — the page is light overall, but Statement,
+   Process and Stats each run dark, giving Crest an actual light/dark
+   rhythm rather than one isolated moment. --background/--card are mixed
+   straight from var(--primary) (not an independently-chosen near-black)
+   so the dark chapters read as "this exact violet, turned down very low"
+   rather than a generic charcoal that merely happens to share a page with
+   it. .crest-spotlight-chapter carries the Statement section's own extra
+   glow-mask rules on top of this same base. */
+.crest-dark-chapter,
+.crest-spotlight-chapter {
+  --background: color-mix(in oklab, var(--primary) 22%, black);
+  --foreground: oklch(0.96 0.01 290);
+  --muted-foreground: oklch(0.68 0.03 290);
+  --border: color-mix(in oklab, var(--primary-glow) 30%, transparent);
+  --card: color-mix(in oklab, var(--primary) 32%, black);
+  --card-foreground: oklch(0.96 0.01 290);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+/* The default eyebrow color (--primary, tuned dark for use on the white
+   page) reads as a muddy plum at low contrast against these chapters'
+   near-black background — swap to the same luminous --primary-glow the
+   spotlight text uses, so it reads as part of the same glow everywhere. */
+.crest-dark-chapter .crest-eyebrow,
+.crest-spotlight-chapter .crest-eyebrow {
+  color: var(--primary-glow);
+}
+
+/* Softens the hand-off at a dark chapter's edges instead of a hard cut
+   against the page's own light background — a short fade from the page's
+   base tone down to transparent (letting the chapter's own --background
+   show through underneath), at both the top and bottom edge. Pure
+   decoration (pointer-events:none) painted first, so real content — which
+   comes later in the DOM — always paints over it. */
+.crest-dark-chapter::before,
+.crest-spotlight-chapter::before,
+.crest-dark-chapter::after,
+.crest-spotlight-chapter::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 90px;
+  pointer-events: none;
+}
+.crest-dark-chapter::before,
+.crest-spotlight-chapter::before {
+  top: 0;
+  background: linear-gradient(to bottom, oklch(0.985 0.004 290), transparent);
+}
+.crest-dark-chapter::after,
+.crest-spotlight-chapter::after {
+  bottom: 0;
+  background: linear-gradient(to top, oklch(0.985 0.004 290), transparent);
+}
+
+/* Slow ambient "breathing" glow for the two plain dark chapters (Process,
+   Stats) — Statement already has its own cursor-driven glow, so it's
+   deliberately left out here to keep that one signature. Long duration
+   and a gentle scale+opacity range so it reads as ambient atmosphere, not
+   a distracting pulse; a decorative background element, so it's placed
+   first in each section's markup and left unpositioned by z-index —
+   normal paint order already puts real content over it. */
+@keyframes crest-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0.5;
+  }
+}
+.crest-ambient-glow {
+  position: absolute;
+  width: 32rem;
+  height: 32rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, var(--primary-glow), transparent 70%);
+  filter: blur(70px);
+  pointer-events: none;
+  animation: crest-breathe 9s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .crest-ambient-glow {
+    animation: none;
+    opacity: 0.3;
+  }
+}
+
+/* Faint dot-grid backdrop for the spotlight chapter, echoing the rest of
+   the page's grid without needing a second decorative device. */
+.crest-spotlight-grid {
+  background-image: radial-gradient(color-mix(in oklab, var(--foreground) 16%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* Color-grades the real stock photo in Craft.tsx into this page's
+   single-accent palette instead of running it at its native colors (which
+   would break the color-consistency lock). Desaturate first, then a violet
+   tint layer on top with mix-blend-mode:color re-applies hue/saturation
+   from the tint while keeping the photo's own luminosity — the standard
+   CSS duotone-grade technique, not a flat color wash. */
+.crest-photo-grade {
+  filter: grayscale(0.55) contrast(1.12) brightness(0.92);
+}
+.crest-photo-tint {
+  background: color-mix(in oklab, var(--primary) 55%, transparent);
+  mix-blend-mode: color;
+}

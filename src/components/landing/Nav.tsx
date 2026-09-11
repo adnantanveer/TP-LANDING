@@ -44,7 +44,7 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
   }, []);
 
   useEffect(() => {
-    const hero = document.querySelector<HTMLElement>(".hero-world");
+    let hero = document.querySelector<HTMLElement>(".hero-world");
     if (!hero) {
       setVisible(true); // no hero on this page — just show the header
       return;
@@ -52,7 +52,7 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
 
     let heroBottom = 0;
     const measure = () => {
-      heroBottom = hero.getBoundingClientRect().bottom + window.scrollY;
+      heroBottom = hero!.getBoundingClientRect().bottom + window.scrollY;
     };
 
     let ticking = false;
@@ -71,11 +71,6 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
       update();
     };
 
-    measure();
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
-
     // The hero is a scroll-world video sequence — its real height is only
     // set once the engine computes the scroll track (ScrollWorldMount's own
     // mount effect, which can run/settle after this one). Without watching
@@ -84,10 +79,34 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
     const ro = new ResizeObserver(onResize);
     ro.observe(hero);
 
+    // Hero.tsx renders a plain placeholder div while its CMS content is
+    // loading, then swaps in ScrollWorldMount's own div once it resolves —
+    // a brand-new .hero-world node, not a resize of the old one. Without
+    // retargeting, the ResizeObserver above keeps watching the now-detached
+    // placeholder (whose rect reads as all-zero), which made heroBottom
+    // collapse to ~0 and the header appear the moment the page loaded.
+    const mo = new MutationObserver(() => {
+      const next = document.querySelector<HTMLElement>(".hero-world");
+      if (next && next !== hero) {
+        ro.disconnect();
+        hero = next;
+        ro.observe(hero);
+        measure();
+        update();
+      }
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    measure();
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       ro.disconnect();
+      mo.disconnect();
     };
   }, []);
 

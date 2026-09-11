@@ -1,8 +1,11 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "@phosphor-icons/react";
 import { SectionLabel, Reveal } from "./primitives";
 import { BackgroundRippleEffect } from "./BackgroundRippleEffect";
+import { CalendlyEmbed } from "@/concepts/shared/CalendlyEmbed";
 import { getRecaptchaConfig, getRecaptchaTokenV3, type RecaptchaConfig } from "@/lib/recaptcha";
 import { RecaptchaCheckbox } from "@/components/RecaptchaCheckbox";
 import { COUNTRY_CODES } from "@/lib/countryCodes";
@@ -156,8 +159,8 @@ export function Marquee() {
   );
 }
 
-type ContactDetail = { type: "address" | "phone" | "email"; label: string; value: string; href?: string; whatsapp?: string };
-type ContactContent = {
+export type ContactDetail = { type: "address" | "phone" | "email"; label: string; value: string; href?: string; whatsapp?: string };
+export type ContactContent = {
   visible: boolean;
   heading: string;
   body: string;
@@ -168,7 +171,7 @@ type ContactContent = {
   details: ContactDetail[];
 };
 
-const DEFAULT_CONTACT_CONTENT: ContactContent = {
+export const DEFAULT_CONTACT_CONTENT: ContactContent = {
   visible: true,
   heading: "Let's build the next one together.",
   body: "Tell us what you're planning. We'll come back within one working day with a view on scope, timeline and cost.",
@@ -185,7 +188,7 @@ const DEFAULT_CONTACT_CONTENT: ContactContent = {
 
 // Icons are fixed art per detail type, not admin-editable — only
 // label/value/href/whatsapp come from the CMS (see /api/content/contact).
-const DETAIL_ICONS: Record<ContactDetail["type"], ReactNode> = {
+export const DETAIL_ICONS: Record<ContactDetail["type"], ReactNode> = {
   address: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
@@ -302,7 +305,20 @@ export function Contact() {
         </div>
 
         <Reveal delay={0.15}>
-          <ContactForm />
+          <div className="overflow-hidden rounded-2xl border border-border bg-background/90 shadow-[var(--shadow-deep)] backdrop-blur-md">
+            <div className="border-b border-border px-6 py-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Book a call</p>
+              <p className="mt-1 text-sm text-foreground">30 minutes, pick a time that works for you.</p>
+            </div>
+            <CalendlyEmbed url="https://calendly.com/techpotam/30min" height={650} />
+            <Link
+              to="/contact"
+              className="flex items-center justify-between gap-2 border-t border-border px-6 py-4 text-sm text-foreground transition-colors hover:text-primary"
+            >
+              Prefer to write instead? Send a message
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -331,7 +347,7 @@ function ChevronDown() {
   );
 }
 
-function ContactForm() {
+export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [recaptchaConfig, setRecaptchaConfig] = useState<RecaptchaConfig | null>(null);

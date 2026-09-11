@@ -1,0 +1,76 @@
+/* ==========================================================================
+   Concept: Air — light, ultra-minimal/gallery. Near-white + near-black +
+   one very restrained deep-pine accent, one type family throughout
+   (Instrument Sans, display and body both), huge whitespace instead of
+   ornament. Same token-override scoping as the other concepts.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Air Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/air-instrument-sans-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Air Mono";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/fonts/air-geist-mono-variable.woff2") format("woff2");
+}
+
+.concept-air {
+  --radius: 0.5rem;
+
+  --background: oklch(0.99 0.001 90);
+  --foreground: oklch(0.15 0.004 90);
+  --card: oklch(0.97 0.002 90);
+  --card-foreground: oklch(0.15 0.004 90);
+  --popover: oklch(0.99 0.001 90);
+  --popover-foreground: oklch(0.15 0.004 90);
+
+  --primary: oklch(0.38 0.05 165);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-glow: oklch(0.48 0.06 165);
+
+  --secondary: oklch(0.3 0.006 90);
+  --secondary-foreground: oklch(0.98 0 0);
+
+  --muted: oklch(0.955 0.002 90);
+  --muted-foreground: oklch(0.46 0.008 90);
+  --accent: oklch(0.94 0.014 165);
+  --accent-foreground: oklch(0.3 0.06 165);
+  --destructive: oklch(0.56 0.21 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.15 0.004 90 / 10%);
+  --input: oklch(0.15 0.004 90 / 14%);
+  --ring: oklch(0.38 0.05 165);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --shadow-ember: 0 20px 50px -30px color-mix(in oklab, var(--primary) 35%, transparent);
+  --shadow-deep: 0 20px 60px -40px oklch(0.15 0.004 90 / 20%);
+
+  --font-display: "Air Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Air Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Air Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-air h1,
+.concept-air h2,
+.concept-air h3,
+.concept-air h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+.concept-air ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}

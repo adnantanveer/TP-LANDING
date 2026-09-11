@@ -1,0 +1,155 @@
+/* ==========================================================================
+   Concept: Vantage — dark, cold-luxury bento/glass, single ice-blue accent.
+   Same scoping approach as Signal (see signal.css) — token overrides only,
+   under .concept-vantage, so shared var(--x) utilities re-theme for free.
+   Radius scale is intentionally soft/generous here (cards) with buttons
+   pinned to full-pill via rounded-full in markup — documented split per
+   the shape-consistency rule, not an accident.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Vantage Display";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("/fonts/vantage-bricolage-grotesque-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Vantage Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/vantage-plus-jakarta-sans-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Vantage Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/vantage-space-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Vantage Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/vantage-space-mono-700.woff2") format("woff2");
+}
+
+.concept-vantage {
+  --radius: 1.25rem;
+
+  --background: oklch(0.15 0.005 245);
+  --foreground: oklch(0.96 0.003 240);
+  --card: oklch(0.205 0.009 245);
+  --card-foreground: oklch(0.96 0.003 240);
+  --popover: oklch(0.205 0.009 245);
+  --popover-foreground: oklch(0.96 0.003 240);
+
+  --primary: oklch(0.74 0.13 220);
+  --primary-foreground: oklch(0.15 0.02 240);
+  --primary-glow: oklch(0.85 0.09 202);
+
+  --secondary: oklch(0.55 0.012 240);
+  --secondary-foreground: oklch(0.97 0 0);
+
+  --muted: oklch(0.24 0.008 245);
+  --muted-foreground: oklch(0.7 0.014 240);
+  --accent: oklch(0.28 0.02 225);
+  --accent-foreground: oklch(0.9 0.04 220);
+  --destructive: oklch(0.62 0.21 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.74 0.13 220);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --gradient-veil: radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--primary) 16%, transparent), transparent 70%);
+  --shadow-ember: 0 30px 90px -40px color-mix(in oklab, var(--primary) 42%, transparent);
+  --shadow-deep: 0 40px 120px -60px oklch(0 0 0 / 88%);
+
+  --font-display: "Vantage Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Vantage Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Vantage Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-vantage h1,
+.concept-vantage h2,
+.concept-vantage h3,
+.concept-vantage h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.concept-vantage ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Reusable frosted-glass surface for bento cells, nav, cards — one
+   consistent recipe (blur + inner highlight border) rather than ad-hoc
+   backdrop-blur per component. Solid fallback for prefers-reduced-transparency. */
+.vantage-glass {
+  background: color-mix(in oklab, var(--card) 62%, transparent);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, white 8%, transparent);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .vantage-glass {
+    background: var(--card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Film-grain texture — fixed + pointer-events-none per the perf rule
+   (6.E), same technique as Signal's but blended for a dark page (screen,
+   not multiply) and a hair stronger since it reads against near-black. */
+.concept-vantage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Holographic sheen sweep — a diagonal light band that animates across on
+   hover (bento hero cell, featured work card). Pure CSS, transform-driven. */
+.vantage-sheen {
+  position: relative;
+  overflow: hidden;
+}
+.vantage-sheen::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    color-mix(in oklab, var(--primary) 35%, transparent) 48%,
+    color-mix(in oklab, white 50%, var(--primary)) 50%,
+    color-mix(in oklab, var(--primary) 35%, transparent) 52%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.vantage-sheen:hover::after {
+  transform: translateX(100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vantage-sheen::after {
+    display: none;
+  }
+}

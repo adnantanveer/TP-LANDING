@@ -1,0 +1,91 @@
+/* ==========================================================================
+   Concept: Vertex — dark, real WebGL 3D scene (Three.js, not CSS tricks),
+   single neon-lime accent, zero radius. Same token-override scoping as
+   Signal/Vantage — see signal.css for the full explanation of why this
+   works with zero changes to the shared stylesheet.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Vertex Display";
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url("/fonts/vertex-syne-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Vertex Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/vertex-hanken-grotesk-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Vertex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/vertex-fragment-mono-400.woff2") format("woff2");
+}
+
+.concept-vertex {
+  --radius: 0px;
+
+  --background: oklch(0.12 0.006 250);
+  --foreground: oklch(0.95 0.004 140);
+  --card: oklch(0.165 0.01 250);
+  --card-foreground: oklch(0.95 0.004 140);
+  --popover: oklch(0.165 0.01 250);
+  --popover-foreground: oklch(0.95 0.004 140);
+
+  --primary: oklch(0.8 0.23 145);
+  --primary-foreground: oklch(0.14 0.02 150);
+  --primary-glow: oklch(0.88 0.19 140);
+
+  --secondary: oklch(0.5 0.01 250);
+  --secondary-foreground: oklch(0.97 0 0);
+
+  --muted: oklch(0.2 0.01 250);
+  --muted-foreground: oklch(0.65 0.012 250);
+  --accent: oklch(0.24 0.03 145);
+  --accent-foreground: oklch(0.88 0.2 145);
+  --destructive: oklch(0.62 0.21 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.8 0.23 145);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --gradient-veil: radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%);
+  --shadow-ember: 0 30px 90px -40px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-deep: 0 40px 120px -60px oklch(0 0 0 / 90%);
+
+  --font-display: "Vertex Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Vertex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Vertex Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-vertex h1,
+.concept-vertex h2,
+.concept-vertex h3,
+.concept-vertex h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.concept-vertex ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.concept-vertex .vertex-canvas-wrap {
+  position: absolute;
+  inset: 0;
+}
+.concept-vertex .vertex-canvas-wrap canvas {
+  display: block;
+}

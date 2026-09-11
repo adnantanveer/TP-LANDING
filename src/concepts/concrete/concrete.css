@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Concept: Concrete — light, brutalist/raw. Off-white + near-black + one
+   alarm-red accent, zero radius, thick 2-3px borders instead of hairlines.
+   Same token-override scoping as Signal/Vantage/Vertex.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Concrete Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/concrete-archivo-black-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Concrete Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/concrete-archivo-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Concrete Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/concrete-dm-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Concrete Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/concrete-dm-mono-500.woff2") format("woff2");
+}
+
+.concept-concrete {
+  --radius: 0px;
+
+  --background: oklch(0.965 0.003 95);
+  --foreground: oklch(0.12 0.004 90);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.12 0.004 90);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.12 0.004 90);
+
+  --primary: oklch(0.56 0.23 27);
+  --primary-foreground: oklch(0.99 0 0);
+  --primary-glow: oklch(0.66 0.21 35);
+
+  --secondary: oklch(0.12 0.004 90);
+  --secondary-foreground: oklch(0.99 0 0);
+
+  --muted: oklch(0.91 0.004 95);
+  --muted-foreground: oklch(0.38 0.006 90);
+  --accent: oklch(0.91 0.03 30);
+  --accent-foreground: oklch(0.3 0.1 27);
+  --destructive: oklch(0.56 0.23 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.12 0.004 90);
+  --input: oklch(0.12 0.004 90 / 60%);
+  --ring: oklch(0.56 0.23 27);
+
+  --gradient-ember: linear-gradient(120deg, var(--primary), var(--primary-glow));
+  --shadow-ember: 8px 8px 0 0 var(--primary);
+  --shadow-deep: 8px 8px 0 0 var(--foreground);
+
+  --font-display: "Concrete Display", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Concrete Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Concrete Mono", ui-monospace, monospace;
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.concept-concrete h1,
+.concept-concrete h2,
+.concept-concrete h3,
+.concept-concrete h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.concept-concrete ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+/* Hard offset shadow (the one "flourish" this page allows itself) — a
+   fixed black or red block sitting behind a card/button, no blur, moving
+   flush on press for physical, printed-poster feedback. */
+.concrete-block {
+  box-shadow: 6px 6px 0 0 var(--foreground);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.concrete-block:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 0 var(--foreground);
+}
+.concrete-block:active {
+  transform: translate(0, 0);
+  box-shadow: 3px 3px 0 0 var(--foreground);
+}
+@media (prefers-reduced-motion: reduce) {
+  .concrete-block {
+    transition: none;
+  }
+}
