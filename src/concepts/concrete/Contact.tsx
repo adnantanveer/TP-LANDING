@@ -1,16 +1,14 @@
+import { Link } from "react-router-dom";
 import { Reveal } from "@/components/landing/primitives";
-import { RecaptchaCheckbox } from "@/components/RecaptchaCheckbox";
-import { useContactForm, BUDGETS } from "@/concepts/shared/useContactForm";
+import { CalendlyEmbed } from "@/concepts/shared/CalendlyEmbed";
 import { contactInfo } from "@/concepts/shared/content";
-import { CaretDown } from "@phosphor-icons/react";
-import { COUNTRY_CODES } from "@/lib/countryCodes";
+import { ArrowRight } from "@phosphor-icons/react";
 
-const fieldClass =
-  "w-full border-2 border-foreground bg-background px-5 py-4 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:bg-accent";
-
+/** Leads with the real Calendly booking widget (calendly.com/techpotam,
+ * "30 Minute Meeting") instead of the full form — the form itself lives on
+ * its own page (ContactPage.tsx) for anyone who'd rather write than book a
+ * call, linked below instead of duplicated here. */
 export function ConcreteContact() {
-  const { status, errorMessage, recaptchaConfig, setV2Token, handleSubmit } = useContactForm();
-
   return (
     <section id="contact" className="relative bg-primary py-20 text-primary-foreground md:py-28">
       <div className="mx-auto grid max-w-5xl gap-12 px-6 md:grid-cols-2 md:items-start">
@@ -36,58 +34,24 @@ export function ConcreteContact() {
               ))}
             </div>
           </Reveal>
+          <Reveal delay={0.2}>
+            <Link
+              to="/concepts/concrete/contact"
+              className="mt-8 inline-flex items-center gap-2 border-b-2 border-primary-foreground pb-1 text-sm font-bold uppercase tracking-wide"
+            >
+              Prefer to write instead? <ArrowRight weight="bold" className="h-3.5 w-3.5" />
+            </Link>
+          </Reveal>
         </div>
 
         <Reveal delay={0.1}>
-          {status === "success" ? (
-            <div className="border-2 border-primary-foreground bg-background p-8 text-center text-foreground">
-              <p className="text-sm font-bold">Thanks. We've got your message and will be in touch shortly.</p>
+          <div className="border-2 border-primary-foreground bg-background text-foreground">
+            <div className="border-b-2 border-foreground px-6 py-4">
+              <p className="font-mono text-xs font-bold uppercase tracking-wide">Book a call</p>
+              <p className="mt-1 text-sm">30 minutes, pick a time that works for you.</p>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 border-2 border-primary-foreground bg-background p-6 text-foreground sm:p-8">
-              <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 opacity-0" />
-              <input type="text" name="name" placeholder="Enter your name" required className={fieldClass} />
-              <div className="flex gap-3">
-                <div className="relative w-[6.5rem] shrink-0">
-                  <select name="countryCode" defaultValue="+44" required className={`${fieldClass} appearance-none pr-8 text-center`}>
-                    {COUNTRY_CODES.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.flag} {c.code}
-                      </option>
-                    ))}
-                  </select>
-                  <CaretDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2" />
-                </div>
-                <input type="tel" name="phone" placeholder="Phone number" required pattern="[0-9 \(\)+\-]{6,}" className={`${fieldClass} flex-1`} />
-              </div>
-              <input type="email" name="email" placeholder="Enter your email" required className={fieldClass} />
-              <div className="relative">
-                <select name="budget" defaultValue="" required className={`${fieldClass} appearance-none`}>
-                  <option value="" disabled>
-                    Select your budget
-                  </option>
-                  {BUDGETS.map((b) => (
-                    <option key={b} value={b}>
-                      {b}
-                    </option>
-                  ))}
-                </select>
-                <CaretDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2" />
-              </div>
-              <textarea name="message" placeholder="Tell us about the project" required minLength={10} rows={4} className={`${fieldClass} resize-none`} />
-              {recaptchaConfig?.active && recaptchaConfig.version === "v2" && (
-                <RecaptchaCheckbox siteKey={recaptchaConfig.siteKey} onChange={setV2Token} />
-              )}
-              {status === "error" && <p className="text-sm text-destructive">{errorMessage}</p>}
-              <button
-                type="submit"
-                disabled={status === "submitting"}
-                className="concrete-block w-full border-2 border-foreground bg-foreground px-8 py-4 text-sm font-bold uppercase tracking-wide text-background disabled:opacity-60 sm:w-auto"
-              >
-                {status === "submitting" ? "Sending..." : "Submit"}
-              </button>
-            </form>
-          )}
+            <CalendlyEmbed url="https://calendly.com/techpotam/30min" height={650} />
+          </div>
         </Reveal>
       </div>
     </section>
