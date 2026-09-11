@@ -52,13 +52,30 @@ const DEFAULT_TECH_STACK_CONTENT: TechStackContent = {
   ],
 };
 
+// The CMS response replaces this component's whole `content` state
+// wholesale — great when an admin has genuinely configured everything, but
+// it also means a per-item gap in the live data (an empty icon, or one
+// saved as a bare <path> with no wrapping <svg>, which InlineIcon's
+// `[&>svg]` sizing selector can't target and so never renders) silently
+// blanks out an icon that already has a good default here. Real data
+// still wins whenever it's actually usable — this only fills the specific
+// items the API left blank/broken, matched by name.
+function hasUsableIcon(icon: string | undefined) {
+  return !!icon && /<svg[\s>]/i.test(icon);
+}
+
+function withIconFallback(items: Tech[]): Tech[] {
+  const defaults = new Map(DEFAULT_TECH_STACK_CONTENT.items.map((t) => [t.name, t.icon]));
+  return items.map((item) => (hasUsableIcon(item.icon) ? item : { ...item, icon: defaults.get(item.name) ?? item.icon }));
+}
+
 export function TechStack() {
   const [content, setContent] = useState<TechStackContent>(DEFAULT_TECH_STACK_CONTENT);
 
   useEffect(() => {
     fetch(`${API_URL}/api/content/techStack`)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => data && setContent(data))
+      .then((data) => data && setContent({ ...data, items: withIconFallback(data.items) }))
       .catch(() => {});
   }, []);
 
