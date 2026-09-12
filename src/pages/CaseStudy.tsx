@@ -8,9 +8,10 @@ import { sanitizeHtml } from "@/lib/sanitizeHtml";
 const API_URL = import.meta.env.VITE_API_URL as string;
 
 type WorkResult = { stat: string; label: string };
+type WorkImage = { url: string; type: "image" | "video"; title: string; altText: string; caption: string };
 type WorkItem = {
   slug: string;
-  img: string;
+  images: WorkImage[];
   client: string;
   title: string;
   caption: string;
@@ -20,9 +21,6 @@ type WorkItem = {
   approach: string;
   results: WorkResult[];
   stack: string[];
-  testimonialQuote: string;
-  testimonialName: string;
-  testimonialRole: string;
 };
 
 /**
@@ -46,8 +44,9 @@ export function CaseStudy() {
   if (all === null) return null;
 
   const project = all.find((w) => w.slug === slug);
-  console.log("[DEBUG CaseStudy] slug:", JSON.stringify(slug), "all slugs:", all.map((w) => w.slug), "found:", !!project);
   if (!project) return <Navigate to="/" replace />;
+  const cover = project.images?.[0];
+  const gallery = project.images?.slice(1) ?? [];
 
   return (
     <main className="relative">
@@ -92,13 +91,20 @@ export function CaseStudy() {
         <Reveal delay={0.15}>
           <div className="relative mx-auto mt-14 max-w-6xl px-6">
             <div className="overflow-hidden rounded-2xl border border-border">
-              <img
-                src={project.img}
-                alt={project.title}
-                width={1600}
-                height={1000}
-                className="h-[38vh] w-full object-cover md:h-[56vh]"
-              />
+              {/* The admin prevents a video from ever being set as the cover,
+                  but render it correctly here too rather than assume — a
+                  plain <img src="*.mp4"> would just show a broken tile. */}
+              {cover?.type === "video" ? (
+                <video src={cover.url} controls className="h-[38vh] w-full object-cover md:h-[56vh]" />
+              ) : (
+                <img
+                  src={cover?.url}
+                  alt={cover?.altText || project.title}
+                  width={1600}
+                  height={1000}
+                  className="h-[38vh] w-full object-cover md:h-[56vh]"
+                />
+              )}
             </div>
           </div>
         </Reveal>
@@ -158,19 +164,39 @@ export function CaseStudy() {
         </div>
       </section>
 
-      {/* testimonial */}
-      <section className="relative overflow-hidden bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_85%,transparent)_0%,color-mix(in_oklab,var(--primary)_14%,transparent)_55%,color-mix(in_oklab,var(--background)_88%,transparent)_100%)] py-28">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <Reveal>
-            <p className="text-[clamp(1.4rem,3.2vw,2.2rem)] font-medium leading-snug">
-              “{project.testimonialQuote}”
-            </p>
-            <p className="mt-6 text-sm text-muted-foreground">
-              {project.testimonialName} · {project.testimonialRole}
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      {/* gallery — every image beyond the cover, only rendered if there are any */}
+      {gallery.length > 0 && (
+        <section className="relative py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <Reveal>
+              <SectionLabel>Gallery</SectionLabel>
+              <h2 className="mt-5 max-w-xl text-[clamp(1.8rem,4vw,2.8rem)] font-semibold leading-[1.05]">
+                More from <span className="text-ember">this project</span>.
+              </h2>
+            </Reveal>
+
+            <div className="mt-14 grid gap-6 sm:grid-cols-2">
+              {gallery.map((img, i) => (
+                <Reveal key={img.url + i} delay={0.06 * i}>
+                  <figure className="overflow-hidden rounded-2xl border border-border bg-card">
+                    {img.type === "video" ? (
+                      <video src={img.url} controls className="h-64 w-full object-cover" />
+                    ) : (
+                      <img
+                        src={img.url}
+                        alt={img.altText || img.title || project.title}
+                        loading="lazy"
+                        className="h-64 w-full object-cover"
+                      />
+                    )}
+                    {img.caption && <figcaption className="px-5 py-4 text-sm text-muted-foreground">{img.caption}</figcaption>}
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* closing CTA */}
       <section className="relative py-28">

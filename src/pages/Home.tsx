@@ -8,6 +8,7 @@ import { OurWork } from "@/components/landing/OurWork";
 import { Precision } from "@/components/landing/Precision";
 import { TechStack } from "@/components/landing/TechStack";
 import { Testimonials } from "@/components/landing/Testimonials";
+import { TeamSection } from "@/components/landing/TeamSection";
 import { Marquee, Contact, Footer } from "@/components/landing/Sections";
 import { SceneEnter } from "@/components/landing/primitives";
 
@@ -76,6 +77,10 @@ export function Home() {
       </SceneEnter>
 
       <Testimonials />
+
+      <SceneEnter>
+        <TeamSection />
+      </SceneEnter>
 
       <SceneEnter>
         <Contact />

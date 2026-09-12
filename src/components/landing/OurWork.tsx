@@ -5,7 +5,8 @@ import { SectionLabel } from "./primitives";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-type WorkItem = { slug: string; img: string; client: string; title: string; caption: string; meta: string[] };
+type WorkImage = { url: string; type: "image" | "video"; title: string; altText: string; caption: string };
+type WorkItem = { slug: string; images: WorkImage[]; client: string; title: string; caption: string; meta: string[] };
 
 /**
  * Pinned horizontal-scroll gallery — same sticky-pin + scroll-driven x-track
@@ -80,7 +81,7 @@ export function OurWork() {
 
 function WorkCard({
   slug,
-  img,
+  images,
   client,
   title,
   caption,
@@ -88,27 +89,42 @@ function WorkCard({
   index,
 }: {
   slug: string;
-  img: string;
+  images: WorkImage[];
   client: string;
   title: string;
   caption: string;
   meta: string[];
   index: number;
 }) {
+  const cover = images?.[0];
   return (
     <Link
       to={`/work/${slug}`}
       className="group relative block w-[78vw] shrink-0 overflow-hidden rounded-2xl border border-border bg-card transition-colors duration-300 hover:border-primary/50 md:w-[34vw]"
     >
       <div className="relative h-44 overflow-hidden">
-        <img
-          src={img}
-          alt={title}
-          loading="lazy"
-          width={1200}
-          height={900}
-          className="h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-110"
-        />
+        {/* The admin prevents a video from ever being set as the cover, but
+            render it correctly here too rather than assume — a plain
+            <img src="*.mp4"> would just show a broken tile. */}
+        {cover?.type === "video" ? (
+          <video
+            src={cover.url}
+            muted
+            loop
+            autoPlay
+            playsInline
+            className="h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-110"
+          />
+        ) : (
+          <img
+            src={cover?.url}
+            alt={cover?.altText || title}
+            loading="lazy"
+            width={1200}
+            height={900}
+            className="h-full w-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-110"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
       </div>
       <div className="p-10 pt-6">

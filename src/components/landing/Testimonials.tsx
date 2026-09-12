@@ -4,29 +4,45 @@ import { SectionLabel } from "./primitives";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-const DEFAULT_CONTENT = {
-  visible: true,
-  heading: "Trusted By Ambitious Teams.",
-  items: [
-    {
-      quote:
-        "They treated our product like it was their own. The craft shows in every screen, every transition, every detail.",
-      name: "Operations Director",
-      org: "UK Healthcare Provider",
-    },
-    {
-      quote:
-        "What impressed us most was the restraint — nothing in the product feels unnecessary. It just works, beautifully.",
-      name: "Head of Digital",
-      org: "UK Financial Services Firm",
-    },
-    {
-      quote: "From discovery to launch, the process felt calm and considered. The result speaks for itself.",
-      name: "Founder",
-      org: "UK Logistics Startup",
-    },
-  ],
+const HEADING = "Trusted By Ambitious Teams.";
+
+type TestimonialItem = {
+  id: string;
+  name: string;
+  organization: string;
+  role: string;
+  quote: string;
+  photo: string;
 };
+
+const DEFAULT_ITEMS: TestimonialItem[] = [
+  {
+    id: "default-1",
+    quote:
+      "They treated our product like it was their own. The craft shows in every screen, every transition, every detail.",
+    name: "Operations Director",
+    organization: "UK Healthcare Provider",
+    role: "",
+    photo: "",
+  },
+  {
+    id: "default-2",
+    quote:
+      "What impressed us most was the restraint — nothing in the product feels unnecessary. It just works, beautifully.",
+    name: "Head of Digital",
+    organization: "UK Financial Services Firm",
+    role: "",
+    photo: "",
+  },
+  {
+    id: "default-3",
+    quote: "From discovery to launch, the process felt calm and considered. The result speaks for itself.",
+    name: "Founder",
+    organization: "UK Logistics Startup",
+    role: "",
+    photo: "",
+  },
+];
 
 /**
  * Pinned quote crossfade: same "act" mechanic as the hero (progress-driven
@@ -37,16 +53,16 @@ export function Testimonials() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const p = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 });
-  const [content, setContent] = useState(DEFAULT_CONTENT);
+  const [items, setItems] = useState<TestimonialItem[]>(DEFAULT_ITEMS);
 
   useEffect(() => {
     fetch(`${API_URL}/api/content/testimonials`)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => data && setContent(data))
+      .then((data) => data?.testimonials && setItems(data.testimonials))
       .catch(() => {});
   }, []);
 
-  if (!content.visible) return null;
+  if (items.length === 0) return null;
 
   return (
     <section
@@ -57,16 +73,16 @@ export function Testimonials() {
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6">
         <div className="mb-16 text-center">
           <SectionLabel>In their words</SectionLabel>
-          <h2 className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">{content.heading}</h2>
+          <h2 className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">{HEADING}</h2>
         </div>
 
         <div className="perspective-scene relative h-[40vh] w-full max-w-3xl">
-          {content.items.map((t, i) => (
-            <Quote key={t.name} {...t} index={i} total={content.items.length} progress={p} />
+          {items.map((t, i) => (
+            <Quote key={t.id} {...t} index={i} total={items.length} progress={p} />
           ))}
         </div>
 
-        <Dots progress={p} total={content.items.length} />
+        <Dots progress={p} total={items.length} />
       </div>
     </section>
   );
@@ -75,14 +91,18 @@ export function Testimonials() {
 function Quote({
   quote,
   name,
-  org,
+  organization,
+  role,
+  photo,
   index,
   total,
   progress,
 }: {
   quote: string;
   name: string;
-  org: string;
+  organization: string;
+  role: string;
+  photo: string;
   index: number;
   total: number;
   progress: MotionValue<number>;
@@ -111,9 +131,10 @@ function Quote({
           &ldquo;{quote}&rdquo;
         </p>
       </blockquote>
-      <figcaption className="mt-8">
+      <figcaption className="mt-8 flex flex-col items-center">
+        {photo && <img src={photo} alt="" className="mb-3 h-12 w-12 rounded-full border border-border object-cover" />}
         <p className="font-medium">{name}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{org}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{[role, organization].filter(Boolean).join(", ")}</p>
       </figcaption>
     </motion.figure>
   );
