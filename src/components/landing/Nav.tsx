@@ -12,15 +12,20 @@ import { Link } from "react-router-dom";
 //
 // Routing both shapes through react-router's own <Link> instead makes them
 // real client-side navigations from anywhere in the app. The anchor target
-// travels as router *state* (`{ scrollTo: "services" }`), not as a second
-// URL hash — this is already a HashRouter, so the URL's one hash slot is
+// is encoded as a query param ("/?section=services"), not a second URL
+// hash — this is already a HashRouter, so the URL's one hash slot is
 // spoken for by the route itself; stacking the anchor on top of that as
 // its own hash renders as an ugly (if technically working) "/#/#services".
-// State keeps the URL to a single "/#/" and is exactly what App.tsx's
-// ScrollToTop reads to perform the actual scroll.
-function toLinkProps(href: string): { to: string; state?: { scrollTo: string } } {
+// A query param keeps a single "#/" while still being real, shareable URL
+// state — unlike router `state`, it survives a hard refresh, which is the
+// whole point: reloading a link like "/#/?section=services" must land back
+// on that section, not silently drop to the top. App.tsx's ScrollToTop
+// reads this same param to perform the actual scroll, on both client-side
+// nav and fresh page load.
+function toLinkProps(href: string): { to: string } {
   if (href.startsWith("#/")) return { to: href.slice(1) };
-  return { to: "/", state: { scrollTo: href.slice(1) } };
+  const section = href.slice(1);
+  return { to: section === "top" ? "/" : `/?section=${section}` };
 }
 
 const API_URL = import.meta.env.VITE_API_URL as string;

@@ -116,6 +116,18 @@
     scroll-behavior: smooth;
   }
 
+  /* Nav's fixed header (see Nav.tsx) sits ~83px tall over the top of the
+     viewport — without this, scrolling to one of these sections (via the
+     header's own links, or App.tsx's ScrollToTop) lands their heading
+     partly hidden underneath it. */
+  #services,
+  #work,
+  #precision,
+  #testimonials,
+  #contact {
+    scroll-margin-top: 96px;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);

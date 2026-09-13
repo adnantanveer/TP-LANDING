@@ -1,5 +1,5 @@
 import { useEffect, Suspense, lazy } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useSearchParams } from "react-router-dom";
 import { Home } from "@/pages/Home";
 import { ReuseComponent } from "@/pages/ReuseComponent";
 import { CaseStudy } from "@/pages/CaseStudy";
@@ -86,30 +86,29 @@ function GlobalScripts() {
 // homepage into a case study lands mid-page instead of at its own top.
 //
 // Also handles a navigation that arrives wanting to land on a specific
-// section (e.g. Nav's links, now real <Link to="/" state={{ scrollTo:
-// "services" }}> navigations so they work from any page — see Nav.tsx):
-// scrolls to that element instead of snapping to the top. Deliberately
-// router *state*, not a URL hash — this app already spends its one
-// HashRouter hash slot on the route itself, so a same-page anchor would
-// have to stack a second hash on top of that ("/#/#services"), which
-// renders correctly but reads as a mistake. State carries the same intent
-// without touching the URL at all.
+// section (e.g. Nav's links, real <Link to="/?section=services">
+// navigations so they work from any page — see Nav.tsx). The target
+// travels as a query param, not router state: state doesn't survive a hard
+// refresh or a pasted/shared link, and the section should both show up in
+// the URL and still work after reloading it — a query param does both
+// while a same-page anchor would have to stack a second hash on top of the
+// route's own ("/#/#services"), which works but reads as a mistake.
 //
-// Two separate timing problems, not one: the target section usually exists
-// immediately (every homepage section renders its own wrapper
-// synchronously; only its *content* streams in later from the CMS), but a
-// route change can still land here a frame before the new page's tree has
-// committed — and on the homepage specifically, the hero is a
-// scroll-scrubbed video that only reaches its true (multi-viewport) height
-// once its own engine finishes measuring, which happens *after* mount.
-// Scrolling the moment the target merely *exists* landed short every time,
-// because everything below the hero was still shifting downward as it
-// expanded. This waits for the target's own position to stop moving
-// between two consecutive frames before scrolling, which is agnostic to
-// whatever is still resizing above it.
+// Landing on the right pixel is its own problem, separate from knowing
+// *which* element to land on. The target section usually exists in the DOM
+// immediately, but content below it keeps arriving asynchronously — CMS
+// fetches that can take over a second on a cold backend (see Hero.tsx's
+// own 2500ms fetch timeout), and the homepage's hero is a scroll-scrubbed
+// video that only reaches its true (multi-viewport) height once its engine
+// finishes measuring, after mount. Scrolling once, the moment the target
+// merely exists, lands short — everything below the hero is still shifting
+// down as more of the page settles in. Re-issuing the scroll every time the
+// page's overall height changes (not just once, and not by guessing a
+// fixed delay) tracks that settling directly instead of racing it.
 function ScrollToTop() {
-  const { pathname, state } = useLocation();
-  const scrollTo = (state as { scrollTo?: string } | null)?.scrollTo;
+  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+  const scrollTo = searchParams.get("section");
 
   useEffect(() => {
     const root = document.documentElement;
@@ -117,24 +116,19 @@ function ScrollToTop() {
 
     if (scrollTo) {
       const selector = `#${scrollTo}`;
-      let attempts = 0;
-      let lastTop: number | null = null;
-      let raf: number;
-      const tryScroll = () => {
-        const target = document.querySelector(selector);
-        const top = target?.getBoundingClientRect().top ?? null;
-        const settled = target && top !== null && top === lastTop;
-        lastTop = top;
-        if (settled) {
-          target.scrollIntoView({ block: "start" });
-        } else if (attempts++ < 60) {
-          raf = requestAnimationFrame(tryScroll);
-        } else if (target) {
-          target.scrollIntoView({ block: "start" }); // give up waiting, scroll anyway
-        }
+      const scroll = () => document.querySelector(selector)?.scrollIntoView({ block: "start" });
+
+      scroll();
+      const ro = new ResizeObserver(scroll);
+      ro.observe(document.body);
+      // Nothing on this page legitimately keeps resizing past this point —
+      // stop correcting so a user who's since scrolled elsewhere on their
+      // own doesn't get yanked back by an unrelated late layout shift.
+      const stop = window.setTimeout(() => ro.disconnect(), 3000);
+      return () => {
+        ro.disconnect();
+        clearTimeout(stop);
       };
-      tryScroll();
-      return () => cancelAnimationFrame(raf);
     }
 
     // styles.css sets html{scroll-behavior:smooth} for in-page anchor

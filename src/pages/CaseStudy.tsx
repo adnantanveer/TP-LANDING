@@ -69,8 +69,7 @@ export function CaseStudy() {
         />
         <div className="relative mx-auto max-w-6xl px-6">
           <Link
-            to="/"
-            state={{ scrollTo: "work" }}
+            to="/?section=work"
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-primary"
           >
             ← Back to our work
@@ -202,8 +201,7 @@ export function CaseStudy() {
                 Want a result like this for <span className="text-ember">your product</span>?
               </h3>
               <Link
-                to="/"
-                state={{ scrollTo: "contact" }}
+                to="/?section=contact"
                 className="shrink-0 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.04]"
               >
                 Start a conversation
