@@ -119,15 +119,23 @@ function ScrollToTop() {
       const scroll = () => document.querySelector(selector)?.scrollIntoView({ block: "start" });
 
       scroll();
+      // Covers the layout-driven shift (body actually growing taller as
+      // content streams in). Doesn't cover the hero's own settle, which
+      // moves everything below it via transform rather than a height
+      // change — ResizeObserver is blind to that, so it's backstopped by
+      // the fixed-delay corrections below.
       const ro = new ResizeObserver(scroll);
       ro.observe(document.body);
-      // Nothing on this page legitimately keeps resizing past this point —
+      const correctionDelays = [200, 500, 900, 1400, 2000, 2800];
+      const timers = correctionDelays.map((ms) => window.setTimeout(scroll, ms));
+      // Nothing on this page legitimately keeps moving past this point —
       // stop correcting so a user who's since scrolled elsewhere on their
-      // own doesn't get yanked back by an unrelated late layout shift.
+      // own doesn't get yanked back by an unrelated late shift.
       const stop = window.setTimeout(() => ro.disconnect(), 3000);
       return () => {
         ro.disconnect();
         clearTimeout(stop);
+        timers.forEach(clearTimeout);
       };
     }
 
