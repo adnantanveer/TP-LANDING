@@ -1,5 +1,27 @@
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+
+// CMS-configured hrefs come in two shapes: a same-page anchor ("#services")
+// meant to scroll within the homepage, or a real route ("#/careers"). A
+// bare <a href="#services"> only works while already on the homepage — on
+// a HashRouter, the URL hash *is* the route, so clicking it from any other
+// page (e.g. a case study) overwrites the whole route with "/services",
+// which doesn't exist, landing on the 404 page instead of scrolling
+// anywhere.
+//
+// Routing both shapes through react-router's own <Link> instead makes them
+// real client-side navigations from anywhere in the app. The anchor target
+// travels as router *state* (`{ scrollTo: "services" }`), not as a second
+// URL hash — this is already a HashRouter, so the URL's one hash slot is
+// spoken for by the route itself; stacking the anchor on top of that as
+// its own hash renders as an ugly (if technically working) "/#/#services".
+// State keeps the URL to a single "/#/" and is exactly what App.tsx's
+// ScrollToTop reads to perform the actual scroll.
+function toLinkProps(href: string): { to: string; state?: { scrollTo: string } } {
+  if (href.startsWith("#/")) return { to: href.slice(1) };
+  return { to: "/", state: { scrollTo: href.slice(1) } };
+}
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -122,27 +144,27 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
         style={{ pointerEvents: visible ? "auto" : "none" }}
       >
         <div className="flex items-center justify-between bg-gradient-to-b from-background/90 to-background/50 px-6 py-5 backdrop-blur-lg md:px-16">
-          <a href="#top" className="flex items-center gap-2.5 font-display text-sm font-semibold tracking-tight">
+          <Link {...toLinkProps("#top")} className="flex items-center gap-2.5 font-display text-sm font-semibold tracking-tight">
             techpotam<span className="text-primary">.</span>
-          </a>
+          </Link>
           <nav className="hidden gap-2 rounded-full border border-border bg-foreground/5 p-1.5 backdrop-blur-md md:flex">
             {activeLinks.map((l) => (
-              <a
+              <Link
                 key={l.href}
-                href={l.href}
+                {...toLinkProps(l.href)}
                 className="rounded-full px-3.5 py-1.5 text-xs font-medium tracking-[0.01em] text-muted-foreground transition-colors hover:text-foreground"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
           {menu.ctaActive && (
-            <a
-              href={menu.ctaHref}
+            <Link
+              {...toLinkProps(menu.ctaHref)}
               className="rounded-full border border-border px-5 py-2 text-xs uppercase tracking-[0.2em] transition-colors hover:border-primary hover:text-primary"
             >
               {menu.ctaLabel}
-            </a>
+            </Link>
           )}
         </div>
         {progressAxis === "x" && (

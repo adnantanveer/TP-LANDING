@@ -84,19 +84,67 @@ function GlobalScripts() {
 // React Router doesn't reset scroll on navigation (SPA route changes just
 // swap the element in place) — without this, clicking from a scrolled-down
 // homepage into a case study lands mid-page instead of at its own top.
+//
+// Also handles a navigation that arrives wanting to land on a specific
+// section (e.g. Nav's links, now real <Link to="/" state={{ scrollTo:
+// "services" }}> navigations so they work from any page — see Nav.tsx):
+// scrolls to that element instead of snapping to the top. Deliberately
+// router *state*, not a URL hash — this app already spends its one
+// HashRouter hash slot on the route itself, so a same-page anchor would
+// have to stack a second hash on top of that ("/#/#services"), which
+// renders correctly but reads as a mistake. State carries the same intent
+// without touching the URL at all.
+//
+// Two separate timing problems, not one: the target section usually exists
+// immediately (every homepage section renders its own wrapper
+// synchronously; only its *content* streams in later from the CMS), but a
+// route change can still land here a frame before the new page's tree has
+// committed — and on the homepage specifically, the hero is a
+// scroll-scrubbed video that only reaches its true (multi-viewport) height
+// once its own engine finishes measuring, which happens *after* mount.
+// Scrolling the moment the target merely *exists* landed short every time,
+// because everything below the hero was still shifting downward as it
+// expanded. This waits for the target's own position to stop moving
+// between two consecutive frames before scrolling, which is agnostic to
+// whatever is still resizing above it.
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
+  const scrollTo = (state as { scrollTo?: string } | null)?.scrollTo;
+
   useEffect(() => {
+    const root = document.documentElement;
+    const prevBehavior = root.style.scrollBehavior;
+
+    if (scrollTo) {
+      const selector = `#${scrollTo}`;
+      let attempts = 0;
+      let lastTop: number | null = null;
+      let raf: number;
+      const tryScroll = () => {
+        const target = document.querySelector(selector);
+        const top = target?.getBoundingClientRect().top ?? null;
+        const settled = target && top !== null && top === lastTop;
+        lastTop = top;
+        if (settled) {
+          target.scrollIntoView({ block: "start" });
+        } else if (attempts++ < 60) {
+          raf = requestAnimationFrame(tryScroll);
+        } else if (target) {
+          target.scrollIntoView({ block: "start" }); // give up waiting, scroll anyway
+        }
+      };
+      tryScroll();
+      return () => cancelAnimationFrame(raf);
+    }
+
     // styles.css sets html{scroll-behavior:smooth} for in-page anchor
     // scrolling — bypass it here so a route change snaps to top instantly
     // instead of visibly animating down from wherever the previous page
     // was scrolled to.
-    const root = document.documentElement;
-    const prevBehavior = root.style.scrollBehavior;
     root.style.scrollBehavior = "auto";
     window.scrollTo(0, 0);
     root.style.scrollBehavior = prevBehavior;
-  }, [pathname]);
+  }, [pathname, scrollTo]);
   return null;
 }
 

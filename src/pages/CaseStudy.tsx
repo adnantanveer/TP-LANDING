@@ -3,12 +3,20 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Sections";
 import { Reveal, SectionLabel } from "@/components/landing/primitives";
+import { CaseStudyCarousel } from "@/components/CaseStudyCarousel";
 import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
 type WorkResult = { stat: string; label: string };
 type WorkImage = { url: string; type: "image" | "video"; title: string; altText: string; caption: string };
+
+// Real photography already used elsewhere on this site (not a fabricated
+// screenshot) — appended only so the carousel has a second slide to
+// actually browse between while most projects still have just the one
+// admin-uploaded cover image. Drop this once every project has 2+ real
+// images from the admin panel.
+const DUMMY_IMAGE: WorkImage = { url: "/assets/work-atlas.jpg", type: "image", title: "", altText: "", caption: "" };
 type WorkItem = {
   slug: string;
   images: WorkImage[];
@@ -45,7 +53,8 @@ export function CaseStudy() {
 
   const project = all.find((w) => w.slug === slug);
   if (!project) return <Navigate to="/" replace />;
-  const cover = project.images?.[0];
+  const realImages = project.images ?? [];
+  const coverImages = realImages.length >= 2 ? realImages : [...realImages, DUMMY_IMAGE];
   const gallery = project.images?.slice(1) ?? [];
 
   return (
@@ -60,7 +69,8 @@ export function CaseStudy() {
         />
         <div className="relative mx-auto max-w-6xl px-6">
           <Link
-            to="/#work"
+            to="/"
+            state={{ scrollTo: "work" }}
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-primary"
           >
             ← Back to our work
@@ -90,22 +100,7 @@ export function CaseStudy() {
 
         <Reveal delay={0.15}>
           <div className="relative mx-auto mt-14 max-w-6xl px-6">
-            <div className="overflow-hidden rounded-2xl border border-border">
-              {/* The admin prevents a video from ever being set as the cover,
-                  but render it correctly here too rather than assume — a
-                  plain <img src="*.mp4"> would just show a broken tile. */}
-              {cover?.type === "video" ? (
-                <video src={cover.url} controls className="h-[38vh] w-full object-cover md:h-[56vh]" />
-              ) : (
-                <img
-                  src={cover?.url}
-                  alt={cover?.altText || project.title}
-                  width={1600}
-                  height={1000}
-                  className="h-[38vh] w-full object-cover md:h-[56vh]"
-                />
-              )}
-            </div>
+            <CaseStudyCarousel images={coverImages} title={project.title} />
           </div>
         </Reveal>
       </section>
@@ -207,7 +202,8 @@ export function CaseStudy() {
                 Want a result like this for <span className="text-ember">your product</span>?
               </h3>
               <Link
-                to="/#contact"
+                to="/"
+                state={{ scrollTo: "contact" }}
                 className="shrink-0 rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.04]"
               >
                 Start a conversation
