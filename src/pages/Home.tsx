@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Loader } from "@/components/landing/Loader";
 import { Nav } from "@/components/landing/Nav";
 import { ReactiveTilt } from "@/components/landing/CursorField";
@@ -39,6 +40,16 @@ export function Home() {
   // as the hero actually becomes visible, not while still hidden behind it.
   const [heroReady, setHeroReady] = useState(() => !showIntro);
 
+  // A nav link (or a case-study "back"/CTA link) arriving with ?section=...
+  // wants App.tsx's ScrollToTop to land on that section — but the auto-intro
+  // drives its own repeated window.scrollTo calls to animate into the hero,
+  // with no idea a target section was requested, and reliably wins that race
+  // (it fires after ScrollToTop's own corrections have already run). Skipping
+  // it here avoids fighting a scroll the user explicitly asked for; it isn't
+  // relevant to reaching a section anyway.
+  const [searchParams] = useSearchParams();
+  const hasSectionTarget = searchParams.has("section");
+
   return (
     <main id="top" className="relative">
       {showIntro && (
@@ -55,7 +66,7 @@ export function Home() {
       )}
       <Nav />
 
-      <Hero autoIntroReady={heroReady} />
+      <Hero autoIntroReady={heroReady && !hasSectionTarget} />
 
       <Marquee />
       <SceneEnter>

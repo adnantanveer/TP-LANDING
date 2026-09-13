@@ -95,16 +95,24 @@ function GlobalScripts() {
 // route's own ("/#/#services"), which works but reads as a mistake.
 //
 // Landing on the right pixel is its own problem, separate from knowing
-// *which* element to land on. The target section usually exists in the DOM
-// immediately, but content below it keeps arriving asynchronously — CMS
-// fetches that can take over a second on a cold backend (see Hero.tsx's
-// own 2500ms fetch timeout), and the homepage's hero is a scroll-scrubbed
-// video that only reaches its true (multi-viewport) height once its engine
-// finishes measuring, after mount. Scrolling once, the moment the target
-// merely exists, lands short — everything below the hero is still shifting
-// down as more of the page settles in. Re-issuing the scroll every time the
-// page's overall height changes (not just once, and not by guessing a
-// fixed delay) tracks that settling directly instead of racing it.
+// *which* element to land on. Three independent things can each block or
+// undo a scroll attempt after this effect fires:
+//   1. Home's intro Loader sets `document.body.style.overflow = "hidden"`
+//      for the length of its own cinematic animation (see Loader.tsx) —
+//      every scroll attempt made before it releases is a silent no-op, not
+//      a wrong-position landing.
+//   2. The target section usually exists in the DOM immediately, but
+//      content below it keeps arriving asynchronously (CMS fetches that
+//      can take over a second on a cold backend — see Hero.tsx's own
+//      2500ms fetch timeout), growing the page's real height after the
+//      fact.
+//   3. The hero itself is a scroll-scrubbed video that keeps settling via
+//      transform, not a height change, for a bit after mount — invisible
+//      to a resize observer.
+// Rather than timing each of these precisely, this retries on every signal
+// that any of them just resolved (the overflow lock clearing, the page
+// growing) plus a handful of fixed-delay backstops for #3, for a few
+// seconds after landing.
 function ScrollToTop() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
@@ -119,21 +127,22 @@ function ScrollToTop() {
       const scroll = () => document.querySelector(selector)?.scrollIntoView({ block: "start" });
 
       scroll();
-      // Covers the layout-driven shift (body actually growing taller as
-      // content streams in). Doesn't cover the hero's own settle, which
-      // moves everything below it via transform rather than a height
-      // change — ResizeObserver is blind to that, so it's backstopped by
-      // the fixed-delay corrections below.
       const ro = new ResizeObserver(scroll);
       ro.observe(document.body);
-      const correctionDelays = [200, 500, 900, 1400, 2000, 2800];
+      const mo = new MutationObserver(scroll);
+      mo.observe(document.body, { attributes: true, attributeFilter: ["style"] });
+      const correctionDelays = [200, 500, 900, 1400, 2000, 2800, 3500];
       const timers = correctionDelays.map((ms) => window.setTimeout(scroll, ms));
       // Nothing on this page legitimately keeps moving past this point —
       // stop correcting so a user who's since scrolled elsewhere on their
       // own doesn't get yanked back by an unrelated late shift.
-      const stop = window.setTimeout(() => ro.disconnect(), 3000);
+      const stop = window.setTimeout(() => {
+        ro.disconnect();
+        mo.disconnect();
+      }, 4000);
       return () => {
         ro.disconnect();
+        mo.disconnect();
         clearTimeout(stop);
         timers.forEach(clearTimeout);
       };
