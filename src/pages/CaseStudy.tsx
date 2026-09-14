@@ -77,10 +77,10 @@ export function CaseStudy() {
 
           <Reveal>
             <p className="mt-8 font-mono text-xs uppercase tracking-[0.3em] text-primary">{project.client}</p>
-            <h1 className="mt-4 max-w-3xl text-[clamp(2.4rem,7vw,5rem)] font-semibold leading-[0.98]">
+            <h1 className="mt-4 max-w-none text-[clamp(2.4rem,7vw,5rem)] font-semibold leading-[0.98]">
               {project.title}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{project.caption}</p>
+            <p className="mt-6 max-w-4xl text-lg text-muted-foreground">{project.caption}</p>
           </Reveal>
 
           <Reveal delay={0.1}>
