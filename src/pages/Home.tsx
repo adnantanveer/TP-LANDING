@@ -4,10 +4,13 @@ import { Loader } from "@/components/landing/Loader";
 import { Nav } from "@/components/landing/Nav";
 import { ReactiveTilt } from "@/components/landing/CursorField";
 import { Hero } from "@/components/landing/Hero";
+import { Statement } from "@/components/landing/Statement";
 import { Services } from "@/components/landing/Services";
 import { OurWork } from "@/components/landing/OurWork";
+import { Process } from "@/components/landing/Process";
 import { Precision } from "@/components/landing/Precision";
 import { TechStack } from "@/components/landing/TechStack";
+import { Stats } from "@/components/landing/Stats";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { TeamSection } from "@/components/landing/TeamSection";
 import { Marquee, Contact, Footer } from "@/components/landing/Sections";
@@ -67,6 +70,7 @@ export function Home() {
       <Nav />
 
       <Hero autoIntroReady={heroReady && !hasSectionTarget} />
+      <Statement />
 
       <Marquee />
       <SceneEnter>
@@ -80,11 +84,19 @@ export function Home() {
       </SceneEnter>
 
       <SceneEnter>
+        <Process />
+      </SceneEnter>
+
+      <SceneEnter>
         <Precision />
       </SceneEnter>
 
       <SceneEnter>
         <TechStack />
+      </SceneEnter>
+
+      <SceneEnter>
+        <Stats />
       </SceneEnter>
 
       <Testimonials />

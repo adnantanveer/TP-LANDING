@@ -149,8 +149,8 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
         style={{ pointerEvents: visible ? "auto" : "none" }}
       >
         <div className="flex items-center justify-between bg-gradient-to-b from-background/90 to-background/50 px-6 py-5 backdrop-blur-lg md:px-16">
-          <Link {...toLinkProps("#top")} className="flex items-center gap-2.5 font-display text-sm font-semibold tracking-tight">
-            techpotam<span className="text-primary">.</span>
+          <Link {...toLinkProps("#top")} className="font-display text-lg uppercase tracking-tight">
+            Techpotam<sup className="ml-0.5 text-[0.5em] text-primary">®</sup>
           </Link>
           <nav className="hidden gap-2 rounded-full border border-border bg-foreground/5 p-1.5 backdrop-blur-md md:flex">
             {activeLinks.map((l) => (

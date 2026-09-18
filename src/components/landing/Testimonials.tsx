@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform, useSpring, type MotionValue } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { SectionLabel } from "./primitives";
+import { SectionLabel, initials } from "./primitives";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -126,17 +126,43 @@ function Quote({
       style={{ opacity, scale, y }}
       className="absolute inset-0 flex flex-col items-center justify-center text-center"
     >
+      <PersonImage name={name} photo={photo} />
       <blockquote>
         <p className="text-[clamp(1.4rem,3vw,2.25rem)] font-medium leading-[1.3] text-foreground">
           &ldquo;{quote}&rdquo;
         </p>
       </blockquote>
-      <figcaption className="mt-8 flex flex-col items-center">
-        {photo && <img src={photo} alt="" className="mb-3 h-12 w-12 rounded-full border border-border object-cover" />}
+      <figcaption className="mt-6 flex flex-col items-center">
         <p className="font-medium">{name}</p>
         <p className="mt-1 text-sm text-muted-foreground">{[role, organization].filter(Boolean).join(", ")}</p>
       </figcaption>
     </motion.figure>
+  );
+}
+
+// The section's one real "image": a proper portrait rather than the tiny
+// 12px thumbnail this used to tuck under the caption. Same cross-fade +
+// monogram-fallback pattern as TeamFlipCard's badge — the client's own
+// default quotes are attributed by role, not a named person ("Operations
+// Director"), so there's rarely a real photo to show; the monogram still
+// gives every quote a face-shaped anchor instead of just floating text.
+function PersonImage({ name, photo }: { name: string; photo: string }) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div className="relative mb-6 h-44 w-44 shrink-0 overflow-hidden rounded-full border border-primary/30 shadow-[var(--shadow-ember)]">
+      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/25 via-primary/10 to-transparent font-display text-4xl font-semibold text-primary">
+        {initials(name)}
+      </div>
+      {photo && (
+        <img
+          src={photo}
+          alt=""
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+          onLoad={() => setLoaded(true)}
+        />
+      )}
+    </div>
   );
 }
 

@@ -7,6 +7,7 @@ import { Jobs } from "@/pages/Jobs";
 import { JobDetail } from "@/pages/JobDetail";
 import { JobApply } from "@/pages/JobApply";
 import { ContactPage } from "@/pages/Contact";
+import { Team } from "@/pages/Team";
 import { NotFound } from "@/pages/NotFound";
 import { CosmicDustBackground } from "@/components/background/CosmicDustBackground";
 
@@ -168,6 +169,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/team" element={<Team />} />
         <Route path="/reuse-component" element={<ReuseComponent />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/careers" element={<Jobs />} />

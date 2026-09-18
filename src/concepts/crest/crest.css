@@ -162,7 +162,7 @@
    page), so left alone the hint would render as dark text over its own
    dark drop-shadow on top of the hero video — illegible. Force it back to
    white here, scoped to this concept only. */
-.concept-crest .hero-world .sw-hint > span {
+.concept-crest .hero-world .sw-hint__prompt > span {
   color: #fff !important;
 }
 

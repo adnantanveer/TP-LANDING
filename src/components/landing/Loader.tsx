@@ -13,7 +13,7 @@ const SOFT_EASE = [0.22, 1, 0.36, 1] as const;
 const BREAK_SPRING = { type: "spring", stiffness: 140, damping: 22, mass: 0.9 } as const;
 
 /**
- * Site intro: the "TECHPOTAM." wordmark appears first, as one solid word.
+ * Site intro: the "TECHPOTAM®" wordmark appears first, as one solid word.
  * Once it's settled, it breaks apart at the middle — a video window opens
  * right in that gap between the two halves, playing the hero's own forge
  * clip (a preview of the destination, not an abstract animation) — and that
@@ -78,7 +78,7 @@ export function Loader({ onDone, onRevealed }: { onDone?: () => void; onRevealed
 
   const textOpacity = phase === "grow" ? 0 : 1;
   const wordClass =
-    "pointer-events-none select-none font-display text-[clamp(2.5rem,10vw,7rem)] font-semibold uppercase tracking-tight text-foreground";
+    "font-display pointer-events-none select-none text-[clamp(2.5rem,10vw,7rem)] uppercase tracking-tight text-foreground";
 
   return (
     <AnimatePresence>
@@ -130,7 +130,7 @@ export function Loader({ onDone, onRevealed }: { onDone?: () => void; onRevealed
               transition={{ layout: BREAK_SPRING, default: { duration: 0.9, ease: SOFT_EASE, delay: 0.12 } }}
               className={wordClass}
             >
-              POTAM<span className="text-primary">.</span>
+              POTAM<sup className="ml-0.5 text-[0.5em] text-primary">®</sup>
             </motion.span>
           </div>
         </motion.div>

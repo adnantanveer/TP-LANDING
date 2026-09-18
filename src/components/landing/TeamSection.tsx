@@ -1,6 +1,8 @@
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { SectionLabel } from "./primitives";
+import { TeamFlipCard, type TeamMember } from "./TeamFlipCard";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
@@ -15,14 +17,11 @@ const OFFSET_PATTERN = [
   { x: 30, y: -15, rotate: -4 },
 ];
 
-type TeamMember = { id: string; name: string; role: string; photo: string; order: number };
-
 /**
- * Public "Our Team" grid — same section shell/card-motion language as
- * Precision.tsx (gradient wash, rounded-2xl bg-card cards, scroll fly-in),
- * but the card itself follows the photo-top / overlapping-name-panel
- * layout the client referenced from a screenshot, reskinned to this site's
- * dark/amber theme instead of the screenshot's light one.
+ * Homepage teaser for the full "Our Team" roster (see pages/Team.tsx) —
+ * a fixed 4-up row (the first 4 members only, regardless of how many the
+ * CMS ends up with — client's said they'll grow this to 15-16 people) with
+ * a "View more" button beneath it that hands off to the full grid.
  */
 export function TeamSection() {
   const [members, setMembers] = useState<TeamMember[]>([]);
@@ -47,10 +46,24 @@ export function TeamSection() {
           The people <span className="text-ember">behind the work</span>.
         </h2>
 
-        <div className="mt-16 flex flex-wrap justify-center gap-x-4 gap-y-8">
-          {members.map((m, i) => (
-            <TeamCard key={m.id} {...m} {...OFFSET_PATTERN[i % OFFSET_PATTERN.length]} index={i} />
+        <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {members.slice(0, 4).map((m, i) => (
+            <div key={m.id} className="h-64 w-full">
+              <TeamCard {...m} {...OFFSET_PATTERN[i % OFFSET_PATTERN.length]} index={i} />
+            </div>
           ))}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            to="/team"
+            className="inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+          >
+            View more
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Link>
         </div>
       </div>
     </section>
@@ -58,13 +71,11 @@ export function TeamSection() {
 }
 
 function TeamCard({
-  name,
-  role,
-  photo,
   x,
   y,
   rotate,
   index,
+  ...member
 }: TeamMember & { x: number; y: number; rotate: number; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 95%", "start 45%"] });
@@ -77,30 +88,8 @@ function TeamCard({
   const opacity = useTransform(p, [0, 0.6, 1], [0, 0.7, 1]);
 
   return (
-    <motion.article
-      ref={ref}
-      style={{ x: tx, y: ty, rotate: tr, scale, opacity }}
-      transition={{ delay: index * 0.03 }}
-      className="group relative w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.667rem)] lg:w-[calc(25%-0.75rem)]"
-    >
-      <div className="aspect-[4/5] overflow-hidden rounded-xl border border-border bg-muted">
-        {photo ? (
-          <img
-            src={photo}
-            alt={name}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-2xl font-semibold text-muted-foreground">
-            {name.slice(0, 1).toUpperCase()}
-          </div>
-        )}
-      </div>
-      <div className="relative z-10 mx-2.5 -mt-6 rounded-lg border border-border bg-card px-2.5 py-2 text-center shadow-[var(--shadow-deep)]">
-        <h3 className="text-xs font-semibold uppercase tracking-wide">{name}</h3>
-        {role && <p className="mt-0.5 text-[0.7rem] italic text-muted-foreground">{role}</p>}
-      </div>
+    <motion.article ref={ref} style={{ x: tx, y: ty, rotate: tr, scale, opacity }} transition={{ delay: index * 0.03 }} className="h-64 w-full">
+      <TeamFlipCard {...member} />
     </motion.article>
   );
 }

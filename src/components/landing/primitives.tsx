@@ -59,6 +59,18 @@ export function TiltCard({ children, className }: { children: ReactNode; classNa
   );
 }
 
+// First + last initials ("Amit Kumar" -> "AK") read as a deliberate
+// monogram badge rather than a single stray letter — used wherever a
+// person (or a role-only attribution like "Operations Director") needs a
+// placeholder avatar (TeamFlipCard, Testimonials' Quote).
+export function initials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  const first = parts[0][0];
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+  return (first + last).toUpperCase();
+}
+
 export function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <span className="inline-flex items-center gap-3 font-mono text-[0.7rem] uppercase tracking-[0.35em] text-primary">

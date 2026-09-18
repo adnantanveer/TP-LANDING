@@ -229,10 +229,13 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
   const copylayer = el("div", "sw-copylayer");
   const route = el("div", "sw-route");
   const hint = el("div", "sw-hint sw-hint--idle");
+  const hintScrim = el("div", "sw-hint__scrim");
+  const hintPrompt = el("div", "sw-hint__prompt");
   const hintText = el("span");
   hintText.textContent = config.hint || "scroll";
-  hint.appendChild(hintText);
-  hint.appendChild(el("i"));
+  hintPrompt.appendChild(hintText);
+  hint.appendChild(hintScrim);
+  hint.appendChild(hintPrompt);
   const track = el("div", "sw-track");
 
   [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach((n) => container.appendChild(n));
@@ -598,16 +601,18 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
 
   seedParticles(particles, reduce || coarse);
 
-  // The hint sits centered (larger, ".sw-hint--idle") whenever the user
-  // isn't actively scrolling, and drops down to its normal corner position
-  // the moment they start — purely based on scroll activity, independent of
-  // the opacity fade above (which still governs overall show/hide). A
-  // scroll event clears the idle state immediately; idle resumes once no
-  // further scroll event has arrived for HINT_IDLE_MS. 3s (not the previous
-  // 260ms) so a normal short pause between scroll gestures — reading a
-  // line, a moment's hesitation — doesn't read as the hint restlessly
-  // floating up and dropping back on every little break; it only resets
-  // once the user has genuinely stopped.
+  // The hint only exists in one place: centered on screen over a dimming
+  // scrim (".sw-hint--idle"), shown whenever the user isn't actively
+  // scrolling — it doesn't live anywhere else the rest of the time (no
+  // small persistent corner/edge version to drop back to), purely based on
+  // scroll activity and independent of the opacity fade above (which still
+  // governs overall show/hide, e.g. during the auto-intro or right at the
+  // very end). A scroll event clears the idle state immediately, hiding the
+  // scrim+prompt together; idle resumes, bringing them back, once no
+  // further scroll event has arrived for HINT_IDLE_MS. 3s so a normal short
+  // pause between scroll gestures — reading a line, a moment's hesitation —
+  // doesn't read as the prompt restlessly flashing in and out on every
+  // little break; it only resets once the user has genuinely stopped.
   const HINT_IDLE_MS = 3000;
   let hintIdleTimer: ReturnType<typeof setTimeout> | undefined;
   const onScroll = () => {
@@ -752,12 +757,12 @@ function injectCSS() {
   .sw-route__dot.is-active i{background:var(--sw-accent);transform:scale(1.4);box-shadow:0 0 0 5px color-mix(in srgb,var(--sw-accent) 22%,transparent);}
   .sw-route__label{position:absolute;right:24px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--sw-ink);background:color-mix(in srgb,#fff 85%,transparent);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border:1px solid color-mix(in srgb,var(--sw-accent) 14%,transparent);}
   .sw-route__dot:hover .sw-route__label,.sw-route__dot.is-active .sw-route__label{opacity:1;transform:translateY(-50%) translateX(0);}
-  .sw-hint{--sw-hint-bottom:26px;position:fixed;inset:0;z-index:30;pointer-events:none;transition:opacity .3s;}
-  .sw-hint>span{position:absolute;left:50%;bottom:calc(var(--sw-hint-bottom) + 44px);transform:translate(-50%,0);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink-soft);white-space:nowrap;transition:bottom .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1),font-size .9s ease;}
-  .sw-hint--idle>span{bottom:50%;transform:translate(-50%,50%);font-size:1.5rem;letter-spacing:.08em;}
-  .sw-hint>i{position:absolute;left:50%;bottom:var(--sw-hint-bottom);transform:translateX(-50%);width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);}
-  .sw-hint>i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
-  @keyframes sw-wheel{0%{opacity:0;top:6px}40%{opacity:1}100%{opacity:0;top:17px}}
+  .sw-hint{position:fixed;inset:0;z-index:30;pointer-events:none;transition:opacity .3s;}
+  .sw-hint__scrim{position:absolute;inset:0;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--sw-bg) 58%,transparent) 0%,color-mix(in srgb,var(--sw-bg) 82%,transparent) 100%);opacity:0;transition:opacity .6s cubic-bezier(.22,1,.36,1);}
+  .sw-hint--idle .sw-hint__scrim{opacity:1;}
+  .sw-hint__prompt{position:absolute;left:50%;top:50%;display:flex;flex-direction:column;align-items:center;gap:16px;opacity:0;transform:translate(-50%,-50%) translateY(10px) scale(.94);transition:opacity .5s cubic-bezier(.22,1,.36,1) .1s,transform .6s cubic-bezier(.22,1,.36,1) .1s;}
+  .sw-hint--idle .sw-hint__prompt{opacity:1;transform:translate(-50%,-50%) translateY(0) scale(1);}
+  .sw-hint__prompt>span{font-size:19px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink-soft);white-space:nowrap;}
   .sw-track{position:relative;z-index:1;width:100%;pointer-events:none;}
   @media (max-width:860px){
     .sw-nav{display:none;}
@@ -766,7 +771,7 @@ function injectCSS() {
     .sw-copy{bottom:calc(clamp(56px,12dvh,110px) + env(safe-area-inset-bottom));}
     .sw-copy__title{font-size:clamp(1.9rem,7.5vw,2.7rem);}
     .sw-copy__body{max-width:none;font-size:clamp(.98rem,3.6vw,1.1rem);} .sw-scene__video,.sw-scene__still{object-position:center 46%;}
-    .sw-hint{--sw-hint-bottom:calc(20px + env(safe-area-inset-bottom));}
+    .sw-hint__prompt{gap:12px;} .sw-hint__prompt>span{font-size:17px;}
     .sw-route{gap:16px;right:6px;} .sw-route__label{display:none;}
   }
   @media (max-width:860px) and (orientation:portrait){
@@ -777,7 +782,7 @@ function injectCSS() {
     .sw-route__dot{width:28px;height:28px;}
     .sw-btn{padding:15px 26px;}
   }
-  @media (prefers-reduced-motion:reduce){ .sw-hint i::after{animation:none;} .sw-hint{transition:opacity .3s;} .sw-pt{display:none;} }
+  @media (prefers-reduced-motion:reduce){ .sw-hint{transition:opacity .3s;} .sw-hint__scrim,.sw-hint__prompt{transition:opacity .3s;transform:translate(-50%,-50%);} .sw-pt{display:none;} }
   `;
   const style = document.createElement("style");
   style.id = "sw-css";

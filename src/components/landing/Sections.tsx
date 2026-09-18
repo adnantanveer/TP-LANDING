@@ -2,7 +2,19 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "@phosphor-icons/react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  LinkedinLogo,
+  XLogo,
+  GithubLogo,
+  InstagramLogo,
+  FacebookLogo,
+  YoutubeLogo,
+  TiktokLogo,
+  DribbbleLogo,
+  BehanceLogo,
+} from "@phosphor-icons/react";
 import { SectionLabel, Reveal } from "./primitives";
 import { BackgroundRippleEffect } from "./BackgroundRippleEffect";
 import { CalendlyEmbed } from "@/concepts/shared/CalendlyEmbed";
@@ -498,6 +510,28 @@ export function ContactForm() {
 type FooterContactDetail = { label: string; value: string; href?: string; active: boolean };
 type FooterSocialLink = { platform: string; url: string; active: boolean };
 
+// `platform` is a free-text CMS field ("LinkedIn", "X", "Twitter", ...),
+// not a fixed enum — matched case-insensitively against common spellings.
+// ArrowUpRight is the fallback for any platform without a dedicated logo
+// glyph, so a new one the admin adds still renders as a real icon instead
+// of silently nothing.
+const SOCIAL_ICONS: Record<string, typeof LinkedinLogo> = {
+  linkedin: LinkedinLogo,
+  twitter: XLogo,
+  x: XLogo,
+  github: GithubLogo,
+  instagram: InstagramLogo,
+  facebook: FacebookLogo,
+  youtube: YoutubeLogo,
+  tiktok: TiktokLogo,
+  dribbble: DribbbleLogo,
+  behance: BehanceLogo,
+};
+
+function socialIcon(platform: string) {
+  return SOCIAL_ICONS[platform.trim().toLowerCase()] ?? ArrowUpRight;
+}
+
 export function Footer() {
   const [contactDetails, setContactDetails] = useState<FooterContactDetail[]>([]);
   const [social, setSocial] = useState<FooterSocialLink[]>([]);
@@ -525,10 +559,10 @@ export function Footer() {
   const activeSocial = social.filter((s) => s.active);
 
   return (
-    <footer className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-10 text-xs text-muted-foreground">
+    <footer className="chapter-glow-bg relative overflow-hidden border-t border-border">
+      <div className="relative mx-auto max-w-6xl px-6 py-10 text-xs text-muted-foreground">
         {(activeContactDetails.length > 0 || activeSocial.length > 0) && (
-          <div className="mb-8 flex flex-wrap items-start justify-between gap-8 border-b border-border pb-8">
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-8 border-b border-border pb-8">
             {activeContactDetails.length > 0 && (
               <div className="flex flex-wrap gap-x-8 gap-y-2">
                 {activeContactDetails.map((d) =>
@@ -545,18 +579,23 @@ export function Footer() {
               </div>
             )}
             {activeSocial.length > 0 && (
-              <div className="flex flex-wrap gap-x-6 gap-y-2">
-                {activeSocial.map((s) => (
-                  <a
-                    key={s.platform}
-                    href={s.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="transition-colors hover:text-primary"
-                  >
-                    {s.platform}
-                  </a>
-                ))}
+              <div className="flex flex-wrap gap-3">
+                {activeSocial.map((s) => {
+                  const Icon = socialIcon(s.platform);
+                  return (
+                    <a
+                      key={s.platform}
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={s.platform}
+                      title={s.platform}
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors duration-300 hover:border-primary hover:text-primary"
+                    >
+                      <Icon weight="regular" className="h-5 w-5" />
+                    </a>
+                  );
+                })}
               </div>
             )}
           </div>

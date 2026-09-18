@@ -95,7 +95,7 @@
    white here, scoped to this concept only. .sw-root redeclares --sw-ink
    on itself, which shadows any override from an ancestor, so this has to
    target .sw-root directly (not just .hero-world) to actually win. */
-.concept-index .hero-world .sw-hint > span {
+.concept-index .hero-world .sw-hint__prompt > span {
   color: #fff !important;
 }
 .concept-index .sw-root {
