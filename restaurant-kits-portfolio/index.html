@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Restaurant Kits portfolio case study — a concept closing in the real world, preserved as a strong food-tech story."
+      content="Restaurant Kits: meal kits from the UK's best restaurants, and RKX immersive at-home experiences with Warner Bros. brands including Game of Thrones, Harry Potter and Friends."
     />
     <title>Restaurant Kits | Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
@@ -30,9 +30,9 @@
           <nav class="nav-links" aria-label="Main navigation">
             <a href="#about">about</a>
             <a href="#partners">partners</a>
-            <a href="#story">story</a>
-            <a href="#tech">tech</a>
-            <a href="#contact">contact</a>
+            <a href="#rkx">rkx</a>
+            <a href="#got">collaborations</a>
+            <a href="#results">results</a>
           </nav>
 
           <div class="header-actions">
@@ -41,7 +41,8 @@
         </div>
       </header>
 
-      <main>
+      <main id="top">
+        <!-- HERO -->
         <section class="hero original-banner">
           <div class="container banner-shell reveal">
             <div class="banner-left">
@@ -59,116 +60,300 @@
 
                 <ul class="hero-stats" aria-label="Restaurant Kits key metrics">
                   <li>
-                    <strong>£1m+</strong>
-                    <span>Revenue in 12 months</span>
-                  </li>
-                  <li>
-                    <strong>30k+</strong>
+                    <strong><span data-count="30000" data-format="k">30k</span>+</strong>
                     <span>Boxes shipped</span>
                   </li>
                   <li>
-                    <strong>25</strong>
-                    <span>Restaurants signed up</span>
+                    <strong>£<span data-count="1">1</span>M</strong>
+                    <span>Revenue in year one</span>
+                  </li>
+                  <li>
+                    <strong><span data-count="25">25</span></strong>
+                    <span>Restaurants signed</span>
+                  </li>
+                  <li>
+                    <strong><span data-count="4.8" data-decimals="1">4.8</span>★</strong>
+                    <span>Trustpilot score</span>
                   </li>
                 </ul>
               </div>
 
               <div class="banner-actions">
-                <a href="#story" class="btn primary">View our menu</a>
-                <a href="#contact" class="btn ghost">Connect</a>
+                <a href="#got" class="btn primary">See the Game of Thrones kit</a>
+                <a href="#partners" class="btn ghost">Our partners</a>
               </div>
             </div>
 
             <div class="banner-right">
-              <img src="./assets/bannermai.jpg" alt="Restaurant Kits banner" />
+              <img src="./assets/bannermai.jpg" alt="A finished Restaurant Kits dinner" />
             </div>
           </div>
         </section>
 
+        <!-- BRAND MARQUEE -->
+        <section class="brand-strip" aria-label="Brands we have worked with">
+          <p class="brand-strip-label">In collaboration with</p>
+          <div class="marquee">
+            <div class="marquee-track">
+              <img src="./assets/warner-bros-logo.png" alt="Warner Bros." />
+              <img src="./assets/game-of-thrones-logo.png" alt="Game of Thrones" />
+              <img src="./assets/harry-potter-logo.png" alt="Harry Potter" />
+              <img src="./assets/friends-logo.png" alt="Friends" class="wide" />
+              <img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" class="circle" />
+              <img src="./assets/partners/adam-handling.png" alt="Adam Handling Restaurant Group" class="circle" />
+              <img src="./assets/partners/chef-calums-pie-kit.png" alt="Chef Calum's Pie Kit" class="circle" />
+              <img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" class="circle" />
+              <img src="./assets/partners/pitt-cue.png" alt="Pitt Cue Co." class="circle" />
+              <img src="./assets/partners/berber-and-q.png" alt="Berber & Q" class="circle" />
+            </div>
+            <div class="marquee-track" aria-hidden="true">
+              <img src="./assets/warner-bros-logo.png" alt="" />
+              <img src="./assets/game-of-thrones-logo.png" alt="" />
+              <img src="./assets/harry-potter-logo.png" alt="" />
+              <img src="./assets/friends-logo.png" alt="" class="wide" />
+              <img src="./assets/partners/gordon-ramsay.png" alt="" class="circle" />
+              <img src="./assets/partners/adam-handling.png" alt="" class="circle" />
+              <img src="./assets/partners/chef-calums-pie-kit.png" alt="" class="circle" />
+              <img src="./assets/partners/mac-and-wild.png" alt="" class="circle" />
+              <img src="./assets/partners/pitt-cue.png" alt="" class="circle" />
+              <img src="./assets/partners/berber-and-q.png" alt="" class="circle" />
+            </div>
+          </div>
+        </section>
+
+        <!-- ABOUT -->
         <section id="about" class="section-shell story">
           <div class="container">
-            <div class="section-heading reveal">
-              <p class="eyebrow alt">About</p>
-              <h2>This is Restaurant Kits.</h2>
+            <div class="intro-split">
+              <div class="intro-statement reveal">
+                <p>
+                  Restaurant Kits was founded as a new type of dark kitchen. We produce, portion and distribute meal kits from the <em>UK’s best restaurant brands</em>, direct to your door.
+                </p>
+                <p>
+                  Founded in 2020, we have worked with leading brands in hospitality including Gordon Ramsay, Adam Handling, Calum Franklin and Tom Brown.
+                </p>
+                <p>
+                  We sold <em>30,000 boxes</em> and <em>over £1M in revenue</em> in 12 months, and were <em>raising £1.6M</em> to continue our growth and expand into more immersive box experiences.
+                </p>
+              </div>
+
+              <div class="intro-partners reveal">
+                <p class="intro-partners-label">A selection of our partners</p>
+                <div class="logo-wall">
+                  <figure><img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" /></figure>
+                  <figure><img src="./assets/partners/carters-of-moseley.png" alt="Carters of Moseley" /></figure>
+                  <figure><img src="./assets/partners/harry-potter.png" alt="Harry Potter" /></figure>
+                  <figure><img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" /></figure>
+                  <figure><img src="./assets/partners/adam-handling.png" alt="Adam Handling Restaurant Group" /></figure>
+                  <figure><img src="./assets/partners/corazon.png" alt="Corazón" /></figure>
+                  <figure><img src="./assets/partners/pitt-cue.png" alt="Pitt Cue Co." /></figure>
+                  <figure><img src="./assets/partners/chef-calums-pie-kit.png" alt="Chef Calum's Pie Kit" /></figure>
+                  <figure><img src="./assets/partners/friends.png" alt="Friends" /></figure>
+                  <figure><img src="./assets/partners/cornerstone.png" alt="Cornerstone" /></figure>
+                  <figure><img src="./assets/partners/game-of-thrones.png" alt="Game of Thrones" /></figure>
+                  <figure><img src="./assets/partners/berber-and-q.png" alt="Berber & Q Grill House" /></figure>
+                </div>
+              </div>
             </div>
 
+            <div class="rk-divider" aria-hidden="true">
+              <img src="./assets/iconbanner.png" alt="" />
+            </div>
+
+            <!--
             <div class="story-grid">
               <article class="story-card reveal">
-                <h3>Founded in 2020</h3>
+                <span class="card-kicker">For restaurants</span>
+                <h3>Demand without the kitchen</h3>
                 <p>
-                  We have worked with leading brands in hospitality including Gordon Ramsay, Adam Handling, Callum Franklin and Tom Brown.
+                  The pandemic accelerated an existing growth trend in at-home dining. Restaurants lack the infrastructure, resources and expertise to meet this demand.
+                </p>
+              </article>
+              <article class="story-card reveal">
+                <span class="card-kicker">For customers</span>
+                <h3>The best chefs, any postcode</h3>
+                <p>
+                  Access to the world’s best restaurants and chefs is limited to physical location and delivery radius.
                 </p>
               </article>
               <article class="story-card accent reveal">
-                <h3>The problem</h3>
+                <span class="card-kicker">Our answer</span>
+                <h3>Pure profit for restaurants</h3>
                 <p>
-                  Restaurants lack the infrastructure, resources and expertise to meet the growing at-home dining demand. Access to the world’s best restaurants and chefs is limited to physical location and delivery radius.
-                </p>
-              </article>
-              <article class="story-card reveal">
-                <h3>Key traction</h3>
-                <p>
-                  We have sold 30,000 boxes and over £1m in revenue in the last 12 months. We are now raising £1.6m to continue growth and expand into more immersive box experiences.
+                  We develop recipes with each restaurant, then take over full end-to-end production. We order, produce, portion and sell the kits. Restaurants are paid an 8–12% royalty.
                 </p>
               </article>
             </div>
+            -->
           </div>
         </section>
 
+        <!-- PARTNERS -->
         <section id="partners" class="section-shell partners">
           <div class="container">
             <div class="section-heading reveal">
-              <p class="eyebrow alt">Brand collaborations</p>
-              <h2>Powered by standout hospitality partners.</h2>
+              <p class="eyebrow alt">Partners</p>
+              <h2>Working with best-in-class restaurants and chefs.</h2>
             </div>
 
-            <div class="partner-grid">
-              <article class="partner-card reveal">
-                <img src="./assets/macandwild-logo.png" alt="Mac & Wild logo" />
-                <h3>Mac & Wild</h3>
-                <p>Premium, restaurant-led hospitality translated into a standout at-home burger experience.</p>
+            <div class="chef-row reveal">
+              <p class="eyebrow alt">Best-in-class chefs &amp; their restaurants</p>
+              <ul>
+                <li>
+                  <img src="./assets/chefs/gordon-ramsay.png" alt="Gordon Ramsay" />
+                  <strong>Gordon Ramsay</strong><span>Restaurants</span>
+                </li>
+                <li>
+                  <img src="./assets/chefs/adam-handling.png" alt="Chef Adam Handling" />
+                  <strong>Chef Adam Handling</strong><span>Restaurant Group</span>
+                </li>
+                <li>
+                  <img src="./assets/chefs/tom-griffiths-flank.png" alt="Tom Griffiths" />
+                  <strong>Tom Griffiths</strong><span>Flank</span>
+                </li>
+                <li>
+                  <img src="./assets/chefs/calum-franklin-pie-room.png" alt="Calum Franklin" />
+                  <strong>Calum Franklin</strong><span>The Pie Room</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="case-grid">
+              <article class="case-card reveal">
+                <img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" />
+                <div>
+                  <span class="card-kicker">Case study · 4 months</span>
+                  <h3>Gordon Ramsay Restaurants</h3>
+                  <p class="case-dish">Beef Wellington</p>
+                  <dl>
+                    <div><dt>Revenue</dt><dd>£<span data-count="51139" data-format="comma">51,139</span></dd></div>
+                    <div><dt>Profit</dt><dd>£<span data-count="17002" data-format="comma">17,002</span></dd></div>
+                  </dl>
+                </div>
               </article>
-              <article class="partner-card reveal">
-                <img src="./assets/pizza-pilgrims-logo.png" alt="Pizza Pilgrims logo" />
-                <h3>Pizza Pilgrims</h3>
-                <p>Popular, highly recognisable comfort food delivered through a premium direct-to-door format.</p>
-              </article>
-              <article class="partner-card reveal">
-                <img src="./assets/wagamama-logo.png" alt="Wagamama logo" />
-                <h3>Wagamama</h3>
-                <p>Modern brand energy and flavour-led storytelling brought into the at-home dining experience.</p>
-              </article>
-              <article class="partner-card reveal">
-                <img src="./assets/guinness-logo.png" alt="Guinness logo" />
-                <h3>Our partners</h3>
-                <p>A selection of the top hospitality brands and chefs helping deliver exceptional home experiences.</p>
+              <article class="case-card reveal">
+                <img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" />
+                <div>
+                  <span class="card-kicker">Case study · 12 months</span>
+                  <h3>Mac &amp; Wild</h3>
+                  <p class="case-dish">Venimoo Burger</p>
+                  <dl>
+                    <div><dt>Revenue</dt><dd>£<span data-count="226179" data-format="comma">226,179</span></dd></div>
+                    <div><dt>Profit</dt><dd>£<span data-count="36777" data-format="comma">36,777</span></dd></div>
+                  </dl>
+                </div>
               </article>
             </div>
 
-            <div class="collab-video reveal">
-              <div class="video-copy">
-                <p class="eyebrow alt">Collaboration spotlight</p>
-                <h3>Working with the best in-class restaurants and chefs.</h3>
+          </div>
+        </section>
+
+        <!-- RKX -->
+        <section id="rkx" class="rkx-section">
+          <div class="container">
+            <div class="rkx-head reveal">
+              <img class="rkx-logo" src="./assets/rkx-logo.png" alt="R.K.X" />
+              <p class="rkx-tag">The biggest<br />events at home</p>
+            </div>
+
+            <p class="rkx-statement reveal">
+              RKX is an <em>immersive at-home experience</em> that celebrates the biggest events across music, film and sports. We <em>secured 9 IPs</em> through our contract with Wonderland at Home.
+            </p>
+
+            <div class="ip-row reveal">
+              <div class="ip-card"><img src="./assets/warner-bros-logo.png" alt="Warner Bros." /></div>
+              <div class="ip-card"><img src="./assets/harry-potter-logo.png" alt="Harry Potter" /></div>
+              <div class="ip-card"><img src="./assets/friends-logo.png" alt="Friends" /></div>
+              <div class="ip-card"><img src="./assets/game-of-thrones-logo.png" alt="Game of Thrones" /></div>
+            </div>
+
+            <div class="rkx-divider" aria-hidden="true">
+              <img src="./assets/iconbanner.png" alt="" />
+            </div>
+          </div>
+        </section>
+
+        <!-- FEATURED COLLABORATIONS -->
+        <section id="got" class="got-section">
+          <div class="container">
+            <p class="got-section-label reveal">Featured collaborations</p>
+          </div>
+          <div class="container got-grid" data-slider>
+            <div class="got-copy reveal">
+              <div class="copy-panel is-active" data-panel="got">
+                <img class="got-lockup-img" src="./assets/rk-x-got-logo-transparent.png" alt="R.K. X Game of Thrones" />
+                <p class="got-eyebrow">The Iron Anniversary</p>
+                <h2>Dinner is coming.</h2>
                 <p>
-                  Our model brings together exceptional restaurant brands and premium food experiences in a way that is accessible, immersive and built for home dining.
+                  Summers span decades. Winters can last a lifetime. The struggle for the Iron Throne may be over, but you can still enjoy a Westerosi feast in the comfort of your own kitchen.
                 </p>
+                <p>
+                  Our at-home experience pays homage to the iconic series, taking diners from the balmy climes of Dorne to the blood-stained dining halls of House Frey.
+                </p>
+
+                <ul class="got-menu-list">
+                  <li>Inn at the Crossroads Hot Pie Special</li>
+                  <li>Dragon Fire Smoked Short Rib</li>
+                  <li>Red Wedding Cake</li>
+                  <li>Wildfire Cocktail</li>
+                </ul>
+
+                <div class="got-price">
+                  <strong>£120</strong>
+                  <span>for two, including shipping</span>
+                </div>
               </div>
 
-              <div class="video-frame">
-                <iframe
-                  src="https://www.youtube.com/embed/wiHeOR0hFRk?rel=0"
-                  title="Restaurant Kits collaboration video"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
+              <div class="copy-panel" data-panel="gr" aria-hidden="true">
+                <img class="gr-logo" src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" />
+                <p class="got-eyebrow">Gordon Ramsay Restaurants × Restaurant Kits</p>
+                <h2>Beef Wellington, made at home.</h2>
+                <p>
+                  We developed the recipe with Gordon Ramsay Restaurants, then took over production, portioning and delivery end to end. Customers recreated one of Gordon Ramsay’s signature dishes in their own kitchens.
+                </p>
+
+                <dl class="gr-stats">
+                  <div><dt>Revenue</dt><dd>£<span data-count="51139" data-format="comma">51,139</span></dd></div>
+                  <div><dt>Profit</dt><dd>£<span data-count="17002" data-format="comma">17,002</span></dd></div>
+                  <div><dt>Period</dt><dd>4 months</dd></div>
+                </dl>
+              </div>
+            </div>
+
+            <div class="got-slider reveal">
+              <div class="slider-viewport">
+                <div class="slider-track">
+                  <figure class="slide slide-laptop" data-panel="got" data-caption="Game of Thrones: the Iron Anniversary booking site">
+                    <img src="./assets/got-laptop-mockup-transparent.png" alt="The Game of Thrones Iron Anniversary booking page shown on a laptop" />
+                  </figure>
+                  <figure class="slide slide-menu" data-panel="got" data-caption="Game of Thrones: the menu and collector’s items">
+                    <img src="./assets/got-menu.png" alt="The Iron Anniversary menu, £120 for two" />
+                  </figure>
+                  <figure class="slide slide-video" data-panel="gr" data-video data-caption="Gordon Ramsay Restaurants: the Beef Wellington kit">
+                    <iframe
+                      src="https://www.youtube.com/embed/wiHeOR0hFRk?rel=0&enablejsapi=1"
+                      title="Gordon Ramsay Restaurants and Restaurant Kits video"
+                      loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowfullscreen
+                    ></iframe>
+                  </figure>
+                </div>
+              </div>
+
+              <div class="slider-controls">
+                <button class="slider-btn" type="button" data-prev aria-label="Previous slide">←</button>
+                <p class="slider-caption" aria-live="polite"></p>
+                <div class="slider-dots" role="tablist" aria-label="Choose slide"></div>
+                <button class="slider-btn" type="button" data-next aria-label="Next slide">→</button>
               </div>
             </div>
           </div>
         </section>
 
+        <!-- ICONIC DISHES -->
         <section class="iconic-section">
-          <div class="container"> 
+          <div class="container">
             <div class="seasonal-head reveal">
               <h2>Iconic restaurant dishes re-created by you at home</h2>
               <p>We send you top quality restaurant ingredients and instructions. You make incredible dinners.</p>
@@ -192,7 +377,7 @@
                     <div class="circle-line"></div>
                   </div>
                   <div class="iconic-viewbtn">
-                    <button class="btn btn-primary rounded-0" type="button">view menu <span class="icon icon-arrow-right"></span></button>
+                    <a class="btn btn-primary rounded-0" href="#got">view menu <span aria-hidden="true">→</span></a>
                   </div>
                 </div>
                 <div class="turn-img">
@@ -203,6 +388,7 @@
           </div>
         </section>
 
+        <!-- HOW IT WORKS -->
         <section class="howitwork-wrap" id="howitwork">
           <div class="container">
             <div class="seasonal-head reveal">
@@ -227,7 +413,7 @@
                       <li>For each meal sold, Restaurant Kits donates a school meal through our charity partner, One Feeds Two.</li>
                     </ul>
 
-                    <a href="#story" class="btn btnsecondary rounded-0">browse menu <span aria-hidden="true">→</span></a>
+                    <a href="#got" class="btn btnsecondary rounded-0">browse menu <span aria-hidden="true">→</span></a>
                   </div>
                 </div>
               </div>
@@ -235,67 +421,85 @@
           </div>
         </section>
 
-        <section id="tech" class="section-shell tech">
+        <!-- RESULTS -->
+        <section id="results" class="section-shell results">
           <div class="container">
             <div class="section-heading reveal">
-              <p class="eyebrow alt">Market and model</p>
-              <h2>Restaurant Kits is the premium end of the meal-kit market.</h2>
+              <p class="eyebrow alt">Traction</p>
+              <h2>Nearly £1M in sales in our first 12 months.</h2>
+            </div>
+
+            <div class="results-grid">
+              <div class="chart-card reveal">
+                <p class="chart-title">Quarterly revenue</p>
+                <div class="bar-chart" role="img" aria-label="Quarterly revenue: Q3 2020 £14,916, Q4 2020 £139,532, Q1 2021 £574,358, Q2 2021 £265,057">
+                  <div class="bar" style="--h: 2.6%"><span class="bar-value">£15k</span><span class="bar-fill"></span><span class="bar-label">Q3 2020</span></div>
+                  <div class="bar" style="--h: 24.3%"><span class="bar-value">£140k</span><span class="bar-fill"></span><span class="bar-label">Q4 2020</span></div>
+                  <div class="bar is-peak" style="--h: 100%"><span class="bar-value">£574k</span><span class="bar-fill"></span><span class="bar-label">Q1 2021</span></div>
+                  <div class="bar" style="--h: 46.1%"><span class="bar-value">£265k</span><span class="bar-fill"></span><span class="bar-label">Q2 2021</span></div>
+                </div>
+              </div>
+
+              <ul class="kpi-grid reveal">
+                <li><strong><span data-count="30000" data-format="comma">30,000</span></strong><span>Boxes shipped</span></li>
+                <li><strong><span data-count="80000" data-format="comma">80,000</span>+</strong><span>Meals shipped</span></li>
+                <li><strong><span data-count="96">96</span>%</strong><span>Retention rate</span></li>
+                <li><strong><span data-count="17.85" data-decimals="2">17.85</span>%</strong><span>Margin per box</span></li>
+              </ul>
             </div>
 
             <div class="tech-grid">
               <article class="tech-card reveal">
                 <span>Market size</span>
                 <h3>$7.6B meal-kit market</h3>
-                <p>Global meal kit delivery was worth $7.6 billion in 2019 and was poised for strong growth through 2027.</p>
+                <p>The global meal kit delivery market was worth $7.6 billion in 2019, poised to grow at a 12.8% CAGR from 2020 to 2027.</p>
               </article>
               <article class="tech-card reveal">
-                <span>Revenue model</span>
-                <h3>17.85% GM per box</h3>
-                <p>Revenue model included delivery, restaurant commission, Stripe fees, direct wages, printing, food and packaging — with margin expansion driven by add-ons and operational efficiency.</p>
+                <span>Demand</span>
+                <h3>62% want it</h3>
+                <p>62% of customers want their favourite brands to sell “cook or finish at home” meal boxes. Source: A Tale of Two Tables, Slerp and KAM Media.</p>
               </article>
               <article class="tech-card reveal">
-                <span>Go-to-market</span>
-                <h3>Blended CAC of £6.23</h3>
-                <p>We work with existing restaurant brands to leverage their audience, while driving adoption through social, gifting and paid acquisition.</p>
+                <span>Positioning</span>
+                <h3>Fully vertically integrated</h3>
+                <p>We sell, portion and produce every kit in-house, at the premium, restaurant-led end of the market. Competitors include Dishpatch, Restokit, Plateaway, Big Night and GF2U.</p>
               </article>
               <article class="tech-card reveal">
-                <span>Why invest</span>
-                <h3>Growth traction</h3>
-                <p>Over 30,000 boxes sold, over 80,000 meals shipped, 96% retention, and a 4.8 Trustpilot score with leading hospitality brands already signed.</p>
+                <span>Growth levers</span>
+                <h3>Margin expansion</h3>
+                <p>Drinks add-ons, lower food costs, operational efficiencies and own-brand offerings. Link redirects from restaurant sites and socials keep acquisition costs low.</p>
               </article>
+            </div>
+
+            <div class="backers reveal">
+              <p>
+                Backed by <strong>1818</strong>, <strong>Start-up Funding Club</strong> and a number of leading angels. At its peak the business was raising <strong>£1.6M</strong>, EIS approved, to expand into more immersive box experiences.
+              </p>
             </div>
           </div>
         </section>
 
+        <!-- STATUS -->
         <section class="section-shell status-block">
           <div class="container archive-box reveal">
             <div>
-              <p class="eyebrow alt">Official status</p>
-              <h2>This website is officially closed.</h2>
+              <p class="eyebrow alt">The final course</p>
+              <h2>The kitchen has closed.<br /><span>The story hasn’t.</span></h2>
             </div>
             <p>
-              The concept remains a compelling food-tech case study: a premium restaurant-led subscription model built for hospitality brands, immersive events, and direct-to-door delivery.
+              Restaurant Kits has served its last box, but what it built still stands. It brought the UK’s best restaurants into 30,000 homes, then went further, with immersive at-home experiences for some of the world’s biggest entertainment brands. This page keeps that work on the table.
             </p>
           </div>
         </section>
 
+        <!-- CONTACT -->
         <section id="contact" class="section-shell contact">
-          <div class="container contact-grid">
-            <div class="reveal">
-              <p class="eyebrow alt">Owner / more info</p>
-              <h2>For more information about the idea and the original business vision.</h2>
-              <div class="contact-list">
-                <p><strong>General enquiries:</strong> list@restaurantkits.com</p>
-                <p><strong>Owner contact:</strong> ed@restaurantkits.com</p>
-                <p><strong>Website:</strong> restaurantkits.com</p>
-              </div>
-            </div>
-
+          <div class="container contact-solo">
             <div class="developer-card reveal">
               <p class="eyebrow alt">Developer / platform build</p>
               <h3>Connected to the people behind the build.</h3>
               <p>
-                This concept was shaped through modern frontend architecture, commerce storytelling, premium food-brand positioning, and a product-first customer journey.
+                The platform powered restaurant partner kits and branded RKX experiences, from booking sites like the Iron Anniversary to a direct-to-door commerce journey.
               </p>
               <a href="mailto:ed@restaurantkits.com" class="btn primary">Connect the dev</a>
             </div>
@@ -307,13 +511,12 @@
         <div class="container footer-wrap">
           <div class="footer-links">
             <a href="#about">About</a>
-            <a href="#story">Story</a>
             <a href="#partners">Partners</a>
-            <a href="#tech">Tech</a>
-            <a href="#contact">Contact</a>
-            <a href="mailto:list@restaurantkits.com?cc=ed@restaurantkits.com">List your kit</a>
+            <a href="#rkx">RKX</a>
+            <a href="#got">Collaborations</a>
+            <a href="#results">Results</a>
           </div>
-          <p>Restaurant Kits — a closed concept preserved as a portfolio feature.</p>
+          <p>Restaurant Kits, founded 2020. Preserved as a portfolio case study. Brand names and logos belong to their owners.</p>
         </div>
       </footer>
     </div>
