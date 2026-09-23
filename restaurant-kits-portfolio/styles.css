@@ -2404,3 +2404,17 @@ nav a {
     animation: none;
   }
 }
+
+.results-grid > * {
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .kpi-grid strong {
+    font-size: clamp(1.7rem, 8vw, 2.2rem);
+  }
+
+  .kpi-grid li {
+    padding: 18px 16px;
+  }
+}

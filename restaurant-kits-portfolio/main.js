@@ -16,8 +16,8 @@ gsap.timeline({ defaults: { ease: 'power3.out' } })
   .from('.banner-actions', { duration: 0.8, y: 20, opacity: 0 }, '-=0.6')
   .from('.banner-right img', { duration: 1.25, x: 52, opacity: 0, scale: 0.96, ease: 'power3.out' }, '-=1.0');
 
-/* Scroll reveals */
-gsap.utils.toArray('.reveal').forEach((item) => {
+/* Scroll reveals (skipped entirely for reduced motion so nothing stays hidden) */
+if (!reduceMotion) gsap.utils.toArray('.reveal').forEach((item) => {
   gsap.fromTo(
     item,
     { opacity: 0, y: 42 },
@@ -33,7 +33,7 @@ gsap.utils.toArray('.reveal').forEach((item) => {
 
 /* Partner circles and IP logos pop in one by one */
 [['.logo-wall', '.logo-wall figure'], ['.ip-row', '.ip-card']].forEach(([trigger, items]) => {
-  if (!document.querySelector(trigger)) return;
+  if (reduceMotion || !document.querySelector(trigger)) return;
   gsap.from(items, {
     scrollTrigger: { trigger, start: 'top 80%', once: true },
     scale: 0.6,
@@ -73,7 +73,7 @@ document.querySelectorAll('[data-count]').forEach((el) => {
 });
 
 /* Revenue bars grow in */
-if (document.querySelector('.bar-chart')) {
+if (!reduceMotion && document.querySelector('.bar-chart')) {
   gsap.from('.bar-fill', {
     scrollTrigger: { trigger: '.bar-chart', start: 'top 80%', once: true },
     scaleY: 0,
