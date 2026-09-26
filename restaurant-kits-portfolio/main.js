@@ -6,7 +6,7 @@ gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* Intro */
-gsap.timeline({ defaults: { ease: 'power3.out' } })
+if (!reduceMotion) gsap.timeline({ defaults: { ease: 'power3.out' } })
   .to('.page-shell', { duration: 1, autoAlpha: 1, ease: 'power2.out' })
   .from('.brand', { duration: 0.9, y: -24, opacity: 0, filter: 'blur(16px)' }, '-=0.7')
   .from('nav a', { duration: 0.8, y: -16, opacity: 0, stagger: 0.08, filter: 'blur(10px)' }, '-=0.7')
