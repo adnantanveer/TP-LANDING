@@ -8,16 +8,24 @@
       content="Restaurant Kits: meal kits from the UK's best restaurants, and RKX immersive at-home experiences with Warner Bros. brands including Game of Thrones, Harry Potter and Friends."
     />
     <title>Restaurant Kits | Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="./assets/index-Dno9KgCL.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-D0dHx33f.css">
+    <script type="module" crossorigin src="./assets/index-CNd904p6.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BbIWlHLZ.css">
   </head>
   <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <symbol id="tp-star" viewBox="0 0 24 24">
+        <path d="M12 2.5l2.9 6.3 6.9.75-5.1 4.7 1.4 6.85L12 17.6l-6.1 3.5 1.4-6.85-5.1-4.7 6.9-.75z" />
+      </symbol>
+    </svg>
     <div class="page-shell">
       <header class="topbar">
         <div class="container nav-wrap">
@@ -45,7 +53,7 @@
       <main id="top">
         <!-- HERO -->
         <section class="hero original-banner">
-          <div class="container banner-shell reveal">
+          <div class="container banner-shell">
             <div class="banner-left">
               <div class="mini-stack">
                 <img src="./assets/smallbaner1-BCZMtdpz.png" alt="Restaurant Kits feature" />
@@ -65,22 +73,46 @@
                     <span>Boxes shipped</span>
                   </li>
                   <li>
-                    <strong>£<span data-count="1">1</span>M</strong>
-                    <span>Revenue in year one</span>
+                    <strong><span data-count="80000" data-format="k">80k</span>+</strong>
+                    <span>Meals shipped</span>
                   </li>
                   <li>
                     <strong><span data-count="25">25</span></strong>
                     <span>Restaurants signed</span>
                   </li>
-                  <li>
-                    <strong><span data-count="4.8" data-decimals="1">4.8</span>★</strong>
-                    <span>Trustpilot score</span>
+                  <li class="hero-stat-trust">
+                    <!-- Trustpilot badge. 375 reviews / 87% five-star are from the live page (uk.trustpilot.com/review/restaurantkitsuk.com, 2026-10-07).
+                         The 4.8 score is the investor-deck figure for the trading period; the live, time-decayed score now differs. See handoff. -->
+                    <a
+                      class="trust-badge"
+                      href="https://uk.trustpilot.com/review/restaurantkitsuk.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-todo="trustpilot-score"
+                      aria-label="Rated 4.8 out of 5 on Trustpilot, 375 reviews, 87% five-star"
+                    >
+                      <span class="trust-top">
+                        <strong><span data-count="4.8" data-decimals="1">4.8</span></strong>
+                        <span class="trust-stars" style="--score: 4.8" aria-hidden="true">
+                          <span class="trust-stars-track">
+                            <svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg>
+                          </span>
+                          <span class="trust-stars-fill">
+                            <svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="trust-meta">
+                        <svg class="tp-mark" aria-hidden="true"><use href="#tp-star" /></svg>
+                        <span>Trustpilot · <span data-count="375" data-format="comma">375</span> reviews · <span data-count="87">87</span>% five-star</span>
+                      </span>
+                    </a>
                   </li>
                 </ul>
               </div>
 
               <div class="banner-actions">
-                <a href="#got" class="btn primary">See the Game of Thrones kit</a>
+                <a href="#contact" class="btn primary">Get in touch</a>
                 <a href="#partners" class="btn ghost">Our partners</a>
               </div>
             </div>
@@ -91,33 +123,75 @@
           </div>
         </section>
 
-        <!-- BRAND MARQUEE -->
-        <section class="brand-strip" aria-label="Brands we have worked with">
-          <p class="brand-strip-label">In collaboration with</p>
+        <!-- RESTAURANT LOGO ROWS -->
+        <section class="brand-strip" aria-labelledby="partner-strip-heading">
+          <h2 id="partner-strip-heading" class="brand-strip-label">Partnered with the following restaurants</h2>
           <div class="marquee">
             <div class="marquee-track">
-              <img src="./assets/warner-bros-logo-DyveFRE8.png" alt="Warner Bros." />
-              <img src="./assets/game-of-thrones-logo-CpwltDI5.png" alt="Game of Thrones" />
-              <img src="./assets/harry-potter-logo-B2yRVSVw.png" alt="Harry Potter" />
-              <img src="./assets/friends-logo-B8lp3mU7.png" alt="Friends" class="wide" />
-              <img src="./assets/gordon-ramsay-DpCAyoTr.png" alt="Gordon Ramsay Restaurants" class="circle" />
-              <img src="./assets/adam-handling-Bugs_r41.png" alt="Adam Handling Restaurant Group" class="circle" />
-              <img src="./assets/chef-calums-pie-kit-CO26t9y1.png" alt="Chef Calum's Pie Kit" class="circle" />
-              <img src="./assets/mac-and-wild-D8BmEXTn.png" alt="Mac & Wild" class="circle" />
-              <img src="./assets/pitt-cue-D8Piq5Tt.png" alt="Pitt Cue Co." class="circle" />
-              <img src="./assets/berber-and-q-DzeyK9SF.png" alt="Berber & Q" class="circle" />
+              <a class="logo-link" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants"><img src="./assets/gordon-ramsay-DpCAyoTr.png" alt="Gordon Ramsay Restaurants" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group"><img src="./assets/adam-handling-Bugs_r41.png" alt="Adam Handling Restaurant Group" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)"><img src="./assets/holborn-dining-room-DysmedSL.png" alt="Holborn Dining Room (Calum Franklin)" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild"><img src="./assets/mac-and-wild-D8BmEXTn.png" alt="Mac &amp; Wild" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims"><img src="./assets/pizza-pilgrims-CkyFJMCy.png" alt="Pizza Pilgrims" loading="lazy" /></a>
+              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket"><img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='152'%20height='21'%20viewBox='0%200%20152%2021'%20fill='none'%3e%3cg%20clip-path='url(%23clip0_467_2250)'%3e%3cpath%20d='M90.1316%207.91745V10.9864C89.5192%2010.7321%2089.0924%2010.1147%2089.0924%209.46099C89.0924%208.80726%2089.5192%208.17168%2090.1316%207.91745ZM91.5234%2011.0227V7.91745C92.2842%208.13536%2093.1935%208.68015%2094.1585%209.51548C93.1935%2010.3145%2092.3028%2010.8229%2091.5234%2011.0227ZM96.1812%209.51548C98.6493%207.10029%20100.95%203.57739%20101.526%201.81593H105.126V0.453987H96.7936V1.81593H100.06C99.4473%203.305%2097.4431%206.37391%2095.1791%208.58935C93.8616%207.42715%2092.6183%206.73711%2091.5234%206.51919V1.81593H95.5503V0.453987H86.1233V1.81593H90.1316V6.51919C88.7213%206.80974%2087.7006%208.04457%2087.7006%209.47916C87.7006%2010.9137%2088.7398%2012.1304%2090.1316%2012.421V18.8493H86.1233V20.2113H95.5503V18.8493H91.5234V12.421C92.6183%2012.2031%2093.843%2011.5493%2095.1606%2010.4416C97.8142%2013.111%20100.171%2016.9063%20100.691%2018.8493H96.7936V20.2113H106.221V18.8493H102.101C101.6%2016.7066%2099.0576%2012.4391%2096.1812%209.51548Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M34.1636%207.26372C34.2192%207.39084%2034.6646%208.35328%2035.2399%209.64259H31.0274V1.79778H37.2997C40.9926%201.79778%2041.5493%204.24928%2041.5493%205.72018V5.81098C41.5307%207.24556%2040.9555%209.62443%2037.2997%209.62443H36.7616C36.2791%208.55303%2035.8152%207.51796%2035.4255%206.70079L35.3327%206.48288L34.0708%207.02766L34.1636%207.24557V7.26372ZM43.0524%2018.8312C41.0482%2018.8312%2040.1946%2017.0879%2039.8791%2016.416V16.3615C39.842%2016.3252%2039.8235%2016.2889%2039.8049%2016.2526C39.6936%2016.0347%2038.8399%2014.1824%2037.3925%2010.9864C42.5514%2010.9501%2042.9596%206.93686%2042.9596%205.70203V5.2662C42.8297%203.81346%2042.0689%200.435829%2037.3183%200.435829H25.6273V1.79778H29.6542V18.8312H25.6273V20.1931H35.0543V18.8312H31.046V11.0045H35.8708C36.6688%2012.766%2038.3946%2016.5431%2038.5802%2016.8881C38.5802%2016.8881%2038.5987%2016.9245%2038.6173%2016.9426L38.6544%2016.9971C39.0441%2017.7779%2040.1946%2020.1931%2043.0709%2020.1931H44.6483V18.8312H43.0709H43.0524Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M50.1968%201.79778H54.2051V18.8312H50.1968V20.1931H59.6238V18.8312H55.5969V1.79778H59.6238V0.435829H50.1968V1.79778Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M111.788%201.79778H115.796V18.8312H111.788V20.1931H127.747V13.7647H126.374V18.8312H117.188V11.0045H123.813V9.64259H117.188V1.79778H126.374V6.86422H127.747V0.435829H111.788V1.79778Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M80.1479%2013.4379C79.7582%2013.4379%2079.4613%2013.7466%2079.4613%2014.1098C79.4613%2017.1605%2077.1231%2019.2125%2073.653%2019.2125C70.1828%2019.2125%2066.3415%2014.6727%2066.3415%2010.2963C66.3415%205.91993%2070.0529%201.38011%2073.653%201.38011C77.253%201.38011%2078.6819%203.63186%2079.0531%204.21296V6.82789H80.4448V0.835332H79.0531V2.07016C77.9582%201.03508%2076.2138%203.8147e-06%2073.653%203.8147e-06C71.0921%203.8147e-06%2068.9024%201.1622%2067.2693%203.25052C65.7848%205.15724%2064.9497%207.7177%2064.9497%2010.2782C64.9497%2016.7065%2069.3663%2020.5563%2073.653%2020.5563C77.9397%2020.5563%2080.8531%2017.8869%2080.8531%2014.0916C80.8531%2010.2963%2080.5376%2013.4197%2080.1665%2013.4197'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M133.314%200.435829V6.86422H134.706V1.79778H141.609V18.8312H137.582V20.1931H147.009V18.8312H143.001V1.79778H149.885V6.86422H151.277V0.435829H133.314Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M3.97122%207.91745V10.9864C3.35884%2010.7321%202.93202%2010.1147%202.93202%209.46099C2.93202%208.80726%203.35884%208.17168%203.97122%207.91745ZM5.363%2011.0227V7.91745C6.12384%208.13536%207.03313%208.68015%207.99809%209.51548C7.03313%2010.3145%206.1424%2010.8229%205.363%2011.0227ZM10.0208%209.51548C12.4889%207.10029%2014.79%203.57739%2015.3652%201.81593H18.9653V0.453987H10.6332V1.81593H13.8992C13.2869%203.305%2011.2827%206.37391%209.01873%208.58935C7.70118%207.42715%206.45787%206.73711%205.363%206.51919V1.81593H9.38987V0.453987H-0.0371094V1.81593H3.98977V6.51919C2.57944%206.80974%201.5588%208.04457%201.5588%209.47916C1.5588%2010.9137%202.59799%2012.1304%203.98977%2012.421V18.8493H-0.0371094V20.2113H9.38987V18.8493H5.363V12.421C6.45787%2012.2031%207.68263%2011.5493%209.00018%2010.4416C11.6538%2013.111%2014.0106%2016.9063%2014.5302%2018.8493H10.6332V20.2113H20.0602V18.8493H15.9405C15.4395%2016.7066%2012.8972%2012.4391%2010.0208%209.51548Z'%20fill='%23A42900'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_467_2250'%3e%3crect%20width='151.24'%20height='20.52'%20fill='white'%3e%3c/rect%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="Kricket" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns"><img src="./assets/flesh-and-buns-Cs8LZo8p.png" alt="Flesh &amp; Buns" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q"><img src="./assets/berber-and-q-DzeyK9SF.png" alt="Berber &amp; Q" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://anglothai.co.uk" target="_blank" rel="noopener noreferrer" title="AngloThai"><img src="./assets/anglothai-dVHgHHq9.png" alt="AngloThai" loading="lazy" /></a>
+              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala"><img src="./assets/rola-wala-B-p_ps1M.png" alt="Rola Wala" loading="lazy" /></a>
+              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)"><img src="./assets/cornerstone-Cx77Vvm9.png" alt="Cornerstone (Tom Brown)" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun"><img src="./assets/yum-bun-BC0Tjw7u.svg" alt="Yum Bun" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun"><img src="./assets/patty-and-bun-D-zrHm9U.svg" alt="Patty &amp; Bun" loading="lazy" /></a>
             </div>
             <div class="marquee-track" aria-hidden="true">
-              <img src="./assets/warner-bros-logo-DyveFRE8.png" alt="" />
-              <img src="./assets/game-of-thrones-logo-CpwltDI5.png" alt="" />
-              <img src="./assets/harry-potter-logo-B2yRVSVw.png" alt="" />
-              <img src="./assets/friends-logo-B8lp3mU7.png" alt="" class="wide" />
-              <img src="./assets/gordon-ramsay-DpCAyoTr.png" alt="" class="circle" />
-              <img src="./assets/adam-handling-Bugs_r41.png" alt="" class="circle" />
-              <img src="./assets/chef-calums-pie-kit-CO26t9y1.png" alt="" class="circle" />
-              <img src="./assets/mac-and-wild-D8BmEXTn.png" alt="" class="circle" />
-              <img src="./assets/pitt-cue-D8Piq5Tt.png" alt="" class="circle" />
-              <img src="./assets/berber-and-q-DzeyK9SF.png" alt="" class="circle" />
+              <a class="logo-link" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants" tabindex="-1" aria-hidden="true"><img src="./assets/gordon-ramsay-DpCAyoTr.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group" tabindex="-1" aria-hidden="true"><img src="./assets/adam-handling-Bugs_r41.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)" tabindex="-1" aria-hidden="true"><img src="./assets/holborn-dining-room-DysmedSL.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild" tabindex="-1" aria-hidden="true"><img src="./assets/mac-and-wild-D8BmEXTn.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims" tabindex="-1" aria-hidden="true"><img src="./assets/pizza-pilgrims-CkyFJMCy.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket" tabindex="-1" aria-hidden="true"><img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='152'%20height='21'%20viewBox='0%200%20152%2021'%20fill='none'%3e%3cg%20clip-path='url(%23clip0_467_2250)'%3e%3cpath%20d='M90.1316%207.91745V10.9864C89.5192%2010.7321%2089.0924%2010.1147%2089.0924%209.46099C89.0924%208.80726%2089.5192%208.17168%2090.1316%207.91745ZM91.5234%2011.0227V7.91745C92.2842%208.13536%2093.1935%208.68015%2094.1585%209.51548C93.1935%2010.3145%2092.3028%2010.8229%2091.5234%2011.0227ZM96.1812%209.51548C98.6493%207.10029%20100.95%203.57739%20101.526%201.81593H105.126V0.453987H96.7936V1.81593H100.06C99.4473%203.305%2097.4431%206.37391%2095.1791%208.58935C93.8616%207.42715%2092.6183%206.73711%2091.5234%206.51919V1.81593H95.5503V0.453987H86.1233V1.81593H90.1316V6.51919C88.7213%206.80974%2087.7006%208.04457%2087.7006%209.47916C87.7006%2010.9137%2088.7398%2012.1304%2090.1316%2012.421V18.8493H86.1233V20.2113H95.5503V18.8493H91.5234V12.421C92.6183%2012.2031%2093.843%2011.5493%2095.1606%2010.4416C97.8142%2013.111%20100.171%2016.9063%20100.691%2018.8493H96.7936V20.2113H106.221V18.8493H102.101C101.6%2016.7066%2099.0576%2012.4391%2096.1812%209.51548Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M34.1636%207.26372C34.2192%207.39084%2034.6646%208.35328%2035.2399%209.64259H31.0274V1.79778H37.2997C40.9926%201.79778%2041.5493%204.24928%2041.5493%205.72018V5.81098C41.5307%207.24556%2040.9555%209.62443%2037.2997%209.62443H36.7616C36.2791%208.55303%2035.8152%207.51796%2035.4255%206.70079L35.3327%206.48288L34.0708%207.02766L34.1636%207.24557V7.26372ZM43.0524%2018.8312C41.0482%2018.8312%2040.1946%2017.0879%2039.8791%2016.416V16.3615C39.842%2016.3252%2039.8235%2016.2889%2039.8049%2016.2526C39.6936%2016.0347%2038.8399%2014.1824%2037.3925%2010.9864C42.5514%2010.9501%2042.9596%206.93686%2042.9596%205.70203V5.2662C42.8297%203.81346%2042.0689%200.435829%2037.3183%200.435829H25.6273V1.79778H29.6542V18.8312H25.6273V20.1931H35.0543V18.8312H31.046V11.0045H35.8708C36.6688%2012.766%2038.3946%2016.5431%2038.5802%2016.8881C38.5802%2016.8881%2038.5987%2016.9245%2038.6173%2016.9426L38.6544%2016.9971C39.0441%2017.7779%2040.1946%2020.1931%2043.0709%2020.1931H44.6483V18.8312H43.0709H43.0524Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M50.1968%201.79778H54.2051V18.8312H50.1968V20.1931H59.6238V18.8312H55.5969V1.79778H59.6238V0.435829H50.1968V1.79778Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M111.788%201.79778H115.796V18.8312H111.788V20.1931H127.747V13.7647H126.374V18.8312H117.188V11.0045H123.813V9.64259H117.188V1.79778H126.374V6.86422H127.747V0.435829H111.788V1.79778Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M80.1479%2013.4379C79.7582%2013.4379%2079.4613%2013.7466%2079.4613%2014.1098C79.4613%2017.1605%2077.1231%2019.2125%2073.653%2019.2125C70.1828%2019.2125%2066.3415%2014.6727%2066.3415%2010.2963C66.3415%205.91993%2070.0529%201.38011%2073.653%201.38011C77.253%201.38011%2078.6819%203.63186%2079.0531%204.21296V6.82789H80.4448V0.835332H79.0531V2.07016C77.9582%201.03508%2076.2138%203.8147e-06%2073.653%203.8147e-06C71.0921%203.8147e-06%2068.9024%201.1622%2067.2693%203.25052C65.7848%205.15724%2064.9497%207.7177%2064.9497%2010.2782C64.9497%2016.7065%2069.3663%2020.5563%2073.653%2020.5563C77.9397%2020.5563%2080.8531%2017.8869%2080.8531%2014.0916C80.8531%2010.2963%2080.5376%2013.4197%2080.1665%2013.4197'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M133.314%200.435829V6.86422H134.706V1.79778H141.609V18.8312H137.582V20.1931H147.009V18.8312H143.001V1.79778H149.885V6.86422H151.277V0.435829H133.314Z'%20fill='%23A42900'%3e%3c/path%3e%3cpath%20d='M3.97122%207.91745V10.9864C3.35884%2010.7321%202.93202%2010.1147%202.93202%209.46099C2.93202%208.80726%203.35884%208.17168%203.97122%207.91745ZM5.363%2011.0227V7.91745C6.12384%208.13536%207.03313%208.68015%207.99809%209.51548C7.03313%2010.3145%206.1424%2010.8229%205.363%2011.0227ZM10.0208%209.51548C12.4889%207.10029%2014.79%203.57739%2015.3652%201.81593H18.9653V0.453987H10.6332V1.81593H13.8992C13.2869%203.305%2011.2827%206.37391%209.01873%208.58935C7.70118%207.42715%206.45787%206.73711%205.363%206.51919V1.81593H9.38987V0.453987H-0.0371094V1.81593H3.98977V6.51919C2.57944%206.80974%201.5588%208.04457%201.5588%209.47916C1.5588%2010.9137%202.59799%2012.1304%203.98977%2012.421V18.8493H-0.0371094V20.2113H9.38987V18.8493H5.363V12.421C6.45787%2012.2031%207.68263%2011.5493%209.00018%2010.4416C11.6538%2013.111%2014.0106%2016.9063%2014.5302%2018.8493H10.6332V20.2113H20.0602V18.8493H15.9405C15.4395%2016.7066%2012.8972%2012.4391%2010.0208%209.51548Z'%20fill='%23A42900'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_467_2250'%3e%3crect%20width='151.24'%20height='20.52'%20fill='white'%3e%3c/rect%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns" tabindex="-1" aria-hidden="true"><img src="./assets/flesh-and-buns-Cs8LZo8p.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q" tabindex="-1" aria-hidden="true"><img src="./assets/berber-and-q-DzeyK9SF.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://anglothai.co.uk" target="_blank" rel="noopener noreferrer" title="AngloThai" tabindex="-1" aria-hidden="true"><img src="./assets/anglothai-dVHgHHq9.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala" tabindex="-1" aria-hidden="true"><img src="./assets/rola-wala-B-p_ps1M.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)" tabindex="-1" aria-hidden="true"><img src="./assets/cornerstone-Cx77Vvm9.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun" tabindex="-1" aria-hidden="true"><img src="./assets/yum-bun-BC0Tjw7u.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun" tabindex="-1" aria-hidden="true"><img src="./assets/patty-and-bun-D-zrHm9U.svg" alt="" loading="lazy" /></a>
+            </div>
+          </div>
+          <div class="marquee reverse">
+            <div class="marquee-track">
+              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)"><img src="./assets/flank-BcFI-rS_.png" alt="Flank (Tom Griffiths)" loading="lazy" /></a>
+              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s"><img src="./assets/biffs-D7Ce6u9w.svg" alt="Biff&#x27;s" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley"><img src="./assets/carters-of-moseley-BMBfg6KH.png" alt="Carters of Moseley" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn"><img src="./assets/baozi-inn-DkekyMbX.png" alt="Baozi Inn" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co."><img src="./assets/pitt-cue-D8Piq5Tt.png" alt="Pitt Cue Co." class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa"><img src="./assets/som-saa-DFW5gz7H.png" alt="Som Saa" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Corazón"><img src="./assets/corazon-BXYMBIwF.png" alt="Corazón" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen"><img src="./assets/juma-kitchen-CofZyC_t.png" alt="JUMA Kitchen" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap"><img src="./assets/sarap-B_bPtx9N.png" alt="Sarap" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké"><img src="data:image/png;base64,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" alt="Island Poké" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit"><img src="./assets/chef-calums-pie-kit-CO26t9y1.png" alt="Chef Calum&#x27;s Pie Kit" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s"><img src="data:image/webp;base64,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" alt="Nanny Bill&#x27;s" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones"><img src="data:image/svg+xml,%3csvg%20width='278'%20height='26'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M3.866%204.056v17.688h.811a8.54%208.54%200%20006.255-2.588%208.5%208.5%200%20002.598-6.248%208.516%208.516%200%2000-2.598-6.264%208.538%208.538%200%2000-6.255-2.588h-.81zM0%2025.61V.207h4.677a12.24%2012.24%200%20018.982%203.719%2012.241%2012.241%200%20013.72%208.982%2012.248%2012.248%200%2001-3.72%208.974%2012.225%2012.225%200%2001-8.982%203.728H0zM29.583.207h3.866V25.61h-3.866zm23.162%203.78V14.72c.229.035.46.052.69.051a4.78%204.78%200%20003.616-1.588%205.392%205.392%200%20001.493-3.83A5.364%205.364%200%200057.05%205.53a4.793%204.793%200%2000-3.616-1.58c-.23%200-.46.013-.69.036m0%2014.53v7.059H48.88V.172h3.865V.19c.23-.011.46-.018.69-.018a8.133%208.133%200%20016.144%202.693%209.125%209.125%200%20012.537%206.489%209.143%209.143%200%2001-2.537%206.505c-.406.432-.85.825-1.329%201.174l4.608%208.612h-4.142l-3.83-7.214c-.48.081-.965.121-1.45.12-.231%200-.461-.01-.69-.034M89.341.071v4H82.99V25.61h-3.87V4.071h-6.35v-4zm11.068.015h4.091l4.797%2011.321%204.78-11.321h4.091l-6.662%2015.86v9.664h-4.435v-9.664zM149.5%2013.133v8.611h3.814a3.79%203.79%200%20002.865-1.268%204.47%204.47%200%20000-6.075%203.792%203.792%200%2000-2.865-1.268H149.5zm0-4.728h2.02a1.838%201.838%200%20001.405-.63%202.2%202.2%200%2000.579-1.545%202.177%202.177%200%2000-.579-1.527%201.838%201.838%200%2000-1.405-.63h-2.02v4.332zm-3.865%2017.205V.207h5.885a5.64%205.64%200%20014.141%201.709%205.618%205.618%200%20011.708%204.124%205.642%205.642%200%2001-1.639%204.073%207.87%207.87%200%20013.193%201.967%207.676%207.676%200%20012.313%205.61%207.926%207.926%200%2001-7.922%207.92h-7.68zm28.881-12.77a8.788%208.788%200%20002.588%206.273%209.044%209.044%200%20009.75%201.88%208.732%208.732%200%20002.822-1.88%208.858%208.858%200%20001.89-2.814%209.013%209.013%200%20000-6.92%208.856%208.856%200%2000-1.89-2.812%208.62%208.62%200%2000-2.821-1.873%209.233%209.233%200%2000-6.92%200%208.754%208.754%200%2000-5.42%208.146m21.935%200a12.181%2012.181%200%2001-1.027%204.978%2012.804%2012.804%200%2001-2.805%204.047%2013.485%2013.485%200%2001-4.141%202.735%2013.299%2013.299%200%2001-10.164%200%2013.489%2013.489%200%2001-4.143-2.735%2012.771%2012.771%200%2001-2.803-4.047%2012.154%2012.154%200%2001-1.028-4.978%2012.36%2012.36%200%20011.028-4.997%2012.677%2012.677%200%20012.803-4.08%2013.363%2013.363%200%20014.143-2.728%2013.407%2013.407%200%200110.164%200%2013.359%2013.359%200%20014.141%202.727%2012.709%2012.709%200%20012.805%204.081%2012.388%2012.388%200%20011.027%204.997m24.262%2012.77l-8.991-15.773V25.61h-3.882V.138h3.554l8.319%2015.29V.069h3.865V25.61zM239.011.207h11.769v3.866h-7.886v6.903h7.886v3.865h-7.886v6.903h7.886v3.866h-11.769zm30.878%2025.438a9.425%209.425%200%2001-2.925-.415%209.823%209.823%200%2001-2.719-1.484V19c.42.47.883.9%201.382%201.286.38.26.775.5%201.181.716.493.264%201.01.478%201.545.639a5.7%205.7%200%20001.675.258%203.652%203.652%200%20002.803-1.182%203.984%203.984%200%20001.096-2.804%202.747%202.747%200%2000-.932-2.157%2014.953%2014.953%200%2000-3.054-1.899%2034.41%2034.41%200%2001-2.157-1.19%209.357%209.357%200%2001-1.691-1.329%206.222%206.222%200%2001-1.312-1.89%206.15%206.15%200%2001-.5-2.58c.039-.94.28-1.861.706-2.7a7.22%207.22%200%20011.727-2.192A8.043%208.043%200%2001269.19.518%208.295%208.295%200%2001272.115%200a8.2%208.2%200%20012.106.32c.76.249%201.484.594%202.157%201.026v3.986a7.607%207.607%200%2000-.992-.595%208.86%208.86%200%2001-.76-.38%205.867%205.867%200%2000-1.139-.457%204.877%204.877%200%2000-1.372-.19%204.02%204.02%200%2000-2.744%201.027%203.064%203.064%200%2000-1.121%202.339%202.573%202.573%200%2000.94%202.01%2013.95%2013.95%200%20002.925%201.682c.92.438%201.672.824%202.253%201.157.62.364%201.196.798%201.716%201.294a5.873%205.873%200%20011.364%202.002%207.65%207.65%200%2001.552%202.865%206.77%206.77%200%2001-.64%202.89%207.691%207.691%200%2001-1.776%202.425%208.477%208.477%200%2001-2.615%201.648%208.158%208.158%200%2001-3.08.595'%20fill='%23F5EFE8'/%3e%3c/svg%3e" alt="Dirty Bones" loading="lazy" /></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="12:51 by James Cochran (logo coming soon)"><span class="logo-placeholder" role="img" aria-label="12:51 by James Cochran, logo coming soon">12<small>soon</small></span></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="Fanny&#x27;s Kebabs (logo coming soon)"><span class="logo-placeholder" role="img" aria-label="Fanny&#x27;s Kebabs, logo coming soon">FK<small>soon</small></span></a>
+            </div>
+            <div class="marquee-track" aria-hidden="true">
+              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)" tabindex="-1" aria-hidden="true"><img src="./assets/flank-BcFI-rS_.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s" tabindex="-1" aria-hidden="true"><img src="./assets/biffs-D7Ce6u9w.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley" tabindex="-1" aria-hidden="true"><img src="./assets/carters-of-moseley-BMBfg6KH.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn" tabindex="-1" aria-hidden="true"><img src="./assets/baozi-inn-DkekyMbX.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co." tabindex="-1" aria-hidden="true"><img src="./assets/pitt-cue-D8Piq5Tt.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa" tabindex="-1" aria-hidden="true"><img src="./assets/som-saa-DFW5gz7H.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Corazón" tabindex="-1" aria-hidden="true"><img src="./assets/corazon-BXYMBIwF.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen" tabindex="-1" aria-hidden="true"><img src="./assets/juma-kitchen-CofZyC_t.png" alt="" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap" tabindex="-1" aria-hidden="true"><img src="./assets/sarap-B_bPtx9N.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké" tabindex="-1" aria-hidden="true"><img src="data:image/png;base64,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" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit" tabindex="-1" aria-hidden="true"><img src="./assets/chef-calums-pie-kit-CO26t9y1.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s" tabindex="-1" aria-hidden="true"><img src="data:image/webp;base64,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" alt="" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones" tabindex="-1" aria-hidden="true"><img src="data:image/svg+xml,%3csvg%20width='278'%20height='26'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M3.866%204.056v17.688h.811a8.54%208.54%200%20006.255-2.588%208.5%208.5%200%20002.598-6.248%208.516%208.516%200%2000-2.598-6.264%208.538%208.538%200%2000-6.255-2.588h-.81zM0%2025.61V.207h4.677a12.24%2012.24%200%20018.982%203.719%2012.241%2012.241%200%20013.72%208.982%2012.248%2012.248%200%2001-3.72%208.974%2012.225%2012.225%200%2001-8.982%203.728H0zM29.583.207h3.866V25.61h-3.866zm23.162%203.78V14.72c.229.035.46.052.69.051a4.78%204.78%200%20003.616-1.588%205.392%205.392%200%20001.493-3.83A5.364%205.364%200%200057.05%205.53a4.793%204.793%200%2000-3.616-1.58c-.23%200-.46.013-.69.036m0%2014.53v7.059H48.88V.172h3.865V.19c.23-.011.46-.018.69-.018a8.133%208.133%200%20016.144%202.693%209.125%209.125%200%20012.537%206.489%209.143%209.143%200%2001-2.537%206.505c-.406.432-.85.825-1.329%201.174l4.608%208.612h-4.142l-3.83-7.214c-.48.081-.965.121-1.45.12-.231%200-.461-.01-.69-.034M89.341.071v4H82.99V25.61h-3.87V4.071h-6.35v-4zm11.068.015h4.091l4.797%2011.321%204.78-11.321h4.091l-6.662%2015.86v9.664h-4.435v-9.664zM149.5%2013.133v8.611h3.814a3.79%203.79%200%20002.865-1.268%204.47%204.47%200%20000-6.075%203.792%203.792%200%2000-2.865-1.268H149.5zm0-4.728h2.02a1.838%201.838%200%20001.405-.63%202.2%202.2%200%2000.579-1.545%202.177%202.177%200%2000-.579-1.527%201.838%201.838%200%2000-1.405-.63h-2.02v4.332zm-3.865%2017.205V.207h5.885a5.64%205.64%200%20014.141%201.709%205.618%205.618%200%20011.708%204.124%205.642%205.642%200%2001-1.639%204.073%207.87%207.87%200%20013.193%201.967%207.676%207.676%200%20012.313%205.61%207.926%207.926%200%2001-7.922%207.92h-7.68zm28.881-12.77a8.788%208.788%200%20002.588%206.273%209.044%209.044%200%20009.75%201.88%208.732%208.732%200%20002.822-1.88%208.858%208.858%200%20001.89-2.814%209.013%209.013%200%20000-6.92%208.856%208.856%200%2000-1.89-2.812%208.62%208.62%200%2000-2.821-1.873%209.233%209.233%200%2000-6.92%200%208.754%208.754%200%2000-5.42%208.146m21.935%200a12.181%2012.181%200%2001-1.027%204.978%2012.804%2012.804%200%2001-2.805%204.047%2013.485%2013.485%200%2001-4.141%202.735%2013.299%2013.299%200%2001-10.164%200%2013.489%2013.489%200%2001-4.143-2.735%2012.771%2012.771%200%2001-2.803-4.047%2012.154%2012.154%200%2001-1.028-4.978%2012.36%2012.36%200%20011.028-4.997%2012.677%2012.677%200%20012.803-4.08%2013.363%2013.363%200%20014.143-2.728%2013.407%2013.407%200%200110.164%200%2013.359%2013.359%200%20014.141%202.727%2012.709%2012.709%200%20012.805%204.081%2012.388%2012.388%200%20011.027%204.997m24.262%2012.77l-8.991-15.773V25.61h-3.882V.138h3.554l8.319%2015.29V.069h3.865V25.61zM239.011.207h11.769v3.866h-7.886v6.903h7.886v3.865h-7.886v6.903h7.886v3.866h-11.769zm30.878%2025.438a9.425%209.425%200%2001-2.925-.415%209.823%209.823%200%2001-2.719-1.484V19c.42.47.883.9%201.382%201.286.38.26.775.5%201.181.716.493.264%201.01.478%201.545.639a5.7%205.7%200%20001.675.258%203.652%203.652%200%20002.803-1.182%203.984%203.984%200%20001.096-2.804%202.747%202.747%200%2000-.932-2.157%2014.953%2014.953%200%2000-3.054-1.899%2034.41%2034.41%200%2001-2.157-1.19%209.357%209.357%200%2001-1.691-1.329%206.222%206.222%200%2001-1.312-1.89%206.15%206.15%200%2001-.5-2.58c.039-.94.28-1.861.706-2.7a7.22%207.22%200%20011.727-2.192A8.043%208.043%200%2001269.19.518%208.295%208.295%200%2001272.115%200a8.2%208.2%200%20012.106.32c.76.249%201.484.594%202.157%201.026v3.986a7.607%207.607%200%2000-.992-.595%208.86%208.86%200%2001-.76-.38%205.867%205.867%200%2000-1.139-.457%204.877%204.877%200%2000-1.372-.19%204.02%204.02%200%2000-2.744%201.027%203.064%203.064%200%2000-1.121%202.339%202.573%202.573%200%2000.94%202.01%2013.95%2013.95%200%20002.925%201.682c.92.438%201.672.824%202.253%201.157.62.364%201.196.798%201.716%201.294a5.873%205.873%200%20011.364%202.002%207.65%207.65%200%2001.552%202.865%206.77%206.77%200%2001-.64%202.89%207.691%207.691%200%2001-1.776%202.425%208.477%208.477%200%2001-2.615%201.648%208.158%208.158%200%2001-3.08.595'%20fill='%23F5EFE8'/%3e%3c/svg%3e" alt="" loading="lazy" /></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="12:51 by James Cochran (logo coming soon)" tabindex="-1" aria-hidden="true"><span class="logo-placeholder" role="img" aria-label="12:51 by James Cochran, logo coming soon">12<small>soon</small></span></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="Fanny&#x27;s Kebabs (logo coming soon)" tabindex="-1" aria-hidden="true"><span class="logo-placeholder" role="img" aria-label="Fanny&#x27;s Kebabs, logo coming soon">FK<small>soon</small></span></a>
             </div>
           </div>
         </section>
@@ -128,64 +202,21 @@
             <div class="intro-split">
               <div class="intro-statement reveal">
                 <p>
-                  Restaurant Kits was founded as a new type of dark kitchen. We produce, portion and distribute meal kits from the <em>UK’s best restaurant brands</em>, direct to your door.
+                  Restaurant Kits was founded in 2020 as <em>a new type of dark kitchen</em>. We produce, portion and distribute meal kits from <em>the UK’s best restaurant brands</em>, direct to your door.
                 </p>
                 <p>
-                  Founded in 2020, we have worked with leading brands in hospitality including Gordon Ramsay, Adam Handling, Calum Franklin and Tom Brown.
-                </p>
-                <p>
-                  We sold <em>30,000 boxes</em> and <em>over £1M in revenue</em> in 12 months, and were <em>raising £1.6M</em> to continue our growth and expand into more immersive box experiences.
+                  We have worked with <em>Gordon Ramsay, Adam Handling, Calum Franklin and Tom Brown</em>, shipped <em>30,000 boxes</em> in our first year, and went on to build <em>immersive at-home experiences</em>.
                 </p>
               </div>
 
-              <div class="intro-partners reveal">
-                <p class="intro-partners-label">A selection of our partners</p>
-                <div class="logo-wall">
-                  <figure><img src="./assets/mac-and-wild-D8BmEXTn.png" alt="Mac & Wild" /></figure>
-                  <figure><img src="./assets/carters-of-moseley-BMBfg6KH.png" alt="Carters of Moseley" /></figure>
-                  <figure><img src="./assets/harry-potter-DuQ_-Bbe.png" alt="Harry Potter" /></figure>
-                  <figure><img src="./assets/gordon-ramsay-DpCAyoTr.png" alt="Gordon Ramsay Restaurants" /></figure>
-                  <figure><img src="./assets/adam-handling-Bugs_r41.png" alt="Adam Handling Restaurant Group" /></figure>
-                  <figure><img src="./assets/corazon-BXYMBIwF.png" alt="Corazón" /></figure>
-                  <figure><img src="./assets/pitt-cue-D8Piq5Tt.png" alt="Pitt Cue Co." /></figure>
-                  <figure><img src="./assets/chef-calums-pie-kit-CO26t9y1.png" alt="Chef Calum's Pie Kit" /></figure>
-                  <figure><img src="./assets/friends-ypUAtk5W.png" alt="Friends" /></figure>
-                  <figure><img src="./assets/cornerstone-Cx77Vvm9.png" alt="Cornerstone" /></figure>
-                  <figure><img src="./assets/game-of-thrones-CntZhqMI.png" alt="Game of Thrones" /></figure>
-                  <figure><img src="./assets/berber-and-q-DzeyK9SF.png" alt="Berber & Q Grill House" /></figure>
-                </div>
-              </div>
+              <figure class="intro-photo reveal">
+                <img src="./assets/chef-cooking-BrFaYpc1.jpg" alt="A chef plating a dish in a restaurant kitchen" loading="lazy" />
+              </figure>
             </div>
 
             <div class="rk-divider" aria-hidden="true">
               <img src="data:image/png;base64,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" alt="" />
             </div>
-
-            <!--
-            <div class="story-grid">
-              <article class="story-card reveal">
-                <span class="card-kicker">For restaurants</span>
-                <h3>Demand without the kitchen</h3>
-                <p>
-                  The pandemic accelerated an existing growth trend in at-home dining. Restaurants lack the infrastructure, resources and expertise to meet this demand.
-                </p>
-              </article>
-              <article class="story-card reveal">
-                <span class="card-kicker">For customers</span>
-                <h3>The best chefs, any postcode</h3>
-                <p>
-                  Access to the world’s best restaurants and chefs is limited to physical location and delivery radius.
-                </p>
-              </article>
-              <article class="story-card accent reveal">
-                <span class="card-kicker">Our answer</span>
-                <h3>Pure profit for restaurants</h3>
-                <p>
-                  We develop recipes with each restaurant, then take over full end-to-end production. We order, produce, portion and sell the kits. Restaurants are paid an 8–12% royalty.
-                </p>
-              </article>
-            </div>
-            -->
           </div>
         </section>
 
@@ -194,14 +225,18 @@
           <div class="container">
             <div class="section-heading reveal">
               <p class="eyebrow alt">Partners</p>
-              <h2>Working with best-in-class restaurants and chefs.</h2>
+              <h2>We’ve partnered with the best chefs in London</h2>
             </div>
 
             <div class="chef-row reveal">
               <p class="eyebrow alt">Best-in-class chefs &amp; their restaurants</p>
               <ul>
                 <li>
-                  <img src="./assets/gordon-ramsay-C9FD50vK.png" alt="Gordon Ramsay" />
+                  <img
+                    src="./assets/gordon-ramsay-cc-Bi5dGTUW.jpg"
+                    alt="Gordon Ramsay"
+                    title="Photo: see credit in the footer (Wikimedia Commons, Creative Commons licence)"
+                  />
                   <strong>Gordon Ramsay</strong><span>Restaurants</span>
                 </li>
                 <li>
@@ -223,24 +258,22 @@
               <article class="case-card reveal">
                 <img src="./assets/gordon-ramsay-DpCAyoTr.png" alt="Gordon Ramsay Restaurants" />
                 <div>
-                  <span class="card-kicker">Case study · 4 months</span>
+                  <span class="card-kicker">Case study</span>
                   <h3>Gordon Ramsay Restaurants</h3>
-                  <p class="case-dish">Beef Wellington</p>
                   <dl>
-                    <div><dt>Revenue</dt><dd>£<span data-count="51139" data-format="comma">51,139</span></dd></div>
-                    <div><dt>Profit</dt><dd>£<span data-count="17002" data-format="comma">17,002</span></dd></div>
+                    <div><dt>Time to launch</dt><dd>4 months</dd></div>
+                    <div><dt>Delivered</dt><dd>Beef Wellington kit</dd></div>
                   </dl>
                 </div>
               </article>
               <article class="case-card reveal">
                 <img src="./assets/mac-and-wild-D8BmEXTn.png" alt="Mac & Wild" />
                 <div>
-                  <span class="card-kicker">Case study · 12 months</span>
+                  <span class="card-kicker">Case study</span>
                   <h3>Mac &amp; Wild</h3>
-                  <p class="case-dish">Venimoo Burger</p>
                   <dl>
-                    <div><dt>Revenue</dt><dd>£<span data-count="226179" data-format="comma">226,179</span></dd></div>
-                    <div><dt>Profit</dt><dd>£<span data-count="36777" data-format="comma">36,777</span></dd></div>
+                    <div><dt>Time to launch</dt><dd>12 months</dd></div>
+                    <div><dt>Delivered</dt><dd>Venimoo Burger kit</dd></div>
                   </dl>
                 </div>
               </article>
@@ -307,16 +340,15 @@
 
               <div class="copy-panel" data-panel="gr" aria-hidden="true">
                 <img class="gr-logo" src="./assets/gordon-ramsay-DpCAyoTr.png" alt="Gordon Ramsay Restaurants" />
-                <p class="got-eyebrow">Gordon Ramsay Restaurants × Restaurant Kits</p>
+                <p class="gr-eyebrow">Gordon Ramsay Restaurants × Restaurant Kits</p>
                 <h2>Beef Wellington, made at home.</h2>
                 <p>
                   We developed the recipe with Gordon Ramsay Restaurants, then took over production, portioning and delivery end to end. Customers recreated one of Gordon Ramsay’s signature dishes in their own kitchens.
                 </p>
 
                 <dl class="gr-stats">
-                  <div><dt>Revenue</dt><dd>£<span data-count="51139" data-format="comma">51,139</span></dd></div>
-                  <div><dt>Profit</dt><dd>£<span data-count="17002" data-format="comma">17,002</span></dd></div>
-                  <div><dt>Period</dt><dd>4 months</dd></div>
+                  <div><dt>Time to launch</dt><dd>4 months</dd></div>
+                  <div><dt>Delivered</dt><dd>Beef Wellington kit</dd></div>
                 </dl>
               </div>
             </div>
@@ -356,7 +388,7 @@
         <section class="iconic-section">
           <div class="container">
             <div class="seasonal-head reveal">
-              <h2>Iconic restaurant dishes re-created by you at home</h2>
+              <h2>Iconic restaurant kits recreated by you at home</h2>
               <p>We send you top quality restaurant ingredients and instructions. You make incredible dinners.</p>
             </div>
 
@@ -377,45 +409,9 @@
                     What your box will turn into
                     <div class="circle-line"></div>
                   </div>
-                  <div class="iconic-viewbtn">
-                    <a class="btn btn-primary rounded-0" href="#got">view menu <span aria-hidden="true">→</span></a>
-                  </div>
                 </div>
                 <div class="turn-img">
-                  <img src="./assets/bannermai-AV5VIGve.jpg" alt="Finished dinner" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- HOW IT WORKS -->
-        <section class="howitwork-wrap" id="howitwork">
-          <div class="container">
-            <div class="seasonal-head reveal">
-              <h2>how it works</h2>
-            </div>
-
-            <div class="howitwork reveal">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="howitwork-img">
-                    <img src="./assets/howit-work-img-CnQyGMvV.png" alt="How Restaurant Kits works" />
-                  </div>
-                </div>
-
-                <div class="col-lg-6">
-                  <div class="howitwork-content">
-                    <ul>
-                      <li>An ever-changing, monthly box containing an iconic restaurant dish from the UK's best brands.</li>
-                      <li>Delivered to your doorstep on the day you want it.</li>
-                      <li>Vegan and Gluten-free options available every month.</li>
-                      <li>No commitment, freeze and cancel your subscription anytime.</li>
-                      <li>For each meal sold, Restaurant Kits donates a school meal through our charity partner, One Feeds Two.</li>
-                    </ul>
-
-                    <a href="#got" class="btn btnsecondary rounded-0">browse menu <span aria-hidden="true">→</span></a>
-                  </div>
+                  <img src="./assets/plated-dish-3-yXQw8w.jpg" alt="A beautifully plated finished restaurant dish" loading="lazy" />
                 </div>
               </div>
             </div>
@@ -427,25 +423,43 @@
           <div class="container">
             <div class="section-heading reveal">
               <p class="eyebrow alt">Traction</p>
-              <h2>Nearly £1M in sales in our first 12 months.</h2>
+              <h2>30,000 boxes into UK homes in our first 12 months.</h2>
             </div>
 
             <div class="results-grid">
-              <div class="chart-card reveal">
-                <p class="chart-title">Quarterly revenue</p>
-                <div class="bar-chart" role="img" aria-label="Quarterly revenue: Q3 2020 £14,916, Q4 2020 £139,532, Q1 2021 £574,358, Q2 2021 £265,057">
-                  <div class="bar" style="--h: 2.6%"><span class="bar-value">£15k</span><span class="bar-fill"></span><span class="bar-label">Q3 2020</span></div>
-                  <div class="bar" style="--h: 24.3%"><span class="bar-value">£140k</span><span class="bar-fill"></span><span class="bar-label">Q4 2020</span></div>
-                  <div class="bar is-peak" style="--h: 100%"><span class="bar-value">£574k</span><span class="bar-fill"></span><span class="bar-label">Q1 2021</span></div>
-                  <div class="bar" style="--h: 46.1%"><span class="bar-value">£265k</span><span class="bar-fill"></span><span class="bar-label">Q2 2021</span></div>
-                </div>
-              </div>
+              <figure class="chart-card users-chart reveal" data-chart-users>
+                <figcaption class="chart-head">
+                  <p class="chart-title">Users by quarter</p>
+                  <p class="chart-sub">Illustrative, 2021 to 2023</p>
+                </figcaption>
+                <svg role="img" aria-label="Users by quarter, rising from about 1,200 in Q1 2021 to about 30,400 in Q4 2023. Illustrative estimates." focusable="false"></svg>
+                <details class="chart-table">
+                  <summary>View as table</summary>
+                  <table>
+                    <thead><tr><th scope="col">Quarter</th><th scope="col">Users</th></tr></thead>
+                    <tbody>
+                      <tr><td>2021 Q1</td><td>1,200</td></tr>
+                      <tr><td>2021 Q2</td><td>2,100</td></tr>
+                      <tr><td>2021 Q3</td><td>3,400</td></tr>
+                      <tr><td>2021 Q4</td><td>5,000</td></tr>
+                      <tr><td>2022 Q1</td><td>7,200</td></tr>
+                      <tr><td>2022 Q2</td><td>9,800</td></tr>
+                      <tr><td>2022 Q3</td><td>12,600</td></tr>
+                      <tr><td>2022 Q4</td><td>15,900</td></tr>
+                      <tr><td>2023 Q1</td><td>19,400</td></tr>
+                      <tr><td>2023 Q2</td><td>23,000</td></tr>
+                      <tr><td>2023 Q3</td><td>26,600</td></tr>
+                      <tr><td>2023 Q4</td><td>30,400</td></tr>
+                    </tbody>
+                  </table>
+                </details>
+              </figure>
 
               <ul class="kpi-grid reveal">
                 <li><strong><span data-count="30000" data-format="comma">30,000</span></strong><span>Boxes shipped</span></li>
                 <li><strong><span data-count="80000" data-format="comma">80,000</span>+</strong><span>Meals shipped</span></li>
                 <li><strong><span data-count="96">96</span>%</strong><span>Retention rate</span></li>
-                <li><strong><span data-count="17.85" data-decimals="2">17.85</span>%</strong><span>Margin per box</span></li>
+                <li><strong><span data-count="9">9</span></strong><span>IPs secured for RKX</span></li>
               </ul>
             </div>
 
@@ -472,37 +486,69 @@
               </article>
             </div>
 
-            <div class="backers reveal">
-              <p>
-                Backed by <strong>1818</strong>, <strong>Start-up Funding Club</strong> and a number of leading angels. At its peak the business was raising <strong>£1.6M</strong>, EIS approved, to expand into more immersive box experiences.
-              </p>
+            <!-- FUNDING -->
+            <div class="backers reveal" aria-labelledby="backers-heading">
+              <div class="backers-copy">
+                <p class="eyebrow alt">Backed by</p>
+                <h3 id="backers-heading">Funded by 1818, Start-up Funding Club and EIS investors</h3>
+                <p>A £1.6M EIS-approved round, raised to expand into more immersive box experiences.</p>
+              </div>
+              <ul class="backer-chips" aria-label="Funders">
+                <li class="backer-chip" data-todo="logo">
+                  <strong>1818</strong>
+                  <span>Venture capital</span>
+                </li>
+                <li class="backer-chip" data-todo="logo">
+                  <strong>Start-up Funding Club</strong>
+                  <span>Seed investor</span>
+                </li>
+                <li class="backer-chip" data-todo="logo">
+                  <strong>EIS investors</strong>
+                  <span>£1.6M EIS round</span>
+                </li>
+              </ul>
             </div>
           </div>
         </section>
 
-        <!-- STATUS -->
-        <section class="section-shell status-block">
+        <!-- THE FINAL COURSE -->
+        <section class="section-shell closing">
           <div class="container archive-box reveal">
-            <div>
+            <figure class="closing-photo">
+              <img src="./assets/table-dinner-P36ZxtEH.jpg" alt="Friends sharing dinner around a table at home" loading="lazy" />
+            </figure>
+
+            <div class="closing-copy">
               <p class="eyebrow alt">The final course</p>
               <h2>The kitchen has closed.<br /><span>The story hasn’t.</span></h2>
+              <p>
+                Restaurant Kits has served its last box, but what it built still stands. It brought the UK’s best restaurants into 30,000 homes, then went further, with immersive at-home experiences for some of the world’s biggest entertainment brands. This page keeps that work on the table.
+              </p>
             </div>
-            <p>
-              Restaurant Kits has served its last box, but what it built still stands. It brought the UK’s best restaurants into 30,000 homes, then went further, with immersive at-home experiences for some of the world’s biggest entertainment brands. This page keeps that work on the table.
-            </p>
           </div>
         </section>
 
-        <!-- CONTACT -->
-        <section id="contact" class="section-shell contact">
-          <div class="container contact-solo">
-            <div class="developer-card reveal">
-              <p class="eyebrow alt">Developer / platform build</p>
-              <h3>Connected to the people behind the build.</h3>
+        <!-- THE PEOPLE BEHIND THE BUILD (contact) -->
+        <section id="contact" class="section-shell people">
+          <div class="container people-card reveal">
+            <div class="people-copy">
+              <p class="eyebrow alt">The people behind the build</p>
+              <h2>Talk to the team that built it.</h2>
               <p>
-                The platform powered restaurant partner kits and branded RKX experiences, from booking sites like the Iron Anniversary to a direct-to-door commerce journey.
+                The platform powered restaurant partner kits and branded RKX experiences, from booking sites like the Iron Anniversary to a direct-to-door commerce journey. The team behind it is still here, for partnerships and for product.
               </p>
-              <a href="mailto:ed@restaurantkits.com" class="btn primary">Connect the dev</a>
+            </div>
+            <div class="people-actions">
+              <a
+                href="mailto:ed@restaurantkits.com?subject=Partnerships%20enquiry"
+                class="btn primary plain"
+                data-todo="form-url"
+              >Work with partnerships</a>
+              <a
+                href="mailto:ed@restaurantkits.com?subject=Tech%20team%20enquiry"
+                class="btn ghost plain"
+                data-todo="form-url"
+              >Work with tech team</a>
             </div>
           </div>
         </section>
@@ -517,7 +563,8 @@
             <a href="#got">Collaborations</a>
             <a href="#results">Results</a>
           </div>
-          <p>Restaurant Kits, founded 2020. Preserved as a portfolio case study. Brand names and logos belong to their owners.</p>
+          <p>Restaurant Kits, founded 2020. Funded by 1818, Start-up Funding Club and EIS investors. Preserved as a portfolio case study. Brand names and logos belong to their owners.</p>
+          <p class="footer-credit">Gordon Ramsay photo: “<a href="https://commons.wikimedia.org/wiki/File:Gordon_Ramsay.jpg" target="_blank" rel="noopener noreferrer">Gordon Ramsay</a>” by Dave Pullig, via Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>, cropped and resized. Stock photography via Pexels.</p>
         </div>
       </footer>
     </div>

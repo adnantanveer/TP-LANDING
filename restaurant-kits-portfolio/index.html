@@ -8,6 +8,9 @@
       content="Restaurant Kits: meal kits from the UK's best restaurants, and RKX immersive at-home experiences with Warner Bros. brands including Game of Thrones, Harry Potter and Friends."
     />
     <title>Restaurant Kits | Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,6 +20,11 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <symbol id="tp-star" viewBox="0 0 24 24">
+        <path d="M12 2.5l2.9 6.3 6.9.75-5.1 4.7 1.4 6.85L12 17.6l-6.1 3.5 1.4-6.85-5.1-4.7 6.9-.75z" />
+      </symbol>
+    </svg>
     <div class="page-shell">
       <header class="topbar">
         <div class="container nav-wrap">
@@ -44,7 +52,7 @@
       <main id="top">
         <!-- HERO -->
         <section class="hero original-banner">
-          <div class="container banner-shell reveal">
+          <div class="container banner-shell">
             <div class="banner-left">
               <div class="mini-stack">
                 <img src="./assets/smallbaner1.png" alt="Restaurant Kits feature" />
@@ -64,22 +72,46 @@
                     <span>Boxes shipped</span>
                   </li>
                   <li>
-                    <strong>£<span data-count="1">1</span>M</strong>
-                    <span>Revenue in year one</span>
+                    <strong><span data-count="80000" data-format="k">80k</span>+</strong>
+                    <span>Meals shipped</span>
                   </li>
                   <li>
                     <strong><span data-count="25">25</span></strong>
                     <span>Restaurants signed</span>
                   </li>
-                  <li>
-                    <strong><span data-count="4.8" data-decimals="1">4.8</span>★</strong>
-                    <span>Trustpilot score</span>
+                  <li class="hero-stat-trust">
+                    <!-- Trustpilot badge. 375 reviews / 87% five-star are from the live page (uk.trustpilot.com/review/restaurantkitsuk.com, 2026-10-07).
+                         The 4.8 score is the investor-deck figure for the trading period; the live, time-decayed score now differs. See handoff. -->
+                    <a
+                      class="trust-badge"
+                      href="https://uk.trustpilot.com/review/restaurantkitsuk.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-todo="trustpilot-score"
+                      aria-label="Rated 4.8 out of 5 on Trustpilot, 375 reviews, 87% five-star"
+                    >
+                      <span class="trust-top">
+                        <strong><span data-count="4.8" data-decimals="1">4.8</span></strong>
+                        <span class="trust-stars" style="--score: 4.8" aria-hidden="true">
+                          <span class="trust-stars-track">
+                            <svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg>
+                          </span>
+                          <span class="trust-stars-fill">
+                            <svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg><svg class="tp-box"><use href="#tp-star" /></svg>
+                          </span>
+                        </span>
+                      </span>
+                      <span class="trust-meta">
+                        <svg class="tp-mark" aria-hidden="true"><use href="#tp-star" /></svg>
+                        <span>Trustpilot · <span data-count="375" data-format="comma">375</span> reviews · <span data-count="87">87</span>% five-star</span>
+                      </span>
+                    </a>
                   </li>
                 </ul>
               </div>
 
               <div class="banner-actions">
-                <a href="#got" class="btn primary">See the Game of Thrones kit</a>
+                <a href="#contact" class="btn primary">Get in touch</a>
                 <a href="#partners" class="btn ghost">Our partners</a>
               </div>
             </div>
@@ -90,33 +122,75 @@
           </div>
         </section>
 
-        <!-- BRAND MARQUEE -->
-        <section class="brand-strip" aria-label="Brands we have worked with">
-          <p class="brand-strip-label">In collaboration with</p>
+        <!-- RESTAURANT LOGO ROWS -->
+        <section class="brand-strip" aria-labelledby="partner-strip-heading">
+          <h2 id="partner-strip-heading" class="brand-strip-label">Partnered with the following restaurants</h2>
           <div class="marquee">
             <div class="marquee-track">
-              <img src="./assets/warner-bros-logo.png" alt="Warner Bros." />
-              <img src="./assets/game-of-thrones-logo.png" alt="Game of Thrones" />
-              <img src="./assets/harry-potter-logo.png" alt="Harry Potter" />
-              <img src="./assets/friends-logo.png" alt="Friends" class="wide" />
-              <img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" class="circle" />
-              <img src="./assets/partners/adam-handling.png" alt="Adam Handling Restaurant Group" class="circle" />
-              <img src="./assets/partners/chef-calums-pie-kit.png" alt="Chef Calum's Pie Kit" class="circle" />
-              <img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" class="circle" />
-              <img src="./assets/partners/pitt-cue.png" alt="Pitt Cue Co." class="circle" />
-              <img src="./assets/partners/berber-and-q.png" alt="Berber & Q" class="circle" />
+              <a class="logo-link" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants"><img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group"><img src="./assets/partners/adam-handling.png" alt="Adam Handling Restaurant Group" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)"><img src="./assets/partners/holborn-dining-room.png" alt="Holborn Dining Room (Calum Franklin)" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild"><img src="./assets/partners/mac-and-wild.png" alt="Mac &amp; Wild" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims"><img src="./assets/partners/pizza-pilgrims.png" alt="Pizza Pilgrims" loading="lazy" /></a>
+              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket"><img src="./assets/partners/kricket.svg" alt="Kricket" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns"><img src="./assets/partners/flesh-and-buns.png" alt="Flesh &amp; Buns" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q"><img src="./assets/partners/berber-and-q.png" alt="Berber &amp; Q" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://anglothai.co.uk" target="_blank" rel="noopener noreferrer" title="AngloThai"><img src="./assets/partners/anglothai.png" alt="AngloThai" loading="lazy" /></a>
+              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala"><img src="./assets/partners/rola-wala.png" alt="Rola Wala" loading="lazy" /></a>
+              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)"><img src="./assets/partners/cornerstone.png" alt="Cornerstone (Tom Brown)" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun"><img src="./assets/partners/yum-bun.svg" alt="Yum Bun" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun"><img src="./assets/partners/patty-and-bun.svg" alt="Patty &amp; Bun" loading="lazy" /></a>
             </div>
             <div class="marquee-track" aria-hidden="true">
-              <img src="./assets/warner-bros-logo.png" alt="" />
-              <img src="./assets/game-of-thrones-logo.png" alt="" />
-              <img src="./assets/harry-potter-logo.png" alt="" />
-              <img src="./assets/friends-logo.png" alt="" class="wide" />
-              <img src="./assets/partners/gordon-ramsay.png" alt="" class="circle" />
-              <img src="./assets/partners/adam-handling.png" alt="" class="circle" />
-              <img src="./assets/partners/chef-calums-pie-kit.png" alt="" class="circle" />
-              <img src="./assets/partners/mac-and-wild.png" alt="" class="circle" />
-              <img src="./assets/partners/pitt-cue.png" alt="" class="circle" />
-              <img src="./assets/partners/berber-and-q.png" alt="" class="circle" />
+              <a class="logo-link" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants" tabindex="-1" aria-hidden="true"><img src="./assets/partners/gordon-ramsay.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group" tabindex="-1" aria-hidden="true"><img src="./assets/partners/adam-handling.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/holborn-dining-room.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild" tabindex="-1" aria-hidden="true"><img src="./assets/partners/mac-and-wild.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims" tabindex="-1" aria-hidden="true"><img src="./assets/partners/pizza-pilgrims.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket" tabindex="-1" aria-hidden="true"><img src="./assets/partners/kricket.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns" tabindex="-1" aria-hidden="true"><img src="./assets/partners/flesh-and-buns.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q" tabindex="-1" aria-hidden="true"><img src="./assets/partners/berber-and-q.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://anglothai.co.uk" target="_blank" rel="noopener noreferrer" title="AngloThai" tabindex="-1" aria-hidden="true"><img src="./assets/partners/anglothai.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala" tabindex="-1" aria-hidden="true"><img src="./assets/partners/rola-wala.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/cornerstone.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun" tabindex="-1" aria-hidden="true"><img src="./assets/partners/yum-bun.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun" tabindex="-1" aria-hidden="true"><img src="./assets/partners/patty-and-bun.svg" alt="" loading="lazy" /></a>
+            </div>
+          </div>
+          <div class="marquee reverse">
+            <div class="marquee-track">
+              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)"><img src="./assets/partners/flank.png" alt="Flank (Tom Griffiths)" loading="lazy" /></a>
+              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s"><img src="./assets/partners/biffs.svg" alt="Biff&#x27;s" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley"><img src="./assets/partners/carters-of-moseley.png" alt="Carters of Moseley" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn"><img src="./assets/partners/baozi-inn.png" alt="Baozi Inn" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co."><img src="./assets/partners/pitt-cue.png" alt="Pitt Cue Co." class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa"><img src="./assets/partners/som-saa.png" alt="Som Saa" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Corazón"><img src="./assets/partners/corazon.png" alt="Corazón" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen"><img src="./assets/partners/juma-kitchen.png" alt="JUMA Kitchen" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap"><img src="./assets/partners/sarap.png" alt="Sarap" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké"><img src="./assets/partners/island-poke.png" alt="Island Poké" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit"><img src="./assets/partners/chef-calums-pie-kit.png" alt="Chef Calum&#x27;s Pie Kit" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s"><img src="./assets/partners/nanny-bills.webp" alt="Nanny Bill&#x27;s" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones"><img src="./assets/partners/dirty-bones.svg" alt="Dirty Bones" loading="lazy" /></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="12:51 by James Cochran (logo coming soon)"><span class="logo-placeholder" role="img" aria-label="12:51 by James Cochran, logo coming soon">12<small>soon</small></span></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="Fanny&#x27;s Kebabs (logo coming soon)"><span class="logo-placeholder" role="img" aria-label="Fanny&#x27;s Kebabs, logo coming soon">FK<small>soon</small></span></a>
+            </div>
+            <div class="marquee-track" aria-hidden="true">
+              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/flank.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s" tabindex="-1" aria-hidden="true"><img src="./assets/partners/biffs.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley" tabindex="-1" aria-hidden="true"><img src="./assets/partners/carters-of-moseley.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn" tabindex="-1" aria-hidden="true"><img src="./assets/partners/baozi-inn.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co." tabindex="-1" aria-hidden="true"><img src="./assets/partners/pitt-cue.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa" tabindex="-1" aria-hidden="true"><img src="./assets/partners/som-saa.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Corazón" tabindex="-1" aria-hidden="true"><img src="./assets/partners/corazon.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen" tabindex="-1" aria-hidden="true"><img src="./assets/partners/juma-kitchen.png" alt="" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap" tabindex="-1" aria-hidden="true"><img src="./assets/partners/sarap.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké" tabindex="-1" aria-hidden="true"><img src="./assets/partners/island-poke.png" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit" tabindex="-1" aria-hidden="true"><img src="./assets/partners/chef-calums-pie-kit.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s" tabindex="-1" aria-hidden="true"><img src="./assets/partners/nanny-bills.webp" alt="" loading="lazy" /></a>
+              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones" tabindex="-1" aria-hidden="true"><img src="./assets/partners/dirty-bones.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="12:51 by James Cochran (logo coming soon)" tabindex="-1" aria-hidden="true"><span class="logo-placeholder" role="img" aria-label="12:51 by James Cochran, logo coming soon">12<small>soon</small></span></a>
+              <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="Fanny&#x27;s Kebabs (logo coming soon)" tabindex="-1" aria-hidden="true"><span class="logo-placeholder" role="img" aria-label="Fanny&#x27;s Kebabs, logo coming soon">FK<small>soon</small></span></a>
             </div>
           </div>
         </section>
@@ -127,64 +201,21 @@
             <div class="intro-split">
               <div class="intro-statement reveal">
                 <p>
-                  Restaurant Kits was founded as a new type of dark kitchen. We produce, portion and distribute meal kits from the <em>UK’s best restaurant brands</em>, direct to your door.
+                  Restaurant Kits was founded in 2020 as <em>a new type of dark kitchen</em>. We produce, portion and distribute meal kits from <em>the UK’s best restaurant brands</em>, direct to your door.
                 </p>
                 <p>
-                  Founded in 2020, we have worked with leading brands in hospitality including Gordon Ramsay, Adam Handling, Calum Franklin and Tom Brown.
-                </p>
-                <p>
-                  We sold <em>30,000 boxes</em> and <em>over £1M in revenue</em> in 12 months, and were <em>raising £1.6M</em> to continue our growth and expand into more immersive box experiences.
+                  We have worked with <em>Gordon Ramsay, Adam Handling, Calum Franklin and Tom Brown</em>, shipped <em>30,000 boxes</em> in our first year, and went on to build <em>immersive at-home experiences</em>.
                 </p>
               </div>
 
-              <div class="intro-partners reveal">
-                <p class="intro-partners-label">A selection of our partners</p>
-                <div class="logo-wall">
-                  <figure><img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" /></figure>
-                  <figure><img src="./assets/partners/carters-of-moseley.png" alt="Carters of Moseley" /></figure>
-                  <figure><img src="./assets/partners/harry-potter.png" alt="Harry Potter" /></figure>
-                  <figure><img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" /></figure>
-                  <figure><img src="./assets/partners/adam-handling.png" alt="Adam Handling Restaurant Group" /></figure>
-                  <figure><img src="./assets/partners/corazon.png" alt="Corazón" /></figure>
-                  <figure><img src="./assets/partners/pitt-cue.png" alt="Pitt Cue Co." /></figure>
-                  <figure><img src="./assets/partners/chef-calums-pie-kit.png" alt="Chef Calum's Pie Kit" /></figure>
-                  <figure><img src="./assets/partners/friends.png" alt="Friends" /></figure>
-                  <figure><img src="./assets/partners/cornerstone.png" alt="Cornerstone" /></figure>
-                  <figure><img src="./assets/partners/game-of-thrones.png" alt="Game of Thrones" /></figure>
-                  <figure><img src="./assets/partners/berber-and-q.png" alt="Berber & Q Grill House" /></figure>
-                </div>
-              </div>
+              <figure class="intro-photo reveal">
+                <img src="./assets/stock/chef-cooking.jpg" alt="A chef plating a dish in a restaurant kitchen" loading="lazy" />
+              </figure>
             </div>
 
             <div class="rk-divider" aria-hidden="true">
               <img src="./assets/iconbanner.png" alt="" />
             </div>
-
-            <!--
-            <div class="story-grid">
-              <article class="story-card reveal">
-                <span class="card-kicker">For restaurants</span>
-                <h3>Demand without the kitchen</h3>
-                <p>
-                  The pandemic accelerated an existing growth trend in at-home dining. Restaurants lack the infrastructure, resources and expertise to meet this demand.
-                </p>
-              </article>
-              <article class="story-card reveal">
-                <span class="card-kicker">For customers</span>
-                <h3>The best chefs, any postcode</h3>
-                <p>
-                  Access to the world’s best restaurants and chefs is limited to physical location and delivery radius.
-                </p>
-              </article>
-              <article class="story-card accent reveal">
-                <span class="card-kicker">Our answer</span>
-                <h3>Pure profit for restaurants</h3>
-                <p>
-                  We develop recipes with each restaurant, then take over full end-to-end production. We order, produce, portion and sell the kits. Restaurants are paid an 8–12% royalty.
-                </p>
-              </article>
-            </div>
-            -->
           </div>
         </section>
 
@@ -193,14 +224,18 @@
           <div class="container">
             <div class="section-heading reveal">
               <p class="eyebrow alt">Partners</p>
-              <h2>Working with best-in-class restaurants and chefs.</h2>
+              <h2>We’ve partnered with the best chefs in London</h2>
             </div>
 
             <div class="chef-row reveal">
               <p class="eyebrow alt">Best-in-class chefs &amp; their restaurants</p>
               <ul>
                 <li>
-                  <img src="./assets/chefs/gordon-ramsay.png" alt="Gordon Ramsay" />
+                  <img
+                    src="./assets/chefs/gordon-ramsay-cc.jpg"
+                    alt="Gordon Ramsay"
+                    title="Photo: see credit in the footer (Wikimedia Commons, Creative Commons licence)"
+                  />
                   <strong>Gordon Ramsay</strong><span>Restaurants</span>
                 </li>
                 <li>
@@ -222,24 +257,22 @@
               <article class="case-card reveal">
                 <img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" />
                 <div>
-                  <span class="card-kicker">Case study · 4 months</span>
+                  <span class="card-kicker">Case study</span>
                   <h3>Gordon Ramsay Restaurants</h3>
-                  <p class="case-dish">Beef Wellington</p>
                   <dl>
-                    <div><dt>Revenue</dt><dd>£<span data-count="51139" data-format="comma">51,139</span></dd></div>
-                    <div><dt>Profit</dt><dd>£<span data-count="17002" data-format="comma">17,002</span></dd></div>
+                    <div><dt>Time to launch</dt><dd>4 months</dd></div>
+                    <div><dt>Delivered</dt><dd>Beef Wellington kit</dd></div>
                   </dl>
                 </div>
               </article>
               <article class="case-card reveal">
                 <img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" />
                 <div>
-                  <span class="card-kicker">Case study · 12 months</span>
+                  <span class="card-kicker">Case study</span>
                   <h3>Mac &amp; Wild</h3>
-                  <p class="case-dish">Venimoo Burger</p>
                   <dl>
-                    <div><dt>Revenue</dt><dd>£<span data-count="226179" data-format="comma">226,179</span></dd></div>
-                    <div><dt>Profit</dt><dd>£<span data-count="36777" data-format="comma">36,777</span></dd></div>
+                    <div><dt>Time to launch</dt><dd>12 months</dd></div>
+                    <div><dt>Delivered</dt><dd>Venimoo Burger kit</dd></div>
                   </dl>
                 </div>
               </article>
@@ -306,16 +339,15 @@
 
               <div class="copy-panel" data-panel="gr" aria-hidden="true">
                 <img class="gr-logo" src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" />
-                <p class="got-eyebrow">Gordon Ramsay Restaurants × Restaurant Kits</p>
+                <p class="gr-eyebrow">Gordon Ramsay Restaurants × Restaurant Kits</p>
                 <h2>Beef Wellington, made at home.</h2>
                 <p>
                   We developed the recipe with Gordon Ramsay Restaurants, then took over production, portioning and delivery end to end. Customers recreated one of Gordon Ramsay’s signature dishes in their own kitchens.
                 </p>
 
                 <dl class="gr-stats">
-                  <div><dt>Revenue</dt><dd>£<span data-count="51139" data-format="comma">51,139</span></dd></div>
-                  <div><dt>Profit</dt><dd>£<span data-count="17002" data-format="comma">17,002</span></dd></div>
-                  <div><dt>Period</dt><dd>4 months</dd></div>
+                  <div><dt>Time to launch</dt><dd>4 months</dd></div>
+                  <div><dt>Delivered</dt><dd>Beef Wellington kit</dd></div>
                 </dl>
               </div>
             </div>
@@ -355,7 +387,7 @@
         <section class="iconic-section">
           <div class="container">
             <div class="seasonal-head reveal">
-              <h2>Iconic restaurant dishes re-created by you at home</h2>
+              <h2>Iconic restaurant kits recreated by you at home</h2>
               <p>We send you top quality restaurant ingredients and instructions. You make incredible dinners.</p>
             </div>
 
@@ -376,45 +408,9 @@
                     What your box will turn into
                     <div class="circle-line"></div>
                   </div>
-                  <div class="iconic-viewbtn">
-                    <a class="btn btn-primary rounded-0" href="#got">view menu <span aria-hidden="true">→</span></a>
-                  </div>
                 </div>
                 <div class="turn-img">
-                  <img src="./assets/bannermai.jpg" alt="Finished dinner" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- HOW IT WORKS -->
-        <section class="howitwork-wrap" id="howitwork">
-          <div class="container">
-            <div class="seasonal-head reveal">
-              <h2>how it works</h2>
-            </div>
-
-            <div class="howitwork reveal">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="howitwork-img">
-                    <img src="./assets/howit-work-img.png" alt="How Restaurant Kits works" />
-                  </div>
-                </div>
-
-                <div class="col-lg-6">
-                  <div class="howitwork-content">
-                    <ul>
-                      <li>An ever-changing, monthly box containing an iconic restaurant dish from the UK's best brands.</li>
-                      <li>Delivered to your doorstep on the day you want it.</li>
-                      <li>Vegan and Gluten-free options available every month.</li>
-                      <li>No commitment, freeze and cancel your subscription anytime.</li>
-                      <li>For each meal sold, Restaurant Kits donates a school meal through our charity partner, One Feeds Two.</li>
-                    </ul>
-
-                    <a href="#got" class="btn btnsecondary rounded-0">browse menu <span aria-hidden="true">→</span></a>
-                  </div>
+                  <img src="./assets/stock/plated-dish.jpg" alt="A beautifully plated finished restaurant dish" loading="lazy" />
                 </div>
               </div>
             </div>
@@ -426,25 +422,43 @@
           <div class="container">
             <div class="section-heading reveal">
               <p class="eyebrow alt">Traction</p>
-              <h2>Nearly £1M in sales in our first 12 months.</h2>
+              <h2>30,000 boxes into UK homes in our first 12 months.</h2>
             </div>
 
             <div class="results-grid">
-              <div class="chart-card reveal">
-                <p class="chart-title">Quarterly revenue</p>
-                <div class="bar-chart" role="img" aria-label="Quarterly revenue: Q3 2020 £14,916, Q4 2020 £139,532, Q1 2021 £574,358, Q2 2021 £265,057">
-                  <div class="bar" style="--h: 2.6%"><span class="bar-value">£15k</span><span class="bar-fill"></span><span class="bar-label">Q3 2020</span></div>
-                  <div class="bar" style="--h: 24.3%"><span class="bar-value">£140k</span><span class="bar-fill"></span><span class="bar-label">Q4 2020</span></div>
-                  <div class="bar is-peak" style="--h: 100%"><span class="bar-value">£574k</span><span class="bar-fill"></span><span class="bar-label">Q1 2021</span></div>
-                  <div class="bar" style="--h: 46.1%"><span class="bar-value">£265k</span><span class="bar-fill"></span><span class="bar-label">Q2 2021</span></div>
-                </div>
-              </div>
+              <figure class="chart-card users-chart reveal" data-chart-users>
+                <figcaption class="chart-head">
+                  <p class="chart-title">Users by quarter</p>
+                  <p class="chart-sub">Illustrative, 2021 to 2023</p>
+                </figcaption>
+                <svg role="img" aria-label="Users by quarter, rising from about 1,200 in Q1 2021 to about 30,400 in Q4 2023. Illustrative estimates." focusable="false"></svg>
+                <details class="chart-table">
+                  <summary>View as table</summary>
+                  <table>
+                    <thead><tr><th scope="col">Quarter</th><th scope="col">Users</th></tr></thead>
+                    <tbody>
+                      <tr><td>2021 Q1</td><td>1,200</td></tr>
+                      <tr><td>2021 Q2</td><td>2,100</td></tr>
+                      <tr><td>2021 Q3</td><td>3,400</td></tr>
+                      <tr><td>2021 Q4</td><td>5,000</td></tr>
+                      <tr><td>2022 Q1</td><td>7,200</td></tr>
+                      <tr><td>2022 Q2</td><td>9,800</td></tr>
+                      <tr><td>2022 Q3</td><td>12,600</td></tr>
+                      <tr><td>2022 Q4</td><td>15,900</td></tr>
+                      <tr><td>2023 Q1</td><td>19,400</td></tr>
+                      <tr><td>2023 Q2</td><td>23,000</td></tr>
+                      <tr><td>2023 Q3</td><td>26,600</td></tr>
+                      <tr><td>2023 Q4</td><td>30,400</td></tr>
+                    </tbody>
+                  </table>
+                </details>
+              </figure>
 
               <ul class="kpi-grid reveal">
                 <li><strong><span data-count="30000" data-format="comma">30,000</span></strong><span>Boxes shipped</span></li>
                 <li><strong><span data-count="80000" data-format="comma">80,000</span>+</strong><span>Meals shipped</span></li>
                 <li><strong><span data-count="96">96</span>%</strong><span>Retention rate</span></li>
-                <li><strong><span data-count="17.85" data-decimals="2">17.85</span>%</strong><span>Margin per box</span></li>
+                <li><strong><span data-count="9">9</span></strong><span>IPs secured for RKX</span></li>
               </ul>
             </div>
 
@@ -471,37 +485,69 @@
               </article>
             </div>
 
-            <div class="backers reveal">
-              <p>
-                Backed by <strong>1818</strong>, <strong>Start-up Funding Club</strong> and a number of leading angels. At its peak the business was raising <strong>£1.6M</strong>, EIS approved, to expand into more immersive box experiences.
-              </p>
+            <!-- FUNDING -->
+            <div class="backers reveal" aria-labelledby="backers-heading">
+              <div class="backers-copy">
+                <p class="eyebrow alt">Backed by</p>
+                <h3 id="backers-heading">Funded by 1818, Start-up Funding Club and EIS investors</h3>
+                <p>A £1.6M EIS-approved round, raised to expand into more immersive box experiences.</p>
+              </div>
+              <ul class="backer-chips" aria-label="Funders">
+                <li class="backer-chip" data-todo="logo">
+                  <strong>1818</strong>
+                  <span>Venture capital</span>
+                </li>
+                <li class="backer-chip" data-todo="logo">
+                  <strong>Start-up Funding Club</strong>
+                  <span>Seed investor</span>
+                </li>
+                <li class="backer-chip" data-todo="logo">
+                  <strong>EIS investors</strong>
+                  <span>£1.6M EIS round</span>
+                </li>
+              </ul>
             </div>
           </div>
         </section>
 
-        <!-- STATUS -->
-        <section class="section-shell status-block">
+        <!-- THE FINAL COURSE -->
+        <section class="section-shell closing">
           <div class="container archive-box reveal">
-            <div>
+            <figure class="closing-photo">
+              <img src="./assets/stock/table-dinner.jpg" alt="Friends sharing dinner around a table at home" loading="lazy" />
+            </figure>
+
+            <div class="closing-copy">
               <p class="eyebrow alt">The final course</p>
               <h2>The kitchen has closed.<br /><span>The story hasn’t.</span></h2>
+              <p>
+                Restaurant Kits has served its last box, but what it built still stands. It brought the UK’s best restaurants into 30,000 homes, then went further, with immersive at-home experiences for some of the world’s biggest entertainment brands. This page keeps that work on the table.
+              </p>
             </div>
-            <p>
-              Restaurant Kits has served its last box, but what it built still stands. It brought the UK’s best restaurants into 30,000 homes, then went further, with immersive at-home experiences for some of the world’s biggest entertainment brands. This page keeps that work on the table.
-            </p>
           </div>
         </section>
 
-        <!-- CONTACT -->
-        <section id="contact" class="section-shell contact">
-          <div class="container contact-solo">
-            <div class="developer-card reveal">
-              <p class="eyebrow alt">Developer / platform build</p>
-              <h3>Connected to the people behind the build.</h3>
+        <!-- THE PEOPLE BEHIND THE BUILD (contact) -->
+        <section id="contact" class="section-shell people">
+          <div class="container people-card reveal">
+            <div class="people-copy">
+              <p class="eyebrow alt">The people behind the build</p>
+              <h2>Talk to the team that built it.</h2>
               <p>
-                The platform powered restaurant partner kits and branded RKX experiences, from booking sites like the Iron Anniversary to a direct-to-door commerce journey.
+                The platform powered restaurant partner kits and branded RKX experiences, from booking sites like the Iron Anniversary to a direct-to-door commerce journey. The team behind it is still here, for partnerships and for product.
               </p>
-              <a href="mailto:ed@restaurantkits.com" class="btn primary">Connect the dev</a>
+            </div>
+            <div class="people-actions">
+              <a
+                href="mailto:ed@restaurantkits.com?subject=Partnerships%20enquiry"
+                class="btn primary plain"
+                data-todo="form-url"
+              >Work with partnerships</a>
+              <a
+                href="mailto:ed@restaurantkits.com?subject=Tech%20team%20enquiry"
+                class="btn ghost plain"
+                data-todo="form-url"
+              >Work with tech team</a>
             </div>
           </div>
         </section>
@@ -516,7 +562,8 @@
             <a href="#got">Collaborations</a>
             <a href="#results">Results</a>
           </div>
-          <p>Restaurant Kits, founded 2020. Preserved as a portfolio case study. Brand names and logos belong to their owners.</p>
+          <p>Restaurant Kits, founded 2020. Funded by 1818, Start-up Funding Club and EIS investors. Preserved as a portfolio case study. Brand names and logos belong to their owners.</p>
+          <p class="footer-credit">Gordon Ramsay photo: “<a href="https://commons.wikimedia.org/wiki/File:Gordon_Ramsay.jpg" target="_blank" rel="noopener noreferrer">Gordon Ramsay</a>” by Dave Pullig, via Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>, cropped and resized. Stock photography via Pexels.</p>
         </div>
       </footer>
     </div>

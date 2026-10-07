@@ -5,16 +5,64 @@ gsap.registerPlugin(ScrollTrigger);
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Intro */
-if (!reduceMotion) gsap.timeline({ defaults: { ease: 'power3.out' } })
-  .to('.page-shell', { duration: 1, autoAlpha: 1, ease: 'power2.out' })
-  .from('.brand', { duration: 0.9, y: -24, opacity: 0, filter: 'blur(16px)' }, '-=0.7')
-  .from('nav a', { duration: 0.8, y: -16, opacity: 0, stagger: 0.08, filter: 'blur(10px)' }, '-=0.7')
-  .from('.banner-shell', { duration: 1.5, y: 70, opacity: 0, filter: 'blur(20px)', scale: 0.97, ease: 'expo.out' }, '-=0.6')
-  .from('.mini-stack img', { duration: 0.9, y: 28, opacity: 0, stagger: 0.18 }, '-=1.0')
-  .from('.banner-copy-wrap', { duration: 1.05, y: 32, opacity: 0 }, '-=0.8')
-  .from('.banner-actions', { duration: 0.8, y: 20, opacity: 0 }, '-=0.6')
-  .from('.banner-right img', { duration: 1.25, x: 52, opacity: 0, scale: 0.96, ease: 'power3.out' }, '-=1.0');
+/* Split a heading into words that can rise into place */
+const splitWords = (el) => {
+  const walk = (node) => {
+    [...node.childNodes].forEach((child) => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+            return;
+          }
+          const outer = document.createElement('span');
+          outer.className = 'word';
+          const inner = document.createElement('span');
+          inner.className = 'word-inner';
+          inner.textContent = part;
+          outer.appendChild(inner);
+          frag.appendChild(outer);
+        });
+        child.replaceWith(frag);
+      } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== 'BR') {
+        walk(child);
+      }
+    });
+  };
+  walk(el);
+  return el.querySelectorAll('.word-inner');
+};
+
+/* Intro: a one-off staggered entrance that alternates between the hero copy and
+   the hero images. Nothing loops afterwards (no breathing / bobbing). */
+if (!reduceMotion) {
+  const heroTitle = document.querySelector('.banner-copy-wrap h1');
+  const titleWords = heroTitle ? splitWords(heroTitle) : [];
+
+  gsap
+    .timeline({ defaults: { ease: 'power3.out' } })
+    .to('.page-shell', { duration: 0.8, autoAlpha: 1, ease: 'power2.out' })
+    .from('.brand', { duration: 0.9, y: -24, opacity: 0, filter: 'blur(16px)' }, '-=0.6')
+    .from('nav a', { duration: 0.8, y: -16, opacity: 0, stagger: 0.08, filter: 'blur(10px)' }, '-=0.7')
+    .from('.header-link', { duration: 0.6, y: -12, opacity: 0 }, '-=0.6')
+    /* text */
+    .from('.icon-banner', { duration: 0.7, y: 18, opacity: 0 }, '-=0.3')
+    /* image */
+    .from('.mini-stack img:first-child', { duration: 0.8, y: 32, opacity: 0, scale: 0.96 }, '-=0.45')
+    /* text */
+    .from(titleWords, { duration: 0.9, yPercent: 110, rotate: 4, stagger: 0.06, ease: 'power4.out' }, '-=0.5')
+    /* image */
+    .from('.mini-stack img:last-child', { duration: 0.8, y: 32, opacity: 0, scale: 0.96 }, '-=0.7')
+    /* text */
+    .from('.banner-copy-wrap > p', { duration: 0.8, y: 22, opacity: 0 }, '-=0.55')
+    /* image */
+    .from('.banner-right img', { duration: 1.1, x: 48, opacity: 0, scale: 0.97 }, '-=0.6')
+    /* text */
+    .from('.hero-stats li', { duration: 0.7, y: 18, opacity: 0, stagger: 0.09 }, '-=0.8')
+    .from('.banner-actions .btn', { duration: 0.6, y: 16, opacity: 0, stagger: 0.1 }, '-=0.45');
+}
 
 /* Scroll reveals (skipped entirely for reduced motion so nothing stays hidden) */
 if (!reduceMotion) gsap.utils.toArray('.reveal').forEach((item) => {
@@ -31,8 +79,8 @@ if (!reduceMotion) gsap.utils.toArray('.reveal').forEach((item) => {
   );
 });
 
-/* Partner circles and IP logos pop in one by one */
-[['.logo-wall', '.logo-wall figure'], ['.ip-row', '.ip-card']].forEach(([trigger, items]) => {
+/* IP logos pop in one by one */
+[['.ip-row', '.ip-card']].forEach(([trigger, items]) => {
   if (reduceMotion || !document.querySelector(trigger)) return;
   gsap.from(items, {
     scrollTrigger: { trigger, start: 'top 80%', once: true },
@@ -72,31 +120,204 @@ document.querySelectorAll('[data-count]').forEach((el) => {
   });
 });
 
-/* Revenue bars grow in */
-if (!reduceMotion && document.querySelector('.bar-chart')) {
-  gsap.from('.bar-fill', {
-    scrollTrigger: { trigger: '.bar-chart', start: 'top 80%', once: true },
-    scaleY: 0,
-    duration: 1.1,
-    stagger: 0.15,
-    ease: 'power3.out',
+/* ============================================================
+   Users chart (Traction)
+   ------------------------------------------------------------
+   ILLUSTRATIVE ESTIMATES. These quarterly "users" figures are not from the
+   investor deck; they are placeholders shaped to end at the deck's "30k+"
+   boxes-shipped figure. Replace with real numbers before relying on them.
+   See handoffs/restaurant-kits-missing.md.
+   ============================================================ */
+const USERS_SERIES = [
+  { label: '2021 Q1', value: 1200 },
+  { label: '2021 Q2', value: 2100 },
+  { label: '2021 Q3', value: 3400 },
+  { label: '2021 Q4', value: 5000 },
+  { label: '2022 Q1', value: 7200 },
+  { label: '2022 Q2', value: 9800 },
+  { label: '2022 Q3', value: 12600 },
+  { label: '2022 Q4', value: 15900 },
+  { label: '2023 Q1', value: 19400 },
+  { label: '2023 Q2', value: 23000 },
+  { label: '2023 Q3', value: 26600 },
+  { label: '2023 Q4', value: 30400 },
+];
+
+const compact = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k` : String(n));
+
+const buildUsersChart = (figure) => {
+  const svg = figure.querySelector('svg');
+  if (!svg) return;
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 640;
+  const H = 300;
+  const pad = { top: 28, right: 86, bottom: 40, left: 48 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+  const max = 32000;
+  const xs = USERS_SERIES.map((_, i) => pad.left + (i / (USERS_SERIES.length - 1)) * plotW);
+  const ys = USERS_SERIES.map((d) => pad.top + plotH - (d.value / max) * plotH);
+  const baseline = pad.top + plotH;
+
+  const el = (name, attrs = {}, text) => {
+    const node = document.createElementNS(NS, name);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+    if (text !== undefined) node.textContent = text;
+    return node;
+  };
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+
+  /* Gridlines + y ticks (hairline, solid, recessive) */
+  const grid = el('g', { class: 'chart-grid' });
+  [0, 10000, 20000, 30000].forEach((tick) => {
+    const y = pad.top + plotH - (tick / max) * plotH;
+    grid.appendChild(el('line', { x1: pad.left, x2: W - pad.right, y1: y, y2: y }));
+    grid.appendChild(el('text', { x: pad.left - 10, y: y + 4, 'text-anchor': 'end', class: 'chart-tick' }, tick === 0 ? '0' : compact(tick)));
   });
-}
+  svg.appendChild(grid);
 
-/* Hero float */
-const floatGroup = document.querySelector('.banner-shell');
-if (floatGroup && !reduceMotion) {
-  gsap.to(floatGroup, { y: -6, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-}
+  /* X labels: year at each Q1, quarter ticks elsewhere */
+  const xg = el('g', { class: 'chart-x' });
+  USERS_SERIES.forEach((d, i) => {
+    const [year, q] = d.label.split(' ');
+    const isYear = q === 'Q1';
+    xg.appendChild(
+      el('text', { x: xs[i], y: baseline + 22, 'text-anchor': 'middle', class: isYear ? 'chart-tick chart-tick-year' : 'chart-tick chart-tick-q' }, isYear ? year : q)
+    );
+  });
+  svg.appendChild(xg);
 
-/* Game of Thrones slider */
+  /* Smooth path through the points (Catmull-Rom to cubic bezier) */
+  const pathD = () => {
+    let d = `M ${xs[0]} ${ys[0]}`;
+    for (let i = 0; i < xs.length - 1; i += 1) {
+      const p0x = xs[Math.max(i - 1, 0)], p0y = ys[Math.max(i - 1, 0)];
+      const p1x = xs[i], p1y = ys[i];
+      const p2x = xs[i + 1], p2y = ys[i + 1];
+      const p3x = xs[Math.min(i + 2, xs.length - 1)], p3y = ys[Math.min(i + 2, xs.length - 1)];
+      const c1x = p1x + (p2x - p0x) / 6, c1y = p1y + (p2y - p0y) / 6;
+      const c2x = p2x - (p3x - p1x) / 6, c2y = p2y - (p3y - p1y) / 6;
+      d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2x} ${p2y}`;
+    }
+    return d;
+  };
+  const line = pathD();
+  const area = `${line} L ${xs[xs.length - 1]} ${baseline} L ${xs[0]} ${baseline} Z`;
+
+  const areaEl = el('path', { d: area, class: 'chart-area' });
+  const lineEl = el('path', { d: line, class: 'chart-line' });
+  svg.appendChild(areaEl);
+  svg.appendChild(lineEl);
+
+  /* End-point marker (8px, surface ring) + callout */
+  const lastX = xs[xs.length - 1];
+  const lastY = ys[ys.length - 1];
+  const last = USERS_SERIES[USERS_SERIES.length - 1];
+  const endDot = el('circle', { cx: lastX, cy: lastY, r: 5, class: 'chart-end' });
+  const callout = el('g', { class: 'chart-callout' });
+  callout.appendChild(el('text', { x: lastX + 12, y: lastY - 2, class: 'chart-callout-value' }, `${compact(last.value)}`));
+  callout.appendChild(el('text', { x: lastX + 12, y: lastY + 14, class: 'chart-callout-label' }, 'users'));
+  svg.appendChild(endDot);
+  svg.appendChild(callout);
+
+  /* Hover layer: crosshair + tooltip + hit targets */
+  const hover = el('g', { class: 'chart-hover', 'aria-hidden': 'true' });
+  const cross = el('line', { y1: pad.top, y2: baseline, class: 'chart-cross' });
+  const hDot = el('circle', { r: 5, class: 'chart-hover-dot' });
+  const tip = el('g', { class: 'chart-tip' });
+  const tipBg = el('rect', { rx: 6, ry: 6, height: 40, class: 'chart-tip-bg' });
+  const tipA = el('text', { x: 10, y: 16, class: 'chart-tip-label' });
+  const tipB = el('text', { x: 10, y: 32, class: 'chart-tip-value' });
+  tip.append(tipBg, tipA, tipB);
+  hover.append(cross, hDot, tip);
+  hover.style.opacity = '0';
+  svg.appendChild(hover);
+
+  const showPoint = (i) => {
+    const d = USERS_SERIES[i];
+    cross.setAttribute('x1', xs[i]);
+    cross.setAttribute('x2', xs[i]);
+    hDot.setAttribute('cx', xs[i]);
+    hDot.setAttribute('cy', ys[i]);
+    tipA.textContent = d.label;
+    tipB.textContent = `${d.value.toLocaleString('en-GB')} users`;
+    const tipW = Math.max(tipA.getComputedTextLength(), tipB.getComputedTextLength()) + 20;
+    tipBg.setAttribute('width', tipW);
+    const flip = xs[i] + 14 + tipW > W - 4;
+    const tx = flip ? xs[i] - 14 - tipW : xs[i] + 14;
+    const ty = Math.max(pad.top, Math.min(ys[i] - 20, baseline - 40));
+    tip.setAttribute('transform', `translate(${tx} ${ty})`);
+    hover.style.opacity = '1';
+  };
+  const hidePoint = () => {
+    hover.style.opacity = '0';
+  };
+
+  const hit = el('rect', { x: pad.left, y: pad.top, width: plotW, height: plotH, fill: 'transparent', class: 'chart-hit' });
+  svg.appendChild(hit);
+  const nearest = (clientX) => {
+    const box = svg.getBoundingClientRect();
+    const x = ((clientX - box.left) / box.width) * W;
+    let best = 0;
+    xs.forEach((px, i) => {
+      if (Math.abs(px - x) < Math.abs(xs[best] - x)) best = i;
+    });
+    return best;
+  };
+  hit.addEventListener('mousemove', (e) => showPoint(nearest(e.clientX)));
+  hit.addEventListener('touchstart', (e) => showPoint(nearest(e.touches[0].clientX)), { passive: true });
+  hit.addEventListener('touchmove', (e) => showPoint(nearest(e.touches[0].clientX)), { passive: true });
+  hit.addEventListener('mouseleave', hidePoint);
+  hit.addEventListener('touchend', hidePoint);
+
+  /* Keyboard: arrow keys walk the points */
+  let kIndex = USERS_SERIES.length - 1;
+  svg.setAttribute('tabindex', '0');
+  svg.addEventListener('focus', () => showPoint(kIndex));
+  svg.addEventListener('blur', hidePoint);
+  svg.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') kIndex = Math.max(0, kIndex - 1);
+    else if (e.key === 'ArrowRight') kIndex = Math.min(USERS_SERIES.length - 1, kIndex + 1);
+    else return;
+    e.preventDefault();
+    showPoint(kIndex);
+  });
+
+  /* Animate in */
+  if (reduceMotion) return;
+  const length = lineEl.getTotalLength();
+  gsap.set(lineEl, { strokeDasharray: length, strokeDashoffset: length });
+  gsap.set(areaEl, { opacity: 0 });
+  gsap.set([endDot], { scale: 0, transformOrigin: 'center' });
+  gsap.set(callout, { opacity: 0, x: -8 });
+  gsap
+    .timeline({ scrollTrigger: { trigger: figure, start: 'top 78%', once: true } })
+    .to(lineEl, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' })
+    .to(areaEl, { opacity: 1, duration: 0.8, ease: 'power2.out' }, '-=0.7')
+    .to(endDot, { scale: 1, duration: 0.45, ease: 'back.out(2)' }, '-=0.35')
+    .to(callout, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, '-=0.25');
+};
+
+document.querySelectorAll('[data-chart-users]').forEach(buildUsersChart);
+
+/* Featured collaborations slider.
+   Slide 0 is always the Game of Thrones item: the slider boots on it, autoplay
+   only runs while the slider is on screen, and if the visitor scrolls away
+   without touching the controls it quietly resets to slide 0 so it always
+   re-enters on Game of Thrones. */
 document.querySelectorAll('[data-slider]').forEach((slider) => {
   const track = slider.querySelector('.slider-track');
   const slides = [...slider.querySelectorAll('.slide')];
   const dotsWrap = slider.querySelector('.slider-dots');
   const caption = slider.querySelector('.slider-caption');
   const panels = [...slider.querySelectorAll('.copy-panel')];
-  let index = 0;
+  const firstIndex = Math.max(0, slides.findIndex((slide) => slide.dataset.panel === 'got'));
+  let index = firstIndex;
+  let timer = null;
+  let userInteracted = false;
+  let visible = false;
 
   const pauseVideos = () => {
     slider.querySelectorAll('.slide-video iframe').forEach((frame) => {
@@ -106,8 +327,6 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
       );
     });
   };
-  let timer = null;
-  let userInteracted = false;
 
   const dots = slides.map((slide, i) => {
     const dot = document.createElement('button');
@@ -122,26 +341,36 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
     return dot;
   });
 
-  function goTo(i) {
-    if (i !== index) pauseVideos();
-    index = (i + slides.length) % slides.length;
+  function render(instant = false) {
     const panelKey = slides[index].dataset.panel;
     panels.forEach((panel) => {
       const active = panel.dataset.panel === panelKey;
       panel.classList.toggle('is-active', active);
       panel.setAttribute('aria-hidden', String(!active));
     });
+    if (instant) track.style.transition = 'none';
     track.style.transform = `translateX(-${index * 100}%)`;
+    if (instant) {
+      // eslint-disable-next-line no-unused-expressions
+      track.offsetHeight;
+      track.style.transition = '';
+    }
     slides.forEach((slide, n) => slide.setAttribute('aria-hidden', String(n !== index)));
     dots.forEach((dot, n) => dot.setAttribute('aria-selected', String(n === index)));
     caption.textContent = slides[index].dataset.caption || '';
+  }
+
+  function goTo(i, instant = false) {
+    if (i !== index) pauseVideos();
+    index = (i + slides.length) % slides.length;
+    render(instant);
     schedule();
   }
 
   function schedule() {
     clearTimeout(timer);
     const onVideo = 'video' in slides[index].dataset;
-    if (reduceMotion || userInteracted || onVideo) return;
+    if (reduceMotion || userInteracted || onVideo || !visible) return;
     timer = setTimeout(() => goTo(index + 1), 5500);
   }
 
@@ -168,7 +397,24 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
   slider.addEventListener('mouseenter', () => clearTimeout(timer));
   slider.addEventListener('mouseleave', schedule);
 
-  goTo(0);
+  new IntersectionObserver(
+    ([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) {
+        schedule();
+      } else {
+        clearTimeout(timer);
+        pauseVideos();
+        if (!userInteracted && index !== firstIndex) goTo(firstIndex, true);
+      }
+    },
+    { threshold: 0.2 }
+  ).observe(slider);
+
+  /* Translate percentages survive resize; re-render keeps aria state honest. */
+  addEventListener('resize', () => render(true));
+
+  goTo(firstIndex, true);
 });
 
 /* ============================================================
@@ -190,48 +436,6 @@ addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 if (!reduceMotion) {
-  /* Split headings into words that rise into place */
-  const splitWords = (el) => {
-    const walk = (node) => {
-      [...node.childNodes].forEach((child) => {
-        if (child.nodeType === Node.TEXT_NODE) {
-          const frag = document.createDocumentFragment();
-          child.textContent.split(/(\s+)/).forEach((part) => {
-            if (!part) return;
-            if (/^\s+$/.test(part)) {
-              frag.appendChild(document.createTextNode(part));
-              return;
-            }
-            const outer = document.createElement('span');
-            outer.className = 'word';
-            const inner = document.createElement('span');
-            inner.className = 'word-inner';
-            inner.textContent = part;
-            outer.appendChild(inner);
-            frag.appendChild(outer);
-          });
-          child.replaceWith(frag);
-        } else if (child.nodeType === Node.ELEMENT_NODE && child.tagName !== 'BR') {
-          walk(child);
-        }
-      });
-    };
-    walk(el);
-    return el.querySelectorAll('.word-inner');
-  };
-
-  const heroTitle = document.querySelector('.banner-copy-wrap h1');
-  if (heroTitle) {
-    gsap.from(splitWords(heroTitle), {
-      yPercent: 110,
-      rotate: 4,
-      duration: 1,
-      stagger: 0.07,
-      ease: 'power4.out',
-      delay: 0.9,
-    });
-  }
-
   document
     .querySelectorAll('.section-heading h2, .archive-box h2, .seasonal-head h2')
     .forEach((heading) => {
@@ -244,7 +448,7 @@ if (!reduceMotion) {
       });
     });
 
-  /* Hero parallax */
+  /* Hero parallax (scroll-driven, not a loop) */
   gsap.to('.banner-right', {
     yPercent: 12,
     ease: 'none',
@@ -256,7 +460,7 @@ if (!reduceMotion) {
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
   });
 
-  /* Coral highlight sweeps behind key phrases */
+  /* Highlight sweeps behind key phrases */
   document.querySelectorAll('.intro-statement em, .rkx-statement em').forEach((em) => {
     ScrollTrigger.create({
       trigger: em,
@@ -265,6 +469,20 @@ if (!reduceMotion) {
       onEnter: () => em.classList.add('is-lit'),
     });
   });
+
+  /* About photo opens like a curtain */
+  if (document.querySelector('.intro-photo')) {
+    gsap.fromTo(
+      '.intro-photo',
+      { clipPath: 'inset(0 0 100% 0 round 28px)' },
+      {
+        clipPath: 'inset(0 0 0% 0 round 28px)',
+        duration: 1.2,
+        ease: 'power4.inOut',
+        scrollTrigger: { trigger: '.intro-photo', start: 'top 80%', once: true },
+      }
+    );
+  }
 
   /* Chef photos rise in */
   gsap.from('.chef-row li', {
@@ -296,15 +514,18 @@ if (!reduceMotion) {
     }
   );
 
-  /* KPI tiles and case cards stagger */
-  gsap.from('.kpi-grid li', {
-    scrollTrigger: { trigger: '.kpi-grid', start: 'top 85%', once: true },
-    y: 30,
-    opacity: 0,
-    scale: 0.94,
-    duration: 0.7,
-    stagger: 0.1,
-    ease: 'power3.out',
+  /* KPI tiles and funder chips stagger */
+  [['.kpi-grid', '.kpi-grid li'], ['.backer-chips', '.backer-chip']].forEach(([trigger, items]) => {
+    if (!document.querySelector(trigger)) return;
+    gsap.from(items, {
+      scrollTrigger: { trigger, start: 'top 85%', once: true },
+      y: 30,
+      opacity: 0,
+      scale: 0.94,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'power3.out',
+    });
   });
 
   /* Gentle 3D tilt on cards */
@@ -328,8 +549,8 @@ if (!reduceMotion) {
       });
     });
 
-    /* Magnetic primary buttons */
-    document.querySelectorAll('.btn.primary, .primary-link').forEach((btn) => {
+    /* Magnetic buttons (hero + header only; `.btn.plain` CTAs stay still) */
+    document.querySelectorAll('.banner-actions .btn, .primary-link').forEach((btn) => {
       btn.addEventListener('mousemove', (event) => {
         const box = btn.getBoundingClientRect();
         gsap.to(btn, {
