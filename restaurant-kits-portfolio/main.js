@@ -792,6 +792,37 @@ if (!reduceMotion) {
 
   }
 
+  /* Iconic section on phones: the coral dot rides the connector from the box
+     image down to the dish image as you scroll (scroll direction = the story:
+     box turns into dish), and the dish wipes in as the dot arrives. */
+  gsap.matchMedia().add('(max-width: 768px)', () => {
+    const conn = document.querySelector('.iconic-connector');
+    const dot = conn?.querySelector('.connector-dot');
+    const dish = document.querySelector('.turn-img');
+    if (!conn || !dot) return;
+    gsap.fromTo(
+      dot,
+      { y: 0 },
+      {
+        y: () => conn.clientHeight - dot.offsetHeight,
+        ease: 'none',
+        scrollTrigger: { trigger: conn, start: 'top 78%', end: 'bottom 50%', scrub: true, invalidateOnRefresh: true },
+      }
+    );
+    if (dish) {
+      gsap.fromTo(
+        dish,
+        { clipPath: 'inset(0 0 100% 0 round 14px)' },
+        {
+          clipPath: 'inset(0 0 0% 0 round 14px)',
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: conn, start: 'bottom 58%', once: true },
+        }
+      );
+    }
+  });
+
   /* Rising embers behind the Game of Thrones carousel */
   const gotSection = document.querySelector('.got-section');
   if (gotSection) {
