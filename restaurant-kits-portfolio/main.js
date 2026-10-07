@@ -583,25 +583,34 @@ if (!reduceMotion) {
   const statement = document.querySelector('.intro-statement');
   if (statement) {
     const splitFlat = (el) => {
-      const walk = (node) => {
+      const walk = (node, inPhrase) => {
         [...node.childNodes].forEach((child) => {
           if (child.nodeType === Node.TEXT_NODE) {
             const frag = document.createDocumentFragment();
-            child.textContent.split(/(\s+)/).forEach((part) => {
-              if (!part) return;
-              if (/^\s+$/.test(part)) return frag.appendChild(document.createTextNode(part));
+            const parts = child.textContent.split(/(\s+)/).filter(Boolean);
+            parts.forEach((part, i) => {
+              if (/^\s+$/.test(part)) {
+                // inside a highlighted phrase the space rides with the previous
+                // word so the underline runs through the gap
+                if (inPhrase && frag.lastChild && frag.lastChild.nodeType === Node.ELEMENT_NODE && i < parts.length - 1) {
+                  frag.lastChild.textContent += part;
+                } else {
+                  frag.appendChild(document.createTextNode(part));
+                }
+                return;
+              }
               const w = document.createElement('span');
-              w.className = 'tw-word';
+              w.className = inPhrase ? 'tw-word tw-u' : 'tw-word';
               w.textContent = part;
               frag.appendChild(w);
             });
             child.replaceWith(frag);
           } else if (child.nodeType === Node.ELEMENT_NODE) {
-            walk(child);
+            walk(child, inPhrase || child.tagName === 'EM');
           }
         });
       };
-      walk(el);
+      walk(el, false);
       return el.querySelectorAll('.tw-word');
     };
     const paras = [...statement.querySelectorAll('p')];
@@ -610,19 +619,24 @@ if (!reduceMotion) {
       const words = splitFlat(para);
       para.classList.add('tw-pending');
       gsap.set(words, { opacity: 0 });
+      gsap.set(para.querySelectorAll('.tw-u'), { backgroundSize: '0% 3px' });
       const onScreen = new Promise((resolve) => {
         ScrollTrigger.create({ trigger: para, start: 'top 82%', once: true, onEnter: resolve });
       });
       const gate = previousDone;
       previousDone = new Promise((done) => {
         Promise.all([onScreen, gate]).then(() => {
-          gsap
-            .timeline({ delay: gate === undefined ? 0 : 0.2 })
-            .to(words, { opacity: 1, duration: 0.25, stagger: 0.035, ease: 'none' })
-            .call(() => {
-              para.classList.remove('tw-pending');
-              setTimeout(done, 500);
-            });
+          const tl = gsap.timeline({ delay: 0.2 });
+          words.forEach((w, i) => {
+            tl.to(w, { opacity: 1, duration: 0.25, ease: 'none' }, i * 0.035);
+            if (w.classList.contains('tw-u')) {
+              tl.to(w, { backgroundSize: '100% 3px', duration: 0.45, ease: 'power2.out' }, i * 0.035 + 0.04);
+            }
+          });
+          tl.call(() => {
+            para.classList.remove('tw-pending');
+            setTimeout(done, 500);
+          });
         });
       });
     });

@@ -3235,26 +3235,25 @@ nav a {
   transition: color 0.5s ease;
 }
 
-.intro-statement em.underline {
+.intro-statement p.tw-pending em {
+  color: inherit;
+}
+
+/* Words are inline (not inline-block) so a phrase's per-word underlines,
+   which include the following space, read as one continuous rule even when
+   the phrase wraps. The script animates background-size from 0% per word. */
+.tw-word {
+  display: inline;
+}
+
+.tw-u {
   background-image: linear-gradient(var(--brand), var(--brand));
   background-repeat: no-repeat;
   background-position: 0 100%;
   background-size: 100% 3px;
   padding-bottom: 2px;
-  transition: background-size 0.9s cubic-bezier(0.65, 0, 0.35, 1), color 0.5s ease;
-}
-
-.intro-statement p.tw-pending em {
-  color: inherit;
-}
-
-.intro-statement p.tw-pending em.underline {
-  background-size: 0% 3px;
-}
-
-.tw-word {
-  display: inline-block;
-  will-change: opacity;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 /* Partners heading: "best chefs" block wipes in behind the words */
@@ -3800,5 +3799,19 @@ nav a {
   .marquee-track {
     gap: 16px;
     padding-right: 16px;
+  }
+}
+
+
+/* Revision 5: headline partner logo, larger than the rest, rows stay centred */
+.logo-link--lead img.circle {
+  width: 130px;
+  height: 130px;
+}
+
+@media (max-width: 640px) {
+  .logo-link--lead img.circle {
+    width: 88px;
+    height: 88px;
   }
 }
