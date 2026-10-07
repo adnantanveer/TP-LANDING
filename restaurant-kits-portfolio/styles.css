@@ -3111,7 +3111,7 @@ nav a {
   letter-spacing: -0.05em;
 }
 
-.people-copy p:last-child {
+.people-copy > p:not(.eyebrow) {
   margin: 0;
   max-width: 560px;
   color: var(--muted);
@@ -3125,6 +3125,51 @@ nav a {
 
 .people-actions .btn {
   width: 100%;
+}
+
+.people-team {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 32px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.people-team li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Profile circle: photo inset inside a hairline ring */
+.people-team img {
+  width: 68px;
+  height: 68px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+}
+
+.people-team span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.people-team strong {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
 }
 
 /* Plain CTAs: colour change only, no motion */
