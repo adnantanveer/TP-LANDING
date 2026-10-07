@@ -122,8 +122,11 @@
      partly hidden underneath it. */
   #services,
   #work,
-  #precision,
+  #process,
+  #delivery,
+  #stack,
   #testimonials,
+  #team,
   #contact {
     scroll-margin-top: 96px;
   }
@@ -337,15 +340,14 @@
   background: none !important;
 }
 
-/* Release a scroll-world instance's viewport-fixed layers (copy/route/hint/
-   scrollbar) once its own scroll track has passed — ScrollWorldMount toggles
+/* Release a scroll-world instance's viewport-fixed layers (copy/route/hint)
+   once its own scroll track has passed — ScrollWorldMount toggles
    `sw-done` via IntersectionObserver-style scroll math. .sw-stage is left
    alone: the engine already fades each scene's own opacity to 0 tied to
    scroll position; forcing it off here would hard-cut a mid-crossfade. */
 .sw-done .sw-copylayer,
 .sw-done .sw-route,
-.sw-done .sw-hint,
-.sw-done .sw-scrollbar {
+.sw-done .sw-hint {
   opacity: 0 !important;
   visibility: hidden;
   pointer-events: none;
@@ -381,7 +383,7 @@
 }
 
 /* An embedded (mid-page) instance contributes only its video scene + copy —
-   its topbar/route-rail/hint/progress-bar would be a redundant duplicate of
+   its topbar/route-rail/hint would be a redundant duplicate of
    the hero's, so hidden unconditionally. .sw-sky is the critical one: it's
    a solid-background position:fixed div the engine always creates
    (atmosphere:false only skips its decorative children), which would
@@ -389,7 +391,6 @@
 .sw-embedded .sw-topbar,
 .sw-embedded .sw-route,
 .sw-embedded .sw-hint,
-.sw-embedded .sw-scrollbar,
 .sw-embedded .sw-sky {
   display: none !important;
 }
@@ -620,4 +621,119 @@
     animation: none;
     opacity: 0.25;
   }
+}
+
+/* Kinetic type (primitives.tsx KineticHeading/LineReveal, Footer wordmark)
+   — each word/letter/line sits in its own clip box so it can rise in from
+   behind its baseline. Padding keeps descenders from being clipped. */
+.kinetic-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+/* Statement.tsx typing caret — the one blink on the page. */
+@keyframes statement-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.statement-caret {
+  animation: statement-blink 1s steps(1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .statement-caret {
+    animation: none;
+  }
+}
+
+/* Team (TeamFlipCard.tsx / TeamSection.tsx) — the "foil" ring: a thin
+   conic metallic sweep (warm gold into cool silver, back to gold) masked
+   to a 1.5px band, with a second hairline inside it so it reads as an
+   editorial frame rather than a coloured border. The sweep rotates slowly
+   on hover only — a still frame otherwise. */
+.foil-ring {
+  position: relative;
+}
+.foil-ring::before,
+.foil-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1; /* above a photo child, which is also absolutely positioned */
+  border-radius: inherit;
+  pointer-events: none;
+}
+.foil-ring::before {
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--foil-angle, 0deg),
+    oklch(0.9 0.1 85) 0%,
+    oklch(0.62 0.12 70) 18%,
+    oklch(0.96 0.01 90) 34%,
+    oklch(0.74 0.02 250) 50%,
+    oklch(0.93 0.08 85) 66%,
+    oklch(0.6 0.1 68) 82%,
+    oklch(0.9 0.1 85) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.foil-ring::after {
+  inset: 6px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
+}
+@property --foil-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes foil-sweep {
+  to {
+    --foil-angle: 360deg;
+  }
+}
+.group:hover .foil-ring::before,
+.group:focus-within .foil-ring::before,
+.foil-ring:hover::before {
+  animation: foil-sweep 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .foil-ring::before {
+    animation: none !important;
+  }
+}
+
+/* Delivery variants (components/landing/delivery/*) — the C variant knocks
+   its headline out of the video: a black panel with white type, multiplied
+   over the footage, so the letters are the only place it shows through. */
+.video-knockout {
+  mix-blend-mode: multiply;
+  background: #000;
+  color: #fff;
+}
+
+/* Testimonials.tsx — the rotation timer ring. pathLength=1 on the circle
+   normalises its circumference so the dash maths is 0..1. */
+@keyframes testimonial-ring {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.testimonial-ring {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: testimonial-ring 5s linear forwards;
 }

@@ -37,7 +37,7 @@ const DEFAULT_MENU: MenuContent = {
   links: [
     { href: "#services", label: "Services", active: true },
     { href: "#work", label: "Work", active: true },
-    { href: "#precision", label: "Capabilities", active: true },
+    { href: "#process", label: "Process", active: true },
     { href: "#testimonials", label: "Testimonials", active: true },
   ],
   ctaLabel: "Contact",
@@ -57,7 +57,10 @@ const DEFAULT_MENU: MenuContent = {
  * has started entering — and fades back out if the user scrolls back up
  * into the hero, rather than a one-time reveal.
  */
-export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
+// No horizontal progress bar under the header any more (it read as a
+// stray orange line); the only remaining progress treatment is the zigzag
+// rail case-study pages opt into with progressAxis="y".
+export function Nav({ progressAxis }: { progressAxis?: "y" }) {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
   const [visible, setVisible] = useState(false);
@@ -172,9 +175,6 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
             </Link>
           )}
         </div>
-        {progressAxis === "x" && (
-          <motion.div style={{ scaleX: progress }} className="h-px origin-left bg-primary" />
-        )}
       </motion.header>
 
       {/* Rendered as a sibling of <header>, not nested inside it: the header
@@ -189,8 +189,7 @@ export function Nav({ progressAxis = "x" }: { progressAxis?: "x" | "y" }) {
 
 /** A thin zigzag rail, top-to-bottom on the left edge, whose completed
  * portion (from the top down) draws in as the page scrolls — used instead
- * of Nav's default straight horizontal progress bar on routes that ask
- * for progressAxis="y" (see CaseStudy.tsx). The zigzag itself is generated
+ * on routes that ask for progressAxis="y" (see CaseStudy.tsx). The zigzag itself is generated
  * from the container's actual measured height so it always reaches exactly
  * from top to bottom regardless of viewport size. */
 function ZigzagProgress({ progress }: { progress: MotionValue<number> }) {

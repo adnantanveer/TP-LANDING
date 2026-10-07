@@ -7,7 +7,7 @@ import london from "@/assets/london.jpg";
  * window on coronel.design) — a huge stadium-radius panel that widens
  * slightly as it scrolls through. Distinct from Signal's text-only
  * Manifesto — Vantage's language is dimensional/material, not typographic.
- * Uses a real photo with honest, grounded copy (the UK entity / Noida
+ * Uses a real photo with honest, grounded copy (the UK entity / London
  * delivery team split is the site's actual footer/contact info, not a
  * new claim) — an earlier version of this section used the unused
  * reel.mp4 asset, which turned out to be fantasy sci-fi CGI with garbled
@@ -39,7 +39,7 @@ export function VantageShowcase() {
         />
         <div className="pointer-events-none absolute bottom-8 left-8 right-8 flex items-end justify-between md:bottom-12 md:left-12 md:right-12">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/80">Where we work</p>
-          <p className="max-w-xs text-right text-sm text-white/80">A UK studio, delivery team based in Noida, India.</p>
+          <p className="max-w-xs text-right text-sm text-white/80">A UK studio, London and remote-first.</p>
         </div>
       </motion.div>
     </section>

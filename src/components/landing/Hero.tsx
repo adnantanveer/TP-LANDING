@@ -40,15 +40,15 @@ const DEFAULT_HERO_CONTENT: HeroContent = {
   visible: true,
   forge: {
     title: "Built in the forge, shipped to production.",
-    body: "From first commit to a live product in your users' hands — clean architecture, fast iteration, dependable delivery.",
+    body: "First commit to live product. Clean architecture, dependable delivery.",
   },
   core: {
     title: "Every detail, considered.",
-    body: "From the first keystroke to the silicon it runs on, nothing ships until it's right.",
+    body: "Nothing ships until it's right.",
   },
   launch: {
     title: "From first line to launch.",
-    body: "Deployed on infrastructure that holds up under real-world load — monitored, hardened, and ready from day one.",
+    body: "Infrastructure that holds under real load. Monitored from day one.",
   },
 };
 

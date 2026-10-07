@@ -202,10 +202,6 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
   const particles = el("div", "sw-particles");
   sky.appendChild(particles);
 
-  const scrollbar = el("div", "sw-scrollbar");
-  const scrollbarFill = el("span");
-  scrollbar.appendChild(scrollbarFill);
-
   const topbar = el("div", "sw-topbar");
   if (config.brand) {
     const brand = el("a", "sw-brand") as HTMLAnchorElement;
@@ -238,7 +234,7 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
   hint.appendChild(hintPrompt);
   const track = el("div", "sw-track");
 
-  [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach((n) => container.appendChild(n));
+  [sky, topbar, stage, copylayer, route, hint, track].forEach((n) => container.appendChild(n));
 
   // segment scenes
   SEGMENTS.forEach((s) => {
@@ -535,7 +531,6 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
       nav.querySelectorAll(".sw-nav__item").forEach((n, k) => n.classList.toggle("is-active", k === near));
       container.style.setProperty("--sw-accent", SECTIONS[near].accent || "");
     }
-    scrollbarFill.style.transform = `scaleX(${clamp((y - base) / (totalW * vh))})`;
     // Hidden for the auto-intro's own duration (the clip is playing itself,
     // not asking to be scrolled yet). Once it stops, stays at full opacity
     // for this instance's ENTIRE scroll range — not just a fade within the
@@ -683,7 +678,7 @@ export function mountScrollWorld(container: HTMLElement, config: ScrollWorldConf
       // of the topbar/copylayer/route rail on top of the first instead of
       // replacing it, since container.appendChild() never clears existing
       // children.
-      [sky, scrollbar, topbar, stage, copylayer, route, hint, track].forEach((n) => n.remove());
+      [sky, topbar, stage, copylayer, route, hint, track].forEach((n) => n.remove());
       container.classList.remove("sw-root");
     },
   };
@@ -722,8 +717,6 @@ function injectCSS() {
   .sw-pt--dot::before{background:radial-gradient(circle at 34% 30%,color-mix(in srgb,var(--sw-accent) 60%,#000),#000 82%);}
   .sw-pt--ring::before{background:transparent;border:2px solid color-mix(in srgb,var(--sw-accent) 55%,transparent);}
   @keyframes sw-drift{0%{opacity:0;transform:scale(var(--sw-sc)) translate(0,12vh) rotate(0)}12%{opacity:.5}88%{opacity:.45}100%{opacity:0;transform:scale(var(--sw-sc)) translate(4vw,-22vh) rotate(210deg)}}
-  .sw-scrollbar{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;background:color-mix(in srgb,var(--sw-accent) 14%,transparent);}
-  .sw-scrollbar span{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--sw-accent);}
   .sw-topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:clamp(14px,2.4vw,26px) clamp(18px,5vw,64px);}
   .sw-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--sw-ink);}
   .sw-brand__mark{width:24px;height:28px;border-radius:7px 7px 10px 10px;background:linear-gradient(160deg,var(--sw-accent),color-mix(in srgb,var(--sw-accent) 60%,#000));box-shadow:0 6px 14px color-mix(in srgb,var(--sw-accent) 40%,transparent);}

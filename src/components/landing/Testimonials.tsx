@@ -1,10 +1,11 @@
-import { motion, useScroll, useTransform, useSpring, type MotionValue } from "motion/react";
-import { useEffect, useRef, useState } from "react";
-import { SectionLabel, initials } from "./primitives";
+import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
+import { KineticHeading, SectionLabel, initials } from "./primitives";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-const HEADING = "Trusted By Ambitious Teams.";
+const ROTATE_MS = 5000;
+const SWIPE_PX = 48;
 
 type TestimonialItem = {
   id: string;
@@ -15,173 +16,210 @@ type TestimonialItem = {
   photo: string;
 };
 
+// The client's own default quotes are attributed by role only. For the
+// visual review they're given fictional names and stock portraits (Pexels
+// licence, see the handoff) so the section reads as personal — every one
+// of these must be replaced with real, permissioned testimonials via the
+// CMS before launch.
 const DEFAULT_ITEMS: TestimonialItem[] = [
   {
+    // TEMP placeholder testimonial
     id: "default-1",
-    quote:
-      "They treated our product like it was their own. The craft shows in every screen, every transition, every detail.",
-    name: "Operations Director",
+    quote: "They treated our product like it was their own. The craft shows in every screen.",
+    name: "Eleanor Whitcombe",
     organization: "UK Healthcare Provider",
-    role: "",
-    photo: "",
+    role: "Operations Director",
+    photo: "/assets/stock/portrait-1.jpg",
   },
   {
+    // TEMP placeholder testimonial
     id: "default-2",
-    quote:
-      "What impressed us most was the restraint — nothing in the product feels unnecessary. It just works, beautifully.",
-    name: "Head of Digital",
+    quote: "What impressed us most was the restraint. Nothing feels unnecessary — it just works.",
+    name: "Daniel Okafor",
     organization: "UK Financial Services Firm",
-    role: "",
-    photo: "",
+    role: "Head of Digital",
+    photo: "/assets/stock/portrait-2.jpg",
   },
   {
+    // TEMP placeholder testimonial
     id: "default-3",
-    quote: "From discovery to launch, the process felt calm and considered. The result speaks for itself.",
-    name: "Founder",
+    quote: "Discovery to launch felt calm and considered. The result speaks for itself.",
+    name: "Thomas Ashdown",
     organization: "UK Logistics Startup",
-    role: "",
-    photo: "",
+    role: "Founder",
+    photo: "/assets/stock/portrait-3.jpg",
   },
 ];
 
 /**
- * Pinned quote crossfade: same "act" mechanic as the hero (progress-driven
- * opacity/scale bands over a shared scroll range), applied to three real
- * client quotes instead of hero copy.
+ * "Trusted by ambitious teams" — an auto-rotating showcase instead of the
+ * old 280vh scroll-pinned crossfade. One quote on stage at a time; the
+ * next slides in every five seconds, pausing while the pointer or
+ * keyboard focus is inside the section. Dots jump directly, a horizontal
+ * drag/swipe moves one step (motion's drag gesture, so it works with a
+ * mouse too), and the ring around the portrait doubles as the timer.
+ * Transform/opacity only; under prefers-reduced-motion the rotation
+ * stops and slides cut instead of sliding.
  */
 export function Testimonials() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const p = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 });
+  const reduce = useReducedMotion();
   const [items, setItems] = useState<TestimonialItem[]>(DEFAULT_ITEMS);
+  const [[index, dir], setIndex] = useState<[number, 1 | -1]>([0, 1]);
+  const [paused, setPaused] = useState(false);
+  // Remounts the timer ring on every manual jump so it restarts from 0.
+  const [cycle, setCycle] = useState(0);
 
   useEffect(() => {
     fetch(`${API_URL}/api/content/testimonials`)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => data?.testimonials && setItems(data.testimonials))
+      .then((data) => data?.testimonials?.length && setItems(data.testimonials))
       .catch(() => {});
   }, []);
 
-  if (items.length === 0) return null;
+  const go = useCallback(
+    (to: number, d: 1 | -1) => {
+      setIndex([((to % items.length) + items.length) % items.length, d]);
+      setCycle((c) => c + 1);
+    },
+    [items.length]
+  );
+
+  useEffect(() => {
+    if (paused || reduce || items.length < 2) return;
+    const id = window.setInterval(() => go(index + 1, 1), ROTATE_MS);
+    return () => window.clearInterval(id);
+  }, [paused, reduce, items.length, index, go]);
+
+  const current = items[index];
+  if (!current) return null;
+
+  function onDragEnd(_: unknown, info: PanInfo) {
+    if (info.offset.x < -SWIPE_PX) go(index + 1, 1);
+    else if (info.offset.x > SWIPE_PX) go(index - 1, -1);
+  }
 
   return (
     <section
       id="testimonials"
-      ref={ref}
-      className="relative h-[280vh] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)]"
+      className="relative overflow-hidden bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)] py-28 md:py-36"
+      onPointerEnter={() => setPaused(true)}
+      onPointerLeave={() => {
+        setPaused(false);
+        setCycle((c) => c + 1); // the interval restarts from 0, so the ring must too
+      }}
+      onFocus={() => setPaused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
+      }}
     >
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6">
-        <div className="mb-16 text-center">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="text-center">
           <SectionLabel>In their words</SectionLabel>
-          <h2 className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]">{HEADING}</h2>
+          <KineticHeading
+            text="Trusted by *ambitious* teams."
+            className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]"
+          />
         </div>
 
-        <div className="perspective-scene relative h-[40vh] w-full max-w-3xl">
-          {items.map((t, i) => (
-            <Quote key={t.id} {...t} index={i} total={items.length} progress={p} />
-          ))}
-        </div>
+        <motion.div
+          drag={items.length > 1 ? "x" : false}
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.12}
+          onDragEnd={onDragEnd}
+          aria-live="polite"
+          aria-roledescription="carousel"
+          className="relative mt-14 min-h-[26rem] cursor-grab touch-pan-y select-none active:cursor-grabbing md:min-h-[22rem]"
+        >
+          <AnimatePresence mode="wait" initial={false} custom={dir}>
+            <motion.figure
+              key={current.id}
+              custom={dir}
+              initial={reduce ? { opacity: 0 } : { opacity: 0, x: dir * 80, rotate: dir * 1.5 }}
+              animate={{ opacity: 1, x: 0, rotate: 0 }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, x: dir * -80, rotate: dir * -1.5 }}
+              transition={{ duration: reduce ? 0.2 : 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-0 flex flex-col items-center text-center"
+            >
+              <PersonImage name={current.name} photo={current.photo} timerKey={cycle} running={!paused && !reduce && items.length > 1} />
+              <blockquote className="mt-6">
+                <p className="text-[clamp(1.35rem,2.8vw,2.1rem)] font-medium leading-[1.3] text-foreground">
+                  &ldquo;{current.quote}&rdquo;
+                </p>
+              </blockquote>
+              <figcaption className="mt-6">
+                <p className="font-medium">{current.name}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{[current.role, current.organization].filter(Boolean).join(", ")}</p>
+              </figcaption>
+            </motion.figure>
+          </AnimatePresence>
+        </motion.div>
 
-        <Dots progress={p} total={items.length} />
+        {items.length > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-3" role="tablist" aria-label="Testimonials">
+            {items.map((t, i) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`Show testimonial ${i + 1}`}
+                onClick={() => go(i, i > index ? 1 : -1)}
+                className="group flex h-11 w-11 items-center justify-center rounded-full outline-none"
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-all duration-500 group-focus-visible:ring-2 group-focus-visible:ring-primary/60 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background ${
+                    i === index ? "w-8 bg-primary" : "w-3 bg-foreground/25 group-hover:bg-foreground/50"
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
-function Quote({
-  quote,
-  name,
-  organization,
-  role,
-  photo,
-  index,
-  total,
-  progress,
-}: {
-  quote: string;
-  name: string;
-  organization: string;
-  role: string;
-  photo: string;
-  index: number;
-  total: number;
-  progress: MotionValue<number>;
-}) {
-  const span = 1 / total;
-  const start = index * span;
-  const mid = start + span * 0.5;
-  const end = start + span;
-  const first = index === 0;
-
-  const opacity = useTransform(
-    progress,
-    first ? [0, 0.02, end - 0.08, end] : [start - 0.06, start + 0.04, end - 0.08, end],
-    [first ? 1 : 0, 1, 1, 0]
-  );
-  const scale = useTransform(progress, [start, mid, end], [0.94, 1, 0.94]);
-  const y = useTransform(progress, [start, mid, end], [24, 0, -24]);
-
-  return (
-    <motion.figure
-      style={{ opacity, scale, y }}
-      className="absolute inset-0 flex flex-col items-center justify-center text-center"
-    >
-      <PersonImage name={name} photo={photo} />
-      <blockquote>
-        <p className="text-[clamp(1.4rem,3vw,2.25rem)] font-medium leading-[1.3] text-foreground">
-          &ldquo;{quote}&rdquo;
-        </p>
-      </blockquote>
-      <figcaption className="mt-6 flex flex-col items-center">
-        <p className="font-medium">{name}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{[role, organization].filter(Boolean).join(", ")}</p>
-      </figcaption>
-    </motion.figure>
-  );
-}
-
-// The section's one real "image": a proper portrait rather than the tiny
-// 12px thumbnail this used to tuck under the caption. Same cross-fade +
-// monogram-fallback pattern as TeamFlipCard's badge — the client's own
-// default quotes are attributed by role, not a named person ("Operations
-// Director"), so there's rarely a real photo to show; the monogram still
-// gives every quote a face-shaped anchor instead of just floating text.
-function PersonImage({ name, photo }: { name: string; photo: string }) {
+// Portrait with the rotation timer drawn as a ring around it. The stroke
+// draws over ROTATE_MS via a CSS animation (.testimonial-ring in
+// styles.css) — remounted (timerKey) on each change so it starts from
+// empty, and frozen in place via animation-play-state while paused.
+function PersonImage({ name, photo, timerKey, running }: { name: string; photo: string; timerKey: number; running: boolean }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className="relative mb-6 h-44 w-44 shrink-0 overflow-hidden rounded-full border border-primary/30 shadow-[var(--shadow-ember)]">
-      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/25 via-primary/10 to-transparent font-display text-4xl font-semibold text-primary">
-        {initials(name)}
-      </div>
-      {photo && (
-        <img
-          src={photo}
-          alt=""
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
-          onLoad={() => setLoaded(true)}
+    <div className="relative h-36 w-36 shrink-0 md:h-40 md:w-40">
+      <svg viewBox="0 0 100 100" className="absolute -inset-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)] -rotate-90" aria-hidden>
+        <circle cx="50" cy="50" r="48" fill="none" stroke="color-mix(in oklab, var(--primary) 25%, transparent)" strokeWidth="1" />
+        <circle
+          key={timerKey}
+          cx="50"
+          cy="50"
+          r="48"
+          fill="none"
+          stroke="var(--primary)"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          pathLength={1}
+          className="testimonial-ring"
+          style={{ animationDuration: `${ROTATE_MS}ms`, animationPlayState: running ? "running" : "paused" }}
         />
-      )}
+      </svg>
+      <div className="relative h-full w-full overflow-hidden rounded-full border border-primary/30 shadow-[var(--shadow-ember)]">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/25 via-primary/10 to-transparent font-display text-4xl font-semibold text-primary">
+          {initials(name)}
+        </div>
+        {photo && (
+          <img
+            src={photo}
+            alt=""
+            width={800}
+            height={800}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+            onLoad={() => setLoaded(true)}
+          />
+        )}
+      </div>
     </div>
   );
-}
-
-function Dots({ progress, total }: { progress: MotionValue<number>; total: number }) {
-  return (
-    <div className="mt-16 flex gap-3">
-      {Array.from({ length: total }).map((_, i) => (
-        <Dot key={i} index={i} total={total} progress={progress} />
-      ))}
-    </div>
-  );
-}
-
-function Dot({ index, total, progress }: { index: number; total: number; progress: MotionValue<number> }) {
-  const span = 1 / total;
-  const opacity = useTransform(
-    progress,
-    [index * span - 0.02, index * span + 0.03, (index + 1) * span - 0.03, (index + 1) * span],
-    [0.3, 1, 1, 0.3]
-  );
-  return <motion.span style={{ opacity }} className="h-1.5 w-6 rounded-full bg-primary" />;
 }

@@ -26,12 +26,12 @@ import { Reveal, SectionLabel } from "./primitives";
  * a different kind of number rather than just another count.
  */
 const STATS = [
-  { value: 100, suffix: "+", label: "Projects delivered", icon: Briefcase },
-  { value: 150, suffix: "+", label: "Engineers on the team", icon: Users },
-  { value: 40, suffix: "+", label: "Technologies in active use", icon: Code },
-  { value: 10, suffix: "+", label: "AI deployments shipped", icon: Sparkle },
-  { value: 7500, suffix: "+", label: "Engineering hours delivered", icon: Clock },
-  { value: 98, suffix: "%", label: "Client satisfaction rate", icon: Smiley },
+  { value: 100, suffix: "+", label: "Projects", icon: Briefcase },
+  { value: 150, suffix: "+", label: "Engineers", icon: Users },
+  { value: 40, suffix: "+", label: "Technologies", icon: Code },
+  { value: 10, suffix: "+", label: "AI deployments", icon: Sparkle },
+  { value: 7500, suffix: "+", label: "Engineering hours", icon: Clock },
+  { value: 98, suffix: "%", label: "Client satisfaction", icon: Smiley },
 ];
 
 export function Stats() {

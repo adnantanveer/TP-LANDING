@@ -10,7 +10,7 @@ export function IndexFooter() {
           <div>
             <p className="font-display text-3xl uppercase leading-none">Techpotam®</p>
             <p className="mt-4 max-w-xs text-sm text-foreground/80">
-              A UK-facing software studio, delivery team based in Noida, India.
+              A UK software studio, London and remote-first.
             </p>
           </div>
           <div>

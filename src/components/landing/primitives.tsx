@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform, useSpring, type MotionValue } from "motion/react";
-import { useRef, type ReactNode } from "react";
+import { motion, useInView, useReducedMotion, useScroll, useTransform, useSpring, type MotionValue } from "motion/react";
+import { Fragment, createElement, useRef, type ReactNode } from "react";
 
 export function useSectionProgress() {
   const ref = useRef<HTMLDivElement>(null);
@@ -77,6 +77,147 @@ export function SectionLabel({ children }: { children: ReactNode }) {
       <span className="h-px w-8 bg-primary/60" />
       {children}
     </span>
+  );
+}
+
+const KINETIC_EASE = [0.16, 1, 0.3, 1] as const;
+
+/**
+ * Kinetic headline: the text is split into words (or letters for a short
+ * line), each clipped by its own mask so it rises into place from behind
+ * its baseline, with a small un-rotate as it lands — the "type animating
+ * on screen" language every section heading now shares (see Statement.tsx
+ * for the scroll-scrubbed version of the same idea).
+ *
+ * Words wrapped in *asterisks* pick up the ember gradient, so a heading
+ * can keep its one accent moment without the caller splitting JSX by hand.
+ *
+ * Visibility is observed on the heading element itself, not on each
+ * animated span: the spans start translated fully outside their
+ * overflow-hidden mask, and IntersectionObserver honours that clipping —
+ * a per-span whileInView would therefore never fire. Pixel `y` on purpose
+ * (percentage values never animated under whileInView here, see
+ * concepts/shared/KineticText.tsx). Collapses to a static heading under
+ * prefers-reduced-motion.
+ */
+export function KineticHeading({
+  text,
+  as: Tag = "h2",
+  split = "words",
+  className,
+  delay = 0,
+}: {
+  text: string;
+  as?: "h1" | "h2" | "h3" | "p";
+  split?: "words" | "chars";
+  className?: string;
+  delay?: number;
+}) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-12% 0px" });
+  const words = text.split(" ");
+
+  if (reduce) {
+    return createElement(
+      Tag,
+      { className },
+      words.map((w, i) => {
+        const em = w.startsWith("*") && w.endsWith("*");
+        const clean = em ? w.slice(1, -1) : w;
+        return (
+          <Fragment key={i}>
+            {em ? <span className="text-ember">{clean}</span> : clean}
+            {i < words.length - 1 ? " " : ""}
+          </Fragment>
+        );
+      })
+    );
+  }
+
+  let unit = 0;
+  return createElement(
+    Tag,
+    { ref, className, "aria-label": text.replace(/\*/g, "") },
+    words.map((w, wi) => {
+        const em = w.startsWith("*") && w.endsWith("*");
+        const clean = em ? w.slice(1, -1) : w;
+        const pieces = split === "chars" ? clean.split("") : [clean];
+        return (
+          <Fragment key={wi}>
+            <span className="inline-block whitespace-nowrap align-top">
+              {pieces.map((piece, pi) => {
+                const i = unit++;
+                return (
+                  <span key={pi} className="kinetic-mask">
+                    <motion.span
+                      aria-hidden
+                      className={`inline-block ${em ? "text-ember" : ""}`}
+                      initial={{ y: 80, opacity: 0, rotate: 5 }}
+                      animate={inView ? { y: 0, opacity: 1, rotate: 0 } : undefined}
+                      transition={{ duration: 0.9, delay: delay + i * (split === "chars" ? 0.025 : 0.06), ease: KINETIC_EASE }}
+                      style={{ transformOrigin: "0% 100%" }}
+                    >
+                      {piece}
+                    </motion.span>
+                  </span>
+                );
+              })}
+            </span>
+            {wi < words.length - 1 ? " " : ""}
+          </Fragment>
+        );
+      })
+  );
+}
+
+/**
+ * Masked line reveal for short body copy: each line is its own clip box
+ * and rises in sequence after the heading above it. Lines are passed
+ * explicitly (not auto-wrapped) so the break points are deliberate.
+ */
+export function LineReveal({ lines, className, delay = 0 }: { lines: string[]; className?: string; delay?: number }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLParagraphElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10% 0px" }); // see KineticHeading
+  return (
+    <p ref={ref} className={className}>
+      {lines.map((line, i) => (
+        <span key={i} className={reduce ? "block" : "kinetic-mask block"}>
+          <motion.span
+            className="block"
+            initial={reduce ? false : { y: 28, opacity: 0 }}
+            animate={inView || reduce ? { y: 0, opacity: 1 } : undefined}
+            transition={{ duration: 0.8, delay: delay + i * 0.09, ease: KINETIC_EASE }}
+          >
+            {line}
+          </motion.span>
+        </span>
+      ))}
+    </p>
+  );
+}
+
+/**
+ * Scroll-linked settle: the block arrives slightly scaled-down and skewed
+ * (a page "caught mid-motion") and straightens as it crosses the lower
+ * half of the viewport. Transform + opacity only, so it stays on the
+ * compositor; a no-op under prefers-reduced-motion.
+ */
+export function SkewReveal({ children, className, skew = 4 }: { children: ReactNode; className?: string; skew?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 45%"] });
+  const p = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 });
+  const skewY = useTransform(p, [0, 1], [reduce ? 0 : skew, 0]);
+  const scale = useTransform(p, [0, 1], [reduce ? 1 : 0.94, 1]);
+  const y = useTransform(p, [0, 1], [reduce ? 0 : 56, 0]);
+  const opacity = useTransform(p, [0, 0.6, 1], [reduce ? 1 : 0.2, 1, 1]);
+
+  return (
+    <motion.div ref={ref} style={{ skewY, scale, y, opacity, transformOrigin: "0% 100%" }} className={className}>
+      {children}
+    </motion.div>
   );
 }
 

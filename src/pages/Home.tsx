@@ -8,7 +8,7 @@ import { Statement } from "@/components/landing/Statement";
 import { Services } from "@/components/landing/Services";
 import { OurWork } from "@/components/landing/OurWork";
 import { Process } from "@/components/landing/Process";
-import { Precision } from "@/components/landing/Precision";
+import { Delivery } from "@/components/landing/delivery/Delivery";
 import { TechStack } from "@/components/landing/TechStack";
 import { Stats } from "@/components/landing/Stats";
 import { Testimonials } from "@/components/landing/Testimonials";
@@ -22,6 +22,9 @@ const INTRO_SEEN_KEY = "techpotam-intro-seen";
 // Flip back to false before shipping.
 const DEV_ALWAYS_REPLAY_INTRO = true;
 
+// Precision ("Built with precision") is no longer on the homepage — its
+// component, endpoint and admin section are left intact (see
+// handoffs/techpotam-backend-admin.md) in case it's wanted elsewhere.
 export function Home() {
   // The cinematic logo intro plays once per browser session — set on Loader's
   // onDone, checked here so a refresh/re-render mid-session doesn't replay it.
@@ -83,13 +86,12 @@ export function Home() {
         <OurWork />
       </SceneEnter>
 
-      <SceneEnter>
-        <Process />
-      </SceneEnter>
+      {/* Process pins an image panel (position: sticky) — SceneEnter's own
+          scroll-linked rise/scale would drag that pinned panel around while
+          the section settles, so it enters on its own motion instead. */}
+      <Process />
 
-      <SceneEnter>
-        <Precision />
-      </SceneEnter>
+      <Delivery />
 
       <SceneEnter>
         <TechStack />
@@ -101,13 +103,9 @@ export function Home() {
 
       <Testimonials />
 
-      <SceneEnter>
-        <TeamSection />
-      </SceneEnter>
+      <TeamSection />
 
-      <SceneEnter>
-        <Contact />
-      </SceneEnter>
+      <Contact />
       <Footer />
     </main>
   );

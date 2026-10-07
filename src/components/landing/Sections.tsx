@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useInView, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
@@ -15,7 +15,7 @@ import {
   DribbbleLogo,
   BehanceLogo,
 } from "@phosphor-icons/react";
-import { SectionLabel, Reveal } from "./primitives";
+import { KineticHeading, SectionLabel, Reveal } from "./primitives";
 import { BackgroundRippleEffect } from "./BackgroundRippleEffect";
 import { CalendlyEmbed } from "@/concepts/shared/CalendlyEmbed";
 import { getRecaptchaConfig, getRecaptchaTokenV3, type RecaptchaConfig } from "@/lib/recaptcha";
@@ -125,14 +125,7 @@ export function Process() {
   );
 }
 
-const DEFAULT_MARQUEE_ITEMS = [
-  "Web platforms",
-  "Mobile apps",
-  "AI systems",
-  "Cloud migration",
-  "Design systems",
-  "Data engineering",
-];
+const DEFAULT_MARQUEE_ITEMS = ["Web", "Mobile", "AI", "Cloud", "Design", "Data"];
 
 export function Marquee() {
   const [visible, setVisible] = useState(true);
@@ -186,14 +179,17 @@ export type ContactContent = {
 export const DEFAULT_CONTACT_CONTENT: ContactContent = {
   visible: true,
   heading: "Let's build the next one together.",
-  body: "Tell us what you're planning. We'll come back within one working day with a view on scope, timeline and cost.",
+  body: "Tell us what you're planning. Scope, timeline and cost back within one working day.",
   primaryCtaLabel: "info@techpotam.com",
   primaryCtaHref: "mailto:info@techpotam.com",
   secondaryCtaLabel: "Book a discovery call",
   secondaryCtaHref: "https://www.techpotam.com/",
   details: [
-    { type: "address", label: "Address", value: "C1-301, Sector 16C, Noida, India 201318" },
-    { type: "phone", label: "Call us", value: "+91 99583 37775", href: "tel:+919958337775", whatsapp: "https://wa.me/919958337775" },
+    // Placeholder UK details (Ofcom drama-range number, serviced-office
+    // address) until the client confirms the real ones — the CMS contact
+    // record needs the same change, see handoffs/techpotam-backend-admin.md.
+    { type: "address", label: "Address", value: "71-75 Shelton Street, London WC2H 9JQ" },
+    { type: "phone", label: "Call us", value: "+44 20 7946 0123", href: "tel:+442079460123", whatsapp: "https://wa.me/442079460123" },
     { type: "email", label: "Email us", value: "info@techpotam.com", href: "mailto:info@techpotam.com" },
   ],
 };
@@ -242,27 +238,34 @@ export function Contact() {
 
   if (!content.visible) return null;
 
+  // Readability first: the copy column sits on the page's plain
+  // near-black (foreground on --background is ~15:1), the ripple grid is
+  // pushed behind the booking card on the right and faded, and the ember
+  // glow is kept to the far corner so no text ever sits on a mid-tone.
   return (
-    <section
-      id="contact"
-      className="relative overflow-hidden py-40 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_85%,transparent)_0%,color-mix(in_oklab,var(--primary)_14%,transparent)_55%,color-mix(in_oklab,var(--background)_88%,transparent)_100%)]"
-    >
-      <div className="pointer-events-none absolute inset-0" style={{ background: "#00000095" }} aria-hidden />
-      <BackgroundRippleEffect />
+    <section id="contact" className="relative overflow-hidden bg-background py-32 md:py-40">
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_100%,color-mix(in_oklab,var(--primary)_20%,transparent),transparent_70%)]"
+        className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 opacity-40 [mask-image:linear-gradient(90deg,transparent,#000_40%)] md:block"
+        aria-hidden
+      >
+        <BackgroundRippleEffect />
+      </div>
+      <div
+        className="pointer-events-none absolute -right-32 -top-32 h-[32rem] w-[32rem] rounded-full bg-primary/15 blur-[140px]"
         aria-hidden
       />
       <div className="relative mx-auto grid max-w-6xl gap-16 px-6 md:grid-cols-2 md:items-center">
         <div className="text-left">
-          <Reveal>
-            <h2 className="text-[clamp(2.2rem,5.5vw,4rem)] font-semibold leading-[0.98]">{content.heading}</h2>
+          <SectionLabel>Start a project</SectionLabel>
+          <KineticHeading
+            text={content.heading}
+            className="mt-6 text-[clamp(2.2rem,5.5vw,4rem)] font-semibold leading-[0.98] text-foreground"
+          />
+          <Reveal delay={0.25}>
+            <div className="rich-text-content mt-8 max-w-lg text-base text-foreground/80" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content.body) }} />
           </Reveal>
-          <Reveal delay={0.1}>
-            <div className="rich-text-content mt-8 max-w-lg text-muted-foreground" dangerouslySetInnerHTML={{ __html: sanitizeHtml(content.body) }} />
-          </Reveal>
-          <Reveal delay={0.2}>
-            <div className="mt-12 flex flex-wrap items-center gap-4">
+          <Reveal delay={0.3}>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
                 href={content.primaryCtaHref}
                 className="rounded-full bg-primary px-8 py-4 text-sm font-medium text-primary-foreground shadow-[var(--shadow-ember)] transition-transform duration-300 hover:scale-[1.04]"
@@ -271,15 +274,15 @@ export function Contact() {
               </a>
               <a
                 href={content.secondaryCtaHref}
-                className="rounded-full border border-border px-8 py-4 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
+                className="rounded-full border border-foreground/25 px-8 py-4 text-sm text-foreground transition-colors hover:border-primary hover:text-primary"
               >
                 {content.secondaryCtaLabel}
               </a>
             </div>
           </Reveal>
 
-          <Reveal delay={0.28}>
-            <div className="mt-10 space-y-5">
+          <Reveal delay={0.36}>
+            <div className="mt-12 space-y-5 border-t border-foreground/10 pt-8">
               {content.details.map((d) => (
                 <div key={d.label} className="flex items-start gap-4">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-primary/40 text-primary">
@@ -317,17 +320,17 @@ export function Contact() {
         </div>
 
         <Reveal delay={0.15}>
-          <div className="overflow-hidden rounded-2xl border border-border bg-background/90 shadow-[var(--shadow-deep)] backdrop-blur-md">
-            <div className="border-b border-border px-6 py-4">
+          <div className="overflow-hidden rounded-2xl border border-foreground/10 bg-card shadow-[var(--shadow-deep)]">
+            <div className="border-b border-foreground/10 px-6 py-4">
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Book a call</p>
-              <p className="mt-1 text-sm text-foreground">30 minutes, pick a time that works for you.</p>
+              <p className="mt-1 text-sm text-foreground">30 minutes. Pick a time.</p>
             </div>
             <CalendlyEmbed url="https://calendly.com/techpotam/30min" height={650} />
             <Link
               to="/contact"
-              className="flex items-center justify-between gap-2 border-t border-border px-6 py-4 text-sm text-foreground transition-colors hover:text-primary"
+              className="flex items-center justify-between gap-2 border-t border-foreground/10 px-6 py-4 text-sm text-foreground transition-colors hover:text-primary"
             >
-              Prefer to write instead? Send a message
+              Prefer to write? Send a message
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -532,6 +535,8 @@ function socialIcon(platform: string) {
   return SOCIAL_ICONS[platform.trim().toLowerCase()] ?? ArrowUpRight;
 }
 
+const WORDMARK = "TECHPOTAM";
+
 export function Footer() {
   const [contactDetails, setContactDetails] = useState<FooterContactDetail[]>([]);
   const [social, setSocial] = useState<FooterSocialLink[]>([]);
@@ -539,6 +544,15 @@ export function Footer() {
   const [copyrightActive, setCopyrightActive] = useState(true);
   const [tagline, setTagline] = useState("London · Remote-first");
   const [taglineActive, setTaglineActive] = useState(true);
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const wordRef = useRef<HTMLDivElement>(null);
+  // Observed on the wordmark's own box, not the clipped letters — see
+  // primitives.tsx KineticHeading for why per-letter whileInView can't fire.
+  const wordInView = useInView(wordRef, { once: true, margin: "0px 0px -5% 0px" });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
+  const p = useSpring(scrollYProgress, { stiffness: 80, damping: 26, mass: 0.4 });
+  const wordX = useTransform(p, [0, 1], reduce ? ["0%", "0%"] : ["4%", "-2%"]);
 
   useEffect(() => {
     fetch(`${API_URL}/api/content/footer`)
@@ -558,11 +572,18 @@ export function Footer() {
   const activeContactDetails = contactDetails.filter((d) => d.active);
   const activeSocial = social.filter((s) => s.active);
 
+  // The page's last word, literally: the wordmark set edge to edge in the
+  // condensed brand face, each letter rising out of its own mask as the
+  // footer arrives and the whole line easing sideways with the last of
+  // the scroll. Solid ember for the first half, hollow for the second —
+  // the same pairing the Statement opened the page with, closing it.
   return (
-    <footer className="chapter-glow-bg relative overflow-hidden border-t border-border">
-      <div className="relative mx-auto max-w-6xl px-6 py-10 text-xs text-muted-foreground">
+    <footer ref={ref} className="relative overflow-hidden border-t border-foreground/10 bg-background">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[radial-gradient(60%_80%_at_50%_100%,color-mix(in_oklab,var(--primary)_22%,transparent),transparent_70%)]" aria-hidden />
+
+      <div className="relative mx-auto max-w-6xl px-6 pt-14 text-xs text-muted-foreground">
         {(activeContactDetails.length > 0 || activeSocial.length > 0) && (
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-8 border-b border-border pb-8">
+          <div className="mb-10 flex flex-wrap items-center justify-between gap-8">
             {activeContactDetails.length > 0 && (
               <div className="flex flex-wrap gap-x-8 gap-y-2">
                 {activeContactDetails.map((d) =>
@@ -590,7 +611,7 @@ export function Footer() {
                       rel="noreferrer"
                       aria-label={s.platform}
                       title={s.platform}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors duration-300 hover:border-primary hover:text-primary"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-foreground transition-colors duration-300 hover:border-primary hover:text-primary"
                     >
                       <Icon weight="regular" className="h-5 w-5" />
                     </a>
@@ -600,17 +621,43 @@ export function Footer() {
             )}
           </div>
         )}
-        {(copyrightActive || taglineActive) && (
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            {copyrightActive && (
-              <p>
-                © {new Date().getFullYear()} {copyrightName}
-              </p>
-            )}
-            {taglineActive && <p className="font-mono uppercase tracking-[0.3em]">{tagline}</p>}
-          </div>
-        )}
+
+        <div className="flex flex-wrap items-end justify-between gap-4 border-t border-foreground/10 pt-6">
+          {copyrightActive && (
+            <p>
+              © {new Date().getFullYear()} {copyrightName}
+            </p>
+          )}
+          {taglineActive && <p className="font-mono uppercase tracking-[0.3em]">{tagline}</p>}
+          <Link to="/" className="inline-flex min-h-11 items-center gap-2 font-mono uppercase tracking-[0.3em] transition-colors hover:text-primary">
+            Top
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M12 19V5m0 0-6 6m6-6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Link>
+        </div>
       </div>
+
+      <motion.div
+        ref={wordRef}
+        style={{ x: wordX }}
+        aria-hidden
+        className="relative mt-6 flex justify-center whitespace-nowrap px-2 pb-3 leading-[0.95] md:mt-2"
+      >
+        {WORDMARK.split("").map((ch, i) => (
+          <span key={i} className="kinetic-mask !pb-[0.14em] !-mb-[0.14em]">
+            <motion.span
+              className={`brand-wordmark inline-block text-[clamp(4.2rem,19vw,19rem)] uppercase ${i < 4 ? "text-ember" : "statement-outline-text"}`}
+              initial={reduce ? false : { y: "70%", opacity: 0 }}
+              animate={wordInView || reduce ? { y: "0%", opacity: 1 } : undefined}
+              transition={{ duration: 1, delay: i * 0.045, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {ch}
+            </motion.span>
+          </span>
+        ))}
+      </motion.div>
+      <span className="sr-only">Techpotam</span>
     </footer>
   );
 }

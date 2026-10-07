@@ -17,7 +17,7 @@ export function ShellStatement() {
 
         <div className="mt-3 flex items-center gap-3">
           <span className="h-px w-8 bg-primary" />
-          <p className="font-mono text-sm text-muted-foreground">Noida, India / UK-facing</p>
+          <p className="font-mono text-sm text-muted-foreground">London, UK / Remote-first</p>
         </div>
 
         <motion.p

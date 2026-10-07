@@ -61,22 +61,22 @@ export type ProcessStep = { title: string; body: string; icon: ProcessIconKey };
 export const processSteps: ProcessStep[] = [
   {
     title: "Discover",
-    body: "Two weeks of workshops, technical audit and a costed delivery roadmap you own outright.",
+    body: "Workshops, a technical audit and a costed roadmap you own outright.",
     icon: "discover",
   },
   {
     title: "Design",
-    body: "Prototypes and design systems validated with your users before a line of production code.",
+    body: "Prototypes and a design system, validated with your users first.",
     icon: "design",
   },
   {
     title: "Build",
-    body: "Two-week sprints, demo every Friday, working software in your environment from week three.",
+    body: "Two-week sprints. Working software in your environment from week three.",
     icon: "build",
   },
   {
     title: "Scale",
-    body: "Monitoring, SLAs and an embedded squad that keeps shipping long after launch.",
+    body: "Monitoring, SLAs and a squad that keeps shipping after launch.",
     icon: "scale",
   },
 ];
@@ -186,8 +186,10 @@ export const contactInfo = {
   body: "Tell us what you're planning. We'll come back within one working day with a view on scope, timeline and cost.",
   email: "info@techpotam.com",
   details: [
-    { label: "Address", value: "C1-301, Sector 16C, Noida, India 201318" },
-    { label: "Call us", value: "+91 99583 37775", href: "tel:+919958337775", whatsapp: "https://wa.me/919958337775" },
+    // Placeholder UK details (Ofcom drama-range number, serviced-office
+    // address) — final details to follow from the client.
+    { label: "Address", value: "71-75 Shelton Street, London WC2H 9JQ" },
+    { label: "Call us", value: "+44 20 7946 0123", href: "tel:+442079460123", whatsapp: "https://wa.me/442079460123" },
     { label: "Email us", value: "info@techpotam.com", href: "mailto:info@techpotam.com" },
   ],
 };

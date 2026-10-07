@@ -12,7 +12,7 @@ export function IndexStatement() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-dashed border-border pb-6 font-mono text-xs uppercase tracking-[0.1em]">
           <span>Techpotam®</span>
-          <span>Noida (IND)</span>
+          <span>London (UK)</span>
           <span>UK-facing</span>
           <span>Engineering_</span>
         </div>

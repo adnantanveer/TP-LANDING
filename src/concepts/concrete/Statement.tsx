@@ -14,7 +14,7 @@ export function ConcreteStatement() {
           transition={{ duration: 0.4 }}
           className="font-mono text-xs uppercase tracking-[0.3em] text-primary"
         >
-          UK software studio / est. delivery in Noida
+          UK software studio / London
         </motion.p>
 
         <motion.h2
