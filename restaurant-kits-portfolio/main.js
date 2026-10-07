@@ -5,6 +5,59 @@ gsap.registerPlugin(ScrollTrigger);
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* ============================================================
+   TEMP (round 9): logo strip variants for comparison.
+   ?logos=2row (default) | 3row | colour | 3row-colour
+   Sets html[data-logos] (styles.css has the matching TEMP block), rebuilds the
+   rows from the logos in the markup, and pads every track so the loop stays
+   seamless up to 1920px wide. Remove once a variant is chosen; the 2row markup
+   in index.html is the default and needs no JS.
+   ============================================================ */
+(() => {
+  const allowed = ['2row', '3row', 'colour', '3row-colour'];
+  const param = new URLSearchParams(location.search).get('logos');
+  const variant = allowed.includes(param) ? param : '2row';
+  document.documentElement.dataset.logos = variant;
+  const strip = document.querySelector('.brand-strip');
+  if (!strip) return;
+  const marquees = [...strip.querySelectorAll('.marquee')];
+  const visibleTracks = marquees.map((m) => m.querySelector('.marquee-track:not([aria-hidden])'));
+  const items = visibleTracks.flatMap((t) => [...t.children]);
+  const rowCount = variant.startsWith('3row') ? 3 : marquees.length;
+  const rows = Array.from({ length: rowCount }, () => []);
+  if (rowCount === marquees.length) {
+    visibleTracks.forEach((t, r) => rows[r].push(...t.children));
+  } else {
+    items.forEach((item, i) => rows[i % rowCount].push(item));
+  }
+  const minWidth = Math.max(innerWidth, 1920) * 1.1;
+  marquees.forEach((m) => m.remove());
+  rows.forEach((rowItems, r) => {
+    const marquee = document.createElement('div');
+    marquee.className = r % 2 ? 'marquee reverse' : 'marquee';
+    const track = document.createElement('div');
+    track.className = 'marquee-track';
+    rowItems.forEach((item) => track.appendChild(item));
+    marquee.appendChild(track);
+    strip.appendChild(marquee);
+    /* pad with copies of the row until one track alone covers the widest screen */
+    const originals = [...track.children];
+    let guard = 0;
+    while (track.scrollWidth < minWidth && guard < 6) {
+      originals.forEach((item) => track.appendChild(item.cloneNode(true)));
+      guard += 1;
+    }
+    const dup = track.cloneNode(true);
+    dup.setAttribute('aria-hidden', 'true');
+    dup.querySelectorAll('a').forEach((link) => {
+      link.tabIndex = -1;
+      link.setAttribute('aria-hidden', 'true');
+    });
+    dup.querySelectorAll('img').forEach((img) => img.setAttribute('alt', ''));
+    marquee.appendChild(dup);
+  });
+})();
+
 /* Split a heading into words that can rise into place */
 const splitWords = (el) => {
   const walk = (node) => {

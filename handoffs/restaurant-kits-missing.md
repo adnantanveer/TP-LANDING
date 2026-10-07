@@ -14,6 +14,7 @@ Research note: the company's real domain was **restaurantkitsuk.com** (restauran
 |---|---|---|
 | 12:51 by James Cochran | Restaurant closed, no logo asset found (1251.co.uk dead) | restaurantonline.co.uk 2020-07-23 "Chef-restaurateurs ... Restaurant Kits online"; corecruitment.com/news/restaurant-kits |
 | Fanny's Kebabs | Site dead; Wayback og:image exists at `static1.squarespace.com/.../FANNYS_KEBAB_BLK+%282%29.png` but was not downloaded | hardens.com 2021-02-12 ("available exclusively on Restaurant Kits") |
+| AngloThai | The fetched logo (SVG rendered to PNG) had an opaque background and showed as a solid square, so it was removed; re-export https://anglothai.co.uk/uploads/2024/06/AT_Seashell_Logotype_Brand-Assets_2024.svg with a transparent background (the mark is pale pink, so it will need the inked treatment or a dark chip) | hardens.com 2021-04-01 "AngloThai the latest big name to arrive on Restaurant Kits" |
 
 ### Confirmed partners with no logo and NOT shown (add if logos are supplied)
 Around the Cluck (James Cochran), Neat Burger, Supa Ya Ramen, Vegan Dough Co, The Cheese Bar ("set to feature" only), Little Viet Kitchen (Trustpilot only), The Bok Shop, Goodbirds, Andy Low n Slow, Dab Dab Wings (all Trustpilot mentions only).
@@ -30,7 +31,6 @@ Fetched (file in assets/partners/ -> source):
 - kricket.svg -> https://kricketrestaurants.com/wp-content/uploads/2026/03/KRICKET_LOGO_2024_RED-1.svg
 - yum-bun.svg -> https://cdn.prod.website-files.com/63b404282ac12c31a7cfd47a/63b58729f6d3904c9735005d_221205_Yumbun_Logo_Jade_Black%202.svg
 - flesh-and-buns.png -> https://www.fleshandbuns.com/wp-content/uploads/2023/11/logo-footer.png
-- anglothai.png -> https://anglothai.co.uk/uploads/2024/06/AT_Seashell_Logotype_Brand-Assets_2024.svg (rendered to PNG; pale logo, shown on a dark tile)
 - biffs.svg -> https://biffs.co/wp-content/uploads/2023/02/Biffs_PlantShack_Logo-POP-YELLOW.svg
 - juma-kitchen.png -> https://jumakitchen.com/wp-content/themes/jumakitchenholding/img/juma-kitchen-logo.png (dark tile)
 - sarap.png -> https://static.wixstatic.com/media/97691e_64a4da1d7a634d128fda94a294589828~mv2.png (white logo, dark tile)
@@ -95,6 +95,9 @@ Unsplash was not used (its search endpoint now needs auth). "Stock photography v
 ## 8. Hero stats changed
 "£1M revenue in year one" was removed (revenue figure). Replaced with "80k+ meals shipped" (deck figure). "25 restaurants signed" (deck) was changed to "32+" at the user's direction; confirm the source for 32. The Trustpilot stat became the Trustpilot badge. The results heading "Nearly £1M in sales..." became "30,000 boxes into UK homes in our first 12 months." The KPI tile "17.85% margin per box" became "9 IPs secured for RKX".
 
+## 8b. Case-study figures changed
+Mac & Wild "Time to launch" is shown as 6 months at the user's direction (the investor deck table says 12 months). Gordon Ramsay stays at 4 months (deck). Revenue/profit figures are not shown anywhere.
+
 ## 9. Featured video (Gordon Ramsay Beef Wellington, YouTube wiHeOR0hFRk)
 - Played through the YouTube IFrame API (script loaded only when the slide is reached), muted autoplay, controls/branding hidden (controls=0, modestbranding=1, rel=0, playsinline=1, iv_load_policy=3, disablekb=1), looping 1:03 to 3:00 by reloading the clip with endSeconds (loop=1 would restart from 0). Site-styled mute/unmute button over the video. Pauses when the slide is not active or the section is off screen. Reduced motion: poster + play button.
 - Poster frame assets/gr-video-poster.jpg is YouTube's maxresdefault thumbnail of the video (i.ytimg.com/vi/wiHeOR0hFRk/maxresdefault.jpg); replace with an owned still if preferred.
@@ -103,7 +106,10 @@ Unsplash was not used (its search endpoint now needs auth). "Stock photography v
 ## 10. Favicon
 `public/favicon.svg` (vector "R.K." in Poppins Black, outlines extracted from the Google Fonts TTF, no font dependency), `favicon-32.png`, `apple-touch-icon.png` (180px, cream background). Linked with relative paths in index.html.
 
-## 11. Open questions for the user
+## 11. TEMP: logo strip variant switch (remove once chosen)
+`?logos=2row` (default) | `3row` | `colour` | `3row-colour` on the RK page. Implemented in the TEMP block near the top of `main.js` (sets `html[data-logos]`, rebuilds the marquee rows, pads tracks for seamless loops) and the TEMP block at the end of `styles.css`. In the colour variants the four pale/white marks (JUMA, Sarap, Nanny Bill's, Dirty Bones) sit on a small dark chip (#1f1e1d, 14px radius); no dark-version logo files exist for them. Once the user picks: if 2row, delete both TEMP blocks; if another variant, bake its row split/CSS into the markup and stylesheet, then delete the blocks.
+
+## 12. Open questions for the user
 1. Is 4.8 the Trustpilot score you want shown given the live page now reads 2.7? (See section 5.)
 2. The users chart now covers 2021 Q1 to 2022 Q2; confirm the start quarter (the first kits shipped mid-2020).
 3. Confirm the weaker partners (Island Poké, Nanny Bill's, Patty & Bun, Baozi Inn, Som Saa) should stay in the strip.
