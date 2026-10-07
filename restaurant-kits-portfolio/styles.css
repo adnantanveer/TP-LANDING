@@ -263,8 +263,8 @@ nav a:hover::after {
 }
 
 .icon-banner {
-  width: 220px;
-  margin-bottom: 10px;
+  width: 198px;
+  margin-bottom: 24px;
 }
 
 .banner-copy-wrap h1 {
@@ -1152,8 +1152,8 @@ nav a {
 .rk-divider img,
 .rkx-divider img {
   position: relative;
-  width: 280px;
-  padding: 0 36px;
+  width: 224px;
+  padding: 0 28px;
   background: var(--bg);
 }
 
@@ -2046,7 +2046,6 @@ nav a {
   will-change: transform;
 }
 
-.intro-statement em,
 .rkx-statement em {
   background-image: linear-gradient(transparent 62%, rgba(255, 99, 104, 0.18) 62%);
   background-repeat: no-repeat;
@@ -2054,7 +2053,6 @@ nav a {
   transition: background-size 1.1s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.intro-statement em.is-lit,
 .rkx-statement em.is-lit {
   background-size: 100% 100%;
 }
@@ -2109,7 +2107,6 @@ nav a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .intro-statement em,
   .rkx-statement em {
     background-size: 100% 100%;
   }
@@ -2235,7 +2232,8 @@ nav a {
   }
 
   .icon-banner {
-    width: 168px;
+    width: 150px;
+    margin-bottom: 18px;
   }
 
   .banner-copy-wrap h1 {
@@ -2346,8 +2344,8 @@ nav a {
 
   .rk-divider img,
   .rkx-divider img {
-    width: 200px;
-    padding: 0 20px;
+    width: 160px;
+    padding: 0 16px;
   }
 
   /* Chefs */
@@ -3226,5 +3224,286 @@ nav a {
 
   .partners.section-shell {
     padding-top: 48px;
+  }
+}
+
+
+/* ============================================================
+   Revision 3: typewriter intro, partners highlight, RKX tiles,
+   video player, footer
+   ============================================================ */
+
+/* About: typewriter. Final state is the default (reduced motion gets it as is);
+   .tw-pending is the "not yet written" state the script starts from. */
+.intro-statement em {
+  transition: color 0.5s ease;
+}
+
+.intro-statement em.underline {
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 3px;
+  padding-bottom: 2px;
+  transition: background-size 0.9s cubic-bezier(0.65, 0, 0.35, 1), color 0.5s ease;
+}
+
+.intro-statement.tw-pending em {
+  color: inherit;
+}
+
+.intro-statement.tw-pending em.underline {
+  background-size: 0% 3px;
+}
+
+.tw-word {
+  display: inline-block;
+  will-change: opacity;
+}
+
+/* Partners heading: "best chefs" block wipes in behind the words */
+.hl {
+  color: inherit;
+  background-color: transparent;
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  background-position: 0 0;
+  border-radius: 2px;
+  transition: background-size 0.6s cubic-bezier(0.65, 0, 0.35, 1), color 0.3s ease 0.2s;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.hl.is-on {
+  background-size: 100% 100%;
+  color: #fff;
+}
+
+/* Chef photo credit (CC BY 2.0 attribution lives here, not in the footer) */
+.photo-credit {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.62rem;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.photo-credit a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.photo-credit a:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* RKX: bordered tiles with consistent padding, more room at the bottom */
+.rkx-section {
+  padding-bottom: 80px;
+}
+
+.ip-row {
+  gap: 16px;
+  border-left: 0;
+}
+
+.ip-card {
+  min-height: 200px;
+  padding: 28px 24px;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  border-right: 1px solid rgba(17, 17, 17, 0.12);
+  border-radius: 20px;
+  background: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.ip-card:hover {
+  border-color: rgba(17, 17, 17, 0.3);
+  box-shadow: 0 16px 34px rgba(17, 17, 17, 0.08);
+  transform: translateY(-4px);
+}
+
+.ip-card img {
+  max-height: 140px;
+}
+
+/* Featured video: cover-cropped player with our own sound toggle */
+.got-grid {
+  grid-template-columns: 0.72fr 1.28fr;
+}
+
+.slide-video {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-shell {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.video-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.12);
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.video-shell.is-playing .video-poster {
+  opacity: 0;
+}
+
+.yt-host {
+  position: absolute;
+  inset: 0;
+}
+
+.video-shell iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  min-width: 100%;
+  border: 0;
+  transform: translate(-50%, -50%) scale(1.32);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.video-play,
+.video-sound {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(17, 17, 17, 0.72);
+  backdrop-filter: blur(6px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.video-play[hidden],
+.video-sound[hidden] {
+  display: none;
+}
+
+.video-play {
+  top: 50%;
+  left: 50%;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--brand);
+}
+
+.video-play:hover {
+  background: var(--brand-deep);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.video-play svg {
+  width: 34px;
+  height: 34px;
+  fill: #fff;
+  margin-left: 4px;
+}
+
+.video-sound {
+  right: 16px;
+  bottom: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.video-sound:hover,
+.video-sound:focus-visible {
+  background: var(--brand);
+  outline: none;
+}
+
+.video-sound svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.video-sound .wave {
+  display: none;
+}
+
+.video-sound[aria-pressed='true'] .wave {
+  display: block;
+}
+
+.video-sound[aria-pressed='true'] .cross {
+  display: none;
+}
+
+/* Footer: one line, centred */
+.footer-wrap {
+  justify-content: center;
+  text-align: center;
+}
+
+.footer-wrap p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 980px) {
+  .got-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .rkx-section {
+    padding-bottom: 48px;
+  }
+
+  .ip-row {
+    gap: 10px;
+  }
+
+  .ip-card {
+    min-height: 120px;
+    padding: 16px 12px;
+    border-radius: 14px;
+  }
+
+  .ip-card img {
+    max-height: 80px;
+  }
+
+  .footer-wrap {
+    align-items: center;
+  }
+
+  .video-sound {
+    right: 10px;
+    bottom: 10px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .photo-credit {
+    font-size: 0.58rem;
   }
 }

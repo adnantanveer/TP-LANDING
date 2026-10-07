@@ -70,9 +70,10 @@ Update the array in `main.js` AND the `<table>` inside `.chart-table` in `index.
 Text chips only. Logos needed for: 1818 (1818 Venture Capital), Start-up Funding Club (SFC Capital), and an "EIS investors" treatment. The copy "£1.6M EIS-approved round" comes from the deck's "raising £1.6M, EIS approved": confirm whether it closed.
 
 ## 5. Trustpilot (`.trust-badge`, `data-todo="trustpilot-score"`)
-- Page: https://uk.trustpilot.com/review/restaurantkitsuk.com (checked live 2026-10-07). 375 reviews, 87% five-star, 8% four-star. Claimed profile October 2020.
-- The 4.8 score shown is the investor-deck figure for the trading period. The LIVE page now shows a time-decayed TrustScore of **2.7 "Poor"** because one 1-star review from March 2026 outweighs the old reviews. No Wayback snapshot of the Trustpilot page was found to prove the historical score.
-- Decision needed: keep the link (a visitor who clicks sees 2.7), unlink the badge, or capture a Wayback/screenshot of the 2021 page. The star mark is a local inline SVG; the Trustpilot widget script is not used.
+- The badge is deliberately NOT a link (user decision): no href, no outbound link anywhere for it.
+- Figures shown: 4.8 (investor-deck score for the trading period), 375 reviews and 87% five-star (from the live page https://uk.trustpilot.com/review/restaurantkitsuk.com, checked 2026-10-07; claimed profile October 2020).
+- The LIVE page now shows a time-decayed TrustScore of 2.7 "Poor" because one 1-star review from March 2026 outweighs the old reviews; no Wayback snapshot of the 2021 page was found to prove the historical 4.8. Keep this in mind if the badge is ever linked.
+- The star mark is a local inline SVG; Trustpilot's widget script is not used.
 
 ## 6. Stock images and photo licences
 | Use | File | Source | Author | Licence |
@@ -87,17 +88,22 @@ Unsplash was not used (its search endpoint now needs auth). "Stock photography v
 - File: assets/chefs/gordon-ramsay-cc.jpg (600x600, cropped from the 853x1280 original: offset y=150, 700x700 square, resized).
 - Source: https://commons.wikimedia.org/wiki/File:Gordon_Ramsay.jpg (original https://upload.wikimedia.org/wikipedia/commons/6/6f/Gordon_Ramsay.jpg), Flickr original https://www.flickr.com/photos/41061319@N00/262930800/
 - Author: Dave Pullig. Licence: CC BY 2.0, https://creativecommons.org/licenses/by/2.0
-- Attribution is in the site footer (`.footer-credit`) and the image `title`: "Gordon Ramsay" by Dave Pullig, via Wikimedia Commons, CC BY 2.0, cropped and resized.
+- Attribution (required by CC BY 2.0) lives on the chef card itself, not in the footer (the footer is now a single line by user request): a small visible caption under the name (`.photo-credit`: "Photo: Dave Pullig, Wikimedia Commons, CC BY 2.0" with the licence linked) plus the full credit in the image `title` attribute (title, author, source, licence, "cropped and resized").
 - It is a 2006 photo. A more recent free alternative is the 2018 US Air Force public-domain photo (https://commons.wikimedia.org/wiki/File:MasterChef_comes_to_March_Air_Reserve_Base_180831-F-RA446-004.jpg) but he wears sunglasses and a flight suit.
 - The previous unlicensed chef photo (assets/chefs/gordon-ramsay.png) was deleted.
 
 ## 8. Hero stat changed
 "£1M revenue in year one" was removed (revenue figure). Replaced with "80k+ meals shipped" (deck figure). The Trustpilot stat became the Trustpilot badge. The results heading "Nearly £1M in sales..." became "30,000 boxes into UK homes in our first 12 months." The KPI tile "17.85% margin per box" became "9 IPs secured for RKX".
 
-## 9. Favicon
+## 9. Featured video (Gordon Ramsay Beef Wellington, YouTube wiHeOR0hFRk)
+- Played through the YouTube IFrame API (script loaded only when the slide is reached), muted autoplay, controls/branding hidden (controls=0, modestbranding=1, rel=0, playsinline=1, iv_load_policy=3, disablekb=1), looping 1:03 to 3:00 by reloading the clip with endSeconds (loop=1 would restart from 0). Site-styled mute/unmute button over the video. Pauses when the slide is not active or the section is off screen. Reduced motion: poster + play button.
+- Poster frame assets/gr-video-poster.jpg is YouTube's maxresdefault thumbnail of the video (i.ytimg.com/vi/wiHeOR0hFRk/maxresdefault.jpg); replace with an owned still if preferred.
+- The iframe is scaled 1.32x inside an overflow-hidden wrapper to crop letterbox bars; adjust `.video-shell iframe { transform: ... scale(1.32) }` if too tight.
+
+## 10. Favicon
 `public/favicon.svg` (vector "R.K." in Poppins Black, outlines extracted from the Google Fonts TTF, no font dependency), `favicon-32.png`, `apple-touch-icon.png` (180px, cream background). Linked with relative paths in index.html.
 
-## 10. Open questions for the user
+## 11. Open questions for the user
 1. Is 4.8 the Trustpilot score you want shown given the live page now reads 2.7? (See section 5.)
 2. The users chart now covers 2021 Q1 to 2022 Q2; confirm the start quarter (the first kits shipped mid-2020).
 3. Confirm the weaker partners (Island Poké, Nanny Bill's, Patty & Bun, Baozi Inn, Som Saa) should stay in the strip.

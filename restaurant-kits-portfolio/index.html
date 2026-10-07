@@ -80,16 +80,9 @@
                     <span>Restaurants signed</span>
                   </li>
                   <li class="hero-stat-trust">
-                    <!-- Trustpilot badge. 375 reviews / 87% five-star are from the live page (uk.trustpilot.com/review/restaurantkitsuk.com, 2026-10-07).
+                    <!-- Trustpilot badge (deliberately NOT linked). 375 reviews / 87% five-star are from the live page (uk.trustpilot.com/review/restaurantkitsuk.com, 2026-10-07).
                          The 4.8 score is the investor-deck figure for the trading period; the live, time-decayed score now differs. See handoff. -->
-                    <a
-                      class="trust-badge"
-                      href="https://uk.trustpilot.com/review/restaurantkitsuk.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      data-todo="trustpilot-score"
-                      aria-label="Rated 4.8 out of 5 on Trustpilot, 375 reviews, 87% five-star"
-                    >
+                    <div class="trust-badge" role="group" aria-label="Rated 4.8 out of 5 on Trustpilot, 375 reviews, 87% five-star" data-todo="trustpilot-score">
                       <span class="trust-top">
                         <strong><span data-count="4.8" data-decimals="1">4.8</span></strong>
                         <span class="trust-stars" style="--score: 4.8" aria-hidden="true">
@@ -105,7 +98,7 @@
                         <svg class="tp-mark" aria-hidden="true"><use href="#tp-star" /></svg>
                         <span>Trustpilot · <span data-count="375" data-format="comma">375</span> reviews · <span data-count="87">87</span>% five-star</span>
                       </span>
-                    </a>
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -200,10 +193,10 @@
           <div class="container">
             <div class="intro-split">
               <div class="intro-statement reveal">
-                <p>
-                  Restaurant Kits was founded in 2020 as <em>a new type of dark kitchen</em>. We produce, portion and distribute meal kits from <em>the UK’s best restaurant brands</em>, direct to your door.
+                <p class="tw-lead">
+                  Restaurant Kits was founded in 2020 as <em class="underline">a new type of dark kitchen</em>. We produce, portion and distribute meal kits from <em>the UK’s best restaurant brands</em>, direct to your door.
                 </p>
-                <p>
+                <p class="tw-follow">
                   We have worked with <em>Gordon Ramsay, Adam Handling, Calum Franklin and Tom Brown</em>, shipped <em>30,000 boxes</em> in our first year, and went on to build <em>immersive at-home experiences</em>.
                 </p>
               </div>
@@ -224,7 +217,7 @@
           <div class="container">
             <div class="section-heading reveal">
               <p class="eyebrow alt">Partners</p>
-              <h2>We’ve partnered with the best chefs in London</h2>
+              <h2 class="partners-title">We’ve partnered with the <mark class="hl">best chefs</mark> in London</h2>
             </div>
 
             <div class="chef-row reveal">
@@ -234,9 +227,10 @@
                   <img
                     src="./assets/chefs/gordon-ramsay-cc.jpg"
                     alt="Gordon Ramsay"
-                    title="Photo: see credit in the footer (Wikimedia Commons, Creative Commons licence)"
+                    title="“Gordon Ramsay” by Dave Pullig, via Wikimedia Commons (commons.wikimedia.org/wiki/File:Gordon_Ramsay.jpg), CC BY 2.0, cropped and resized"
                   />
                   <strong>Gordon Ramsay</strong><span>Restaurants</span>
+                  <small class="photo-credit">Photo: Dave Pullig, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener noreferrer">CC BY 2.0</a></small>
                 </li>
                 <li>
                   <img src="./assets/chefs/adam-handling.png" alt="Chef Adam Handling" />
@@ -254,7 +248,7 @@
             </div>
 
             <div class="case-grid">
-              <article class="case-card reveal">
+              <article class="case-card">
                 <img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" />
                 <div>
                   <span class="card-kicker">Case study</span>
@@ -265,7 +259,7 @@
                   </dl>
                 </div>
               </article>
-              <article class="case-card reveal">
+              <article class="case-card">
                 <img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" />
                 <div>
                   <span class="card-kicker">Case study</span>
@@ -293,7 +287,7 @@
               RKX is an <em>immersive at-home experience</em> that celebrates the biggest events across music, film and sports. We <em>secured 9 IPs</em> through our contract with Wonderland at Home.
             </p>
 
-            <div class="ip-row reveal">
+            <div class="ip-row">
               <div class="ip-card"><img src="./assets/warner-bros-logo.png" alt="Warner Bros." /></div>
               <div class="ip-card"><img src="./assets/harry-potter-logo.png" alt="Harry Potter" /></div>
               <div class="ip-card"><img src="./assets/friends-logo.png" alt="Friends" /></div>
@@ -342,7 +336,7 @@
                 <p class="gr-eyebrow">Gordon Ramsay Restaurants × Restaurant Kits</p>
                 <h2>Beef Wellington, made at home.</h2>
                 <p>
-                  We developed the recipe with Gordon Ramsay Restaurants, then took over production, portioning and delivery end to end. Customers recreated one of Gordon Ramsay’s signature dishes in their own kitchens.
+                  Recipe developed with Gordon Ramsay Restaurants; production, portioning and delivery handled end to end by Restaurant Kits.
                 </p>
 
                 <dl class="gr-stats">
@@ -362,13 +356,20 @@
                     <img src="./assets/got-menu.png" alt="The Iron Anniversary menu, £120 for two" />
                   </figure>
                   <figure class="slide slide-video" data-panel="gr" data-video data-caption="Gordon Ramsay Restaurants: the Beef Wellington kit">
-                    <iframe
-                      src="https://www.youtube.com/embed/wiHeOR0hFRk?rel=0&enablejsapi=1"
-                      title="Gordon Ramsay Restaurants and Restaurant Kits video"
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowfullscreen
-                    ></iframe>
+                    <div class="video-shell" data-yt="wiHeOR0hFRk" data-start="63" data-end="180">
+                      <img class="video-poster" src="./assets/gr-video-poster.jpg" alt="Gordon Ramsay Restaurants and Restaurant Kits: the Beef Wellington kit video" loading="lazy" />
+                      <div class="yt-host" aria-hidden="true"></div>
+                      <button class="video-play" type="button" aria-label="Play the Beef Wellington kit video" hidden>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+                      </button>
+                      <button class="video-sound" type="button" aria-pressed="false" aria-label="Unmute video" hidden>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path class="spk" d="M4 9v6h4l5 4V5L8 9H4z" />
+                          <path class="wave" d="M16 8.5a4.5 4.5 0 010 7M18.5 6a8 8 0 010 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                          <path class="cross" d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                      </button>
+                    </div>
                   </figure>
                 </div>
               </div>
@@ -549,15 +550,7 @@
 
       <footer class="site-footer">
         <div class="container footer-wrap">
-          <div class="footer-links">
-            <a href="#about">About</a>
-            <a href="#partners">Partners</a>
-            <a href="#rkx">RKX</a>
-            <a href="#got">Collaborations</a>
-            <a href="#results">Results</a>
-          </div>
-          <p>Restaurant Kits, founded 2020. Funded by 1818, Start-up Funding Club and EIS investors. Preserved as a portfolio case study. Brand names and logos belong to their owners.</p>
-          <p class="footer-credit">Gordon Ramsay photo: “<a href="https://commons.wikimedia.org/wiki/File:Gordon_Ramsay.jpg" target="_blank" rel="noopener noreferrer">Gordon Ramsay</a>” by Dave Pullig, via Wikimedia Commons, <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>, cropped and resized. Stock photography via Pexels.</p>
+          <p>Restaurant Kits, founded 2020. Funded by 1818, Start-up Funding Club and EIS investors.</p>
         </div>
       </footer>
     </div>

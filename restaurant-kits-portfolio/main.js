@@ -79,19 +79,6 @@ if (!reduceMotion) gsap.utils.toArray('.reveal').forEach((item) => {
   );
 });
 
-/* IP logos pop in one by one */
-[['.ip-row', '.ip-card']].forEach(([trigger, items]) => {
-  if (reduceMotion || !document.querySelector(trigger)) return;
-  gsap.from(items, {
-    scrollTrigger: { trigger, start: 'top 80%', once: true },
-    scale: 0.6,
-    opacity: 0,
-    duration: 0.6,
-    stagger: 0.06,
-    ease: 'back.out(1.7)',
-  });
-});
-
 /* Count-up numbers */
 const formatNumber = (value, el) => {
   const decimals = Number(el.dataset.decimals || 0);
@@ -313,13 +300,135 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
   let userInteracted = false;
   let visible = false;
 
-  const pauseVideos = () => {
-    slider.querySelectorAll('.slide-video iframe').forEach((frame) => {
-      frame.contentWindow?.postMessage(
-        JSON.stringify({ event: 'command', func: 'pauseVideo', args: [] }),
-        '*'
-      );
+  /* Featured video (YouTube IFrame API). The API script is only requested the
+     first time the video slide is reached. Autoplay has to start muted or the
+     browser blocks it; the on-video button lets the viewer unmute. The 63s to
+     180s segment loops by reloading the clip with endSeconds, because loop=1
+     would restart from 0. Reduced motion: poster + play button, no autoplay. */
+  const videoShells = [...slider.querySelectorAll('.video-shell')].map((shell) => {
+    const state = {
+      shell,
+      id: shell.dataset.yt,
+      start: Number(shell.dataset.start || 0),
+      end: Number(shell.dataset.end || 0),
+      player: null,
+      ready: false,
+      wantPlaying: false,
+      guard: null,
+    };
+    const soundBtn = shell.querySelector('.video-sound');
+    const playBtn = shell.querySelector('.video-play');
+
+    const loadApi = () =>
+      new Promise((resolve) => {
+        if (window.YT && window.YT.Player) return resolve(window.YT);
+        const prev = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => {
+          prev?.();
+          resolve(window.YT);
+        };
+        if (!document.querySelector('script[data-yt-api]')) {
+          const tag = document.createElement('script');
+          tag.src = 'https://www.youtube.com/iframe_api';
+          tag.async = true;
+          tag.dataset.ytApi = '';
+          document.head.appendChild(tag);
+        }
+      });
+
+    const segment = () => ({ videoId: state.id, startSeconds: state.start, endSeconds: state.end || undefined });
+
+    const startGuard = () => {
+      clearInterval(state.guard);
+      if (!state.end) return;
+      state.guard = setInterval(() => {
+        if (!state.ready || !state.wantPlaying) return;
+        const t = state.player.getCurrentTime?.() || 0;
+        if (t >= state.end - 0.25 || t < state.start - 1) state.player.loadVideoById(segment());
+      }, 500);
+    };
+
+    const create = async (muted) => {
+      if (state.player) return;
+      const YT = await loadApi();
+      const host = shell.querySelector('.yt-host');
+      state.player = new YT.Player(host, {
+        videoId: state.id,
+        playerVars: {
+          autoplay: 1,
+          mute: muted ? 1 : 0,
+          controls: 0,
+          modestbranding: 1,
+          rel: 0,
+          playsinline: 1,
+          iv_load_policy: 3,
+          disablekb: 1,
+          fs: 0,
+          start: state.start,
+          end: state.end || undefined,
+          enablejsapi: 1,
+          origin: location.origin,
+        },
+        events: {
+          onReady: (e) => {
+            state.ready = true;
+            if (muted) e.target.mute();
+            else e.target.unMute();
+            soundBtn.hidden = false;
+            soundBtn.setAttribute('aria-pressed', String(!muted));
+            soundBtn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+            if (state.wantPlaying) e.target.playVideo();
+            startGuard();
+          },
+          onStateChange: (e) => {
+            if (e.data === YT.PlayerState.PLAYING) shell.classList.add('is-playing');
+            if (e.data === YT.PlayerState.ENDED && state.wantPlaying) e.target.loadVideoById(segment());
+          },
+        },
+      });
+    };
+
+    soundBtn.addEventListener('click', () => {
+      if (!state.ready) return;
+      const muted = state.player.isMuted();
+      if (muted) state.player.unMute();
+      else state.player.mute();
+      soundBtn.setAttribute('aria-pressed', String(muted));
+      soundBtn.setAttribute('aria-label', muted ? 'Mute video' : 'Unmute video');
     });
+
+    if (reduceMotion) {
+      playBtn.hidden = false;
+      playBtn.addEventListener('click', () => {
+        playBtn.hidden = true;
+        state.wantPlaying = true;
+        create(false);
+      });
+    }
+
+    state.play = () => {
+      state.wantPlaying = true;
+      if (reduceMotion && !state.player) return; // waits for the play button
+      if (!state.player) create(true);
+      else if (state.ready) {
+        state.player.playVideo();
+        startGuard();
+      }
+    };
+    state.pause = () => {
+      state.wantPlaying = false;
+      clearInterval(state.guard);
+      if (state.ready) state.player.pauseVideo();
+    };
+    return state;
+  });
+
+  const pauseVideos = () => videoShells.forEach((v) => v.pause());
+  const playActiveVideo = () => {
+    if (!visible) return;
+    const active = slides[index];
+    if (!('video' in active.dataset)) return;
+    videoShells.filter((v) => active.contains(v.shell)).forEach((v) => v.play());
   };
 
   const dots = slides.map((slide, i) => {
@@ -358,6 +467,7 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
     if (i !== index) pauseVideos();
     index = (i + slides.length) % slides.length;
     render(instant);
+    playActiveVideo();
     schedule();
   }
 
@@ -396,6 +506,7 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
       visible = entry.isIntersecting;
       if (visible) {
         schedule();
+        playActiveVideo();
       } else {
         clearTimeout(timer);
         pauseVideos();
@@ -430,8 +541,70 @@ addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 if (!reduceMotion) {
+  /* About: the first paragraph writes itself on word by word, the key phrases
+     turn black (and the first one underlines) as it completes, then the second
+     paragraph follows. */
+  const statement = document.querySelector('.intro-statement');
+  const lead = statement?.querySelector('.tw-lead');
+  const follow = statement?.querySelector('.tw-follow');
+  if (statement && lead) {
+    const splitFlat = (el) => {
+      const walk = (node) => {
+        [...node.childNodes].forEach((child) => {
+          if (child.nodeType === Node.TEXT_NODE) {
+            const frag = document.createDocumentFragment();
+            child.textContent.split(/(\s+)/).forEach((part) => {
+              if (!part) return;
+              if (/^\s+$/.test(part)) return frag.appendChild(document.createTextNode(part));
+              const w = document.createElement('span');
+              w.className = 'tw-word';
+              w.textContent = part;
+              frag.appendChild(w);
+            });
+            child.replaceWith(frag);
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
+            walk(child);
+          }
+        });
+      };
+      walk(el);
+      return el.querySelectorAll('.tw-word');
+    };
+    const words = splitFlat(lead);
+    statement.classList.add('tw-pending');
+    gsap.set(words, { opacity: 0 });
+    if (follow) gsap.set(follow, { opacity: 0, y: 16 });
+    gsap
+      .timeline({ scrollTrigger: { trigger: statement, start: 'top 72%', once: true } })
+      .to(words, { opacity: 1, duration: 0.25, stagger: 0.035, ease: 'none' })
+      .call(() => statement.classList.remove('tw-pending'))
+      .to(follow || {}, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '+=0.9');
+  }
+
+  /* Partners: heading words rise, the "best chefs" block wipes in, then after a
+     beat the four chefs land one by one. */
+  const partnersTitle = document.querySelector('.partners-title');
+  if (partnersTitle) {
+    const mark = partnersTitle.querySelector('.hl');
+    const chefs = document.querySelectorAll('.chef-row li');
+    gsap
+      .timeline({ scrollTrigger: { trigger: partnersTitle, start: 'top 85%', once: true } })
+      .from(splitWords(partnersTitle), { yPercent: 110, duration: 0.9, stagger: 0.06, ease: 'power4.out' })
+      .call(() => mark?.classList.add('is-on'), null, '-=0.3')
+      .from(chefs, { y: 50, opacity: 0, duration: 0.8, stagger: 0.16, ease: 'power3.out' }, '+=1.0');
+  }
+
+  /* Case studies: card, then each line */
+  document.querySelectorAll('.case-card').forEach((card) => {
+    gsap
+      .timeline({ scrollTrigger: { trigger: card, start: 'top 85%', once: true } })
+      .from(card, { y: 40, opacity: 0, duration: 0.8, ease: 'power2.out' })
+      .from(card.querySelector('img'), { scale: 0.7, opacity: 0, duration: 0.5, ease: 'back.out(1.7)' }, '-=0.4')
+      .from(card.querySelectorAll('.card-kicker, h3, dl > div'), { y: 14, opacity: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, '-=0.3');
+  });
+
   document
-    .querySelectorAll('.section-heading h2, .archive-box h2, .seasonal-head h2')
+    .querySelectorAll('.section-heading h2:not(.partners-title), .archive-box h2, .seasonal-head h2')
     .forEach((heading) => {
       gsap.from(splitWords(heading), {
         scrollTrigger: { trigger: heading, start: 'top 85%', once: true },
@@ -455,7 +628,7 @@ if (!reduceMotion) {
   });
 
   /* Highlight sweeps behind key phrases */
-  document.querySelectorAll('.intro-statement em, .rkx-statement em').forEach((em) => {
+  document.querySelectorAll('.rkx-statement em').forEach((em) => {
     ScrollTrigger.create({
       trigger: em,
       start: 'top 80%',
@@ -478,16 +651,6 @@ if (!reduceMotion) {
     );
   }
 
-  /* Chef photos rise in */
-  gsap.from('.chef-row li', {
-    scrollTrigger: { trigger: '.chef-row', start: 'top 80%', once: true },
-    y: 50,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.12,
-    ease: 'power3.out',
-  });
-
   /* RKX lockup lands */
   const rkxTl = gsap.timeline({
     scrollTrigger: { trigger: '.rkx-head', start: 'top 80%', once: true },
@@ -495,6 +658,15 @@ if (!reduceMotion) {
   rkxTl
     .from('.rkx-logo', { scale: 0.5, rotate: -10, opacity: 0, duration: 0.9, ease: 'back.out(1.8)' })
     .from('.rkx-tag', { x: 40, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.4');
+  gsap.from('.ip-card', {
+    scrollTrigger: { trigger: '.ip-row', start: 'top 85%', once: true },
+    y: 36,
+    opacity: 0,
+    scale: 0.94,
+    duration: 0.7,
+    stagger: 0.14,
+    ease: 'power3.out',
+  });
 
   /* Carousel opens like a curtain */
   gsap.fromTo(
