@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "motion/react";
 import { Code, Briefcase, Users, Clock, Sparkle, Smiley } from "@phosphor-icons/react";
-import { Reveal, SectionLabel } from "./primitives";
+import { KineticHeading, Reveal, SectionLabel } from "./primitives";
 
 /**
  * "By the numbers" — pulled in from Crest's own Stats.tsx, same layout and
@@ -38,9 +38,12 @@ export function Stats() {
   return (
     <section className="chapter-glow-bg relative overflow-hidden py-20 md:py-28">
       <div className="relative mx-auto max-w-6xl px-6">
-        <Reveal>
-          <SectionLabel>By the numbers</SectionLabel>
-        </Reveal>
+        <SectionLabel>Track record</SectionLabel>
+        {/* Same face and ember emphasis as the stack heading, one size up so the stats get their own moment. */}
+        <KineticHeading
+          text="By the *numbers.*"
+          className="mt-5 text-[clamp(2.8rem,8vw,6rem)] font-semibold leading-[0.95] tracking-tight"
+        />
 
         <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3">
           {STATS.map((s, i) => (
