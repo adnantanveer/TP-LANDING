@@ -34,7 +34,10 @@ export type TeamMember = {
 // still reads as premium rather than as a missing avatar.
 function EditorialFrame({ name }: { name: string }) {
   return (
-    <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_30%,color-mix(in_oklab,var(--foreground)_8%,transparent),transparent_70%)] bg-card">
+    // `isolate`: the ring's pseudo-elements carry z-index 1 (so they sit
+    // above a photo *inside* a ring), which here would lift them above the
+    // real photo layered on top — a new stacking context keeps them under.
+    <div className="absolute inset-0 isolate flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_30%,color-mix(in_oklab,var(--foreground)_8%,transparent),transparent_70%)] bg-card">
       <div className="foil-ring relative flex h-28 w-24 items-center justify-center rounded-lg sm:h-32 sm:w-28">
         <span className="brand-wordmark statement-outline-text text-4xl leading-none sm:text-5xl">{initials(name)}</span>
       </div>

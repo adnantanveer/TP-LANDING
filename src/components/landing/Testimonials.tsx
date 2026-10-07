@@ -1,11 +1,10 @@
-import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useState } from "react";
 import { KineticHeading, SectionLabel, initials } from "./primitives";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-const ROTATE_MS = 5000;
-const SWIPE_PX = 48;
+const ROTATE_MS = 3500;
 
 type TestimonialItem = {
   id: string;
@@ -52,22 +51,18 @@ const DEFAULT_ITEMS: TestimonialItem[] = [
 ];
 
 /**
- * "Trusted by ambitious teams" — an auto-rotating showcase instead of the
- * old 280vh scroll-pinned crossfade. One quote on stage at a time; the
- * next slides in every five seconds, pausing while the pointer or
- * keyboard focus is inside the section. Dots jump directly, a horizontal
- * drag/swipe moves one step (motion's drag gesture, so it works with a
- * mouse too), and the ring around the portrait doubles as the timer.
- * Transform/opacity only; under prefers-reduced-motion the rotation
- * stops and slides cut instead of sliding.
+ * "From our clients." — an auto-rotating showcase instead of the old
+ * 280vh scroll-pinned crossfade. One quote on stage at a time; the next
+ * crossfades in every 3.5 s (opacity only — no sideways travel, no timer
+ * ring), pausing while the pointer or keyboard focus is inside the
+ * section. The dots jump directly. Under prefers-reduced-motion the
+ * rotation stops and the dots still work.
  */
 export function Testimonials() {
   const reduce = useReducedMotion();
   const [items, setItems] = useState<TestimonialItem[]>(DEFAULT_ITEMS);
-  const [[index, dir], setIndex] = useState<[number, 1 | -1]>([0, 1]);
+  const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  // Remounts the timer ring on every manual jump so it restarts from 0.
-  const [cycle, setCycle] = useState(0);
 
   useEffect(() => {
     fetch(`${API_URL}/api/content/testimonials`)
@@ -76,37 +71,23 @@ export function Testimonials() {
       .catch(() => {});
   }, []);
 
-  const go = useCallback(
-    (to: number, d: 1 | -1) => {
-      setIndex([((to % items.length) + items.length) % items.length, d]);
-      setCycle((c) => c + 1);
-    },
-    [items.length]
-  );
+  const go = useCallback((to: number) => setIndex(((to % items.length) + items.length) % items.length), [items.length]);
 
   useEffect(() => {
     if (paused || reduce || items.length < 2) return;
-    const id = window.setInterval(() => go(index + 1, 1), ROTATE_MS);
+    const id = window.setInterval(() => go(index + 1), ROTATE_MS);
     return () => window.clearInterval(id);
   }, [paused, reduce, items.length, index, go]);
 
   const current = items[index];
   if (!current) return null;
 
-  function onDragEnd(_: unknown, info: PanInfo) {
-    if (info.offset.x < -SWIPE_PX) go(index + 1, 1);
-    else if (info.offset.x > SWIPE_PX) go(index - 1, -1);
-  }
-
   return (
     <section
       id="testimonials"
       className="relative overflow-hidden bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_80%,transparent)_0%,color-mix(in_oklab,var(--primary)_12%,transparent)_50%,color-mix(in_oklab,var(--background)_80%,transparent)_100%)] py-28 md:py-36"
       onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => {
-        setPaused(false);
-        setCycle((c) => c + 1); // the interval restarts from 0, so the ring must too
-      }}
+      onPointerLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
@@ -115,32 +96,22 @@ export function Testimonials() {
       <div className="mx-auto max-w-5xl px-6">
         <div className="text-center">
           <SectionLabel>In their words</SectionLabel>
-          <KineticHeading
-            text="Trusted by *ambitious* teams."
-            className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]"
-          />
+          <KineticHeading text="From our *clients.*" className="mt-6 text-[clamp(2rem,5vw,3.6rem)] font-semibold leading-[1.02]" />
         </div>
 
-        <motion.div
-          drag={items.length > 1 ? "x" : false}
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.12}
-          onDragEnd={onDragEnd}
-          aria-live="polite"
-          aria-roledescription="carousel"
-          className="relative mt-14 min-h-[26rem] cursor-grab touch-pan-y select-none active:cursor-grabbing md:min-h-[22rem]"
-        >
-          <AnimatePresence mode="wait" initial={false} custom={dir}>
+        <div aria-live="polite" aria-roledescription="carousel" className="relative mt-14 min-h-[26rem] md:min-h-[22rem]">
+          {/* mode="sync" so the outgoing and incoming quotes overlap into a
+              true crossfade rather than fading out, then in. */}
+          <AnimatePresence mode="sync" initial={false}>
             <motion.figure
               key={current.id}
-              custom={dir}
-              initial={reduce ? { opacity: 0 } : { opacity: 0, x: dir * 80, rotate: dir * 1.5 }}
-              animate={{ opacity: 1, x: 0, rotate: 0 }}
-              exit={reduce ? { opacity: 0 } : { opacity: 0, x: dir * -80, rotate: dir * -1.5 }}
-              transition={{ duration: reduce ? 0.2 : 0.7, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduce ? 0.2 : 0.9, ease: "easeInOut" }}
               className="absolute inset-0 flex flex-col items-center text-center"
             >
-              <PersonImage name={current.name} photo={current.photo} timerKey={cycle} running={!paused && !reduce && items.length > 1} />
+              <PersonImage name={current.name} photo={current.photo} />
               <blockquote className="mt-6">
                 <p className="text-[clamp(1.35rem,2.8vw,2.1rem)] font-medium leading-[1.3] text-foreground">
                   &ldquo;{current.quote}&rdquo;
@@ -152,7 +123,7 @@ export function Testimonials() {
               </figcaption>
             </motion.figure>
           </AnimatePresence>
-        </motion.div>
+        </div>
 
         {items.length > 1 && (
           <div className="mt-6 flex items-center justify-center gap-3" role="tablist" aria-label="Testimonials">
@@ -163,7 +134,7 @@ export function Testimonials() {
                 role="tab"
                 aria-selected={i === index}
                 aria-label={`Show testimonial ${i + 1}`}
-                onClick={() => go(i, i > index ? 1 : -1)}
+                onClick={() => go(i)}
                 className="group flex h-11 w-11 items-center justify-center rounded-full outline-none"
               >
                 <span
@@ -180,31 +151,13 @@ export function Testimonials() {
   );
 }
 
-// Portrait with the rotation timer drawn as a ring around it. The stroke
-// draws over ROTATE_MS via a CSS animation (.testimonial-ring in
-// styles.css) — remounted (timerKey) on each change so it starts from
-// empty, and frozen in place via animation-play-state while paused.
-function PersonImage({ name, photo, timerKey, running }: { name: string; photo: string; timerKey: number; running: boolean }) {
+// Portrait with the same monogram-underneath cross-fade as the team cards;
+// a thin static ember ring, nothing animated around it.
+function PersonImage({ name, photo }: { name: string; photo: string }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
     <div className="relative h-36 w-36 shrink-0 md:h-40 md:w-40">
-      <svg viewBox="0 0 100 100" className="absolute -inset-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)] -rotate-90" aria-hidden>
-        <circle cx="50" cy="50" r="48" fill="none" stroke="color-mix(in oklab, var(--primary) 25%, transparent)" strokeWidth="1" />
-        <circle
-          key={timerKey}
-          cx="50"
-          cy="50"
-          r="48"
-          fill="none"
-          stroke="var(--primary)"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          pathLength={1}
-          className="testimonial-ring"
-          style={{ animationDuration: `${ROTATE_MS}ms`, animationPlayState: running ? "running" : "paused" }}
-        />
-      </svg>
       <div className="relative h-full w-full overflow-hidden rounded-full border border-primary/30 shadow-[var(--shadow-ember)]">
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/25 via-primary/10 to-transparent font-display text-4xl font-semibold text-primary">
           {initials(name)}

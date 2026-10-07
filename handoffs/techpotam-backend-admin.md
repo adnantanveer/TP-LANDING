@@ -23,13 +23,13 @@ Endpoints are all `GET ${VITE_API_URL}/api/content/<key>`.
 | `services` | `heading` | string | `Everything a team needs, under one roof.` | `Everything the UK needs under one roof.` | Requested wording. |
 | `services` | `subheading` | string | long sentence | `One squad. Discovery to long-term support.` | Shorter copy. |
 | `services` | `items[].body` | string | one sentence each | see `src/components/landing/Services.tsx` `DEFAULT_CONTENT` for the five short versions | Shorter copy. |
-| `techStack` | `heading` | string | `A full-spectrum` | `Stack,` | Section is now titled "Stack, remastered."; the frontend no longer appends ", deployed with precision." |
-| `techStack` | `headingEmphasis` | string | `technology stack` | `remastered.` | Same. |
-| `techStack` | `subheading` | string | long sentence | `The right tool, every time.` | Shorter copy. |
+| `techStack` | `heading` | string | `A full-spectrum` | `We're experts in` | Section heading is now the single line "We're experts in many technologies."; the frontend no longer appends ", deployed with precision." |
+| `techStack` | `headingEmphasis` | string | `technology stack` | `many technologies.` | Same (this half renders in the ember gradient). |
+| `techStack` | `subheading` | string | long sentence | *(leave empty)* | The subheading is no longer rendered on the homepage. The field can stay in the admin for now; safe to remove later. |
 | `marquee` | `items[]` | string[] | `Web platforms`, `Mobile apps`, … | `Web`, `Mobile`, `AI`, `Cloud`, `Design`, `Data` | Shorter copy. |
 | `hero` | `forge.body` / `core.body` / `launch.body` | string | long sentences | see `DEFAULT_HERO_CONTENT` in `src/components/landing/Hero.tsx` | Shorter copy. |
 | `menu` | `links[]` | array | contains `{ href: "#precision", label: "Capabilities" }` | replace with `{ href: "#process", label: "Process", active: true }` | The Precision section is no longer on the homepage (see §3). `#precision` now scrolls nowhere. |
-| `testimonials` | `testimonials[]` | array | role-only attributions, no photos | real, permissioned client quotes with `name`, `role`, `organization`, `photo` | The frontend currently ships **fictional placeholder people** (see §4) that must not go live. |
+| `testimonials` | `testimonials[]` | array | role-only attributions, no photos | real, permissioned client quotes with `name`, `role`, `organization`, `photo` | The frontend currently ships **fictional placeholder people** (see §4) that must not go live. Section heading is hard-coded ("From our clients."), not a CMS field. |
 | `team` | `teamMembers[]` | array | (unknown) | real members with `photo`; mark the four leads with `isKeyMember: true` (new, see §2) | Frontend ships a fictional fallback team (see §4). |
 
 ---
@@ -78,7 +78,9 @@ Team fallback (`src/components/landing/TeamSection.tsx`, only shown when the API
 | Margaret Holloway | Delivery Lead | | `/assets/stock/team-7.jpg` |
 | Jerome Adebayo | Mobile Engineer | | `/assets/stock/team-8.jpg` |
 
-Case-study fallback cards (`src/components/landing/OurWork.tsx` `DEFAULT_WORK`, derived from `src/concepts/shared/content.ts` `workItems`): Atlas, Civica, Harborline, Meridian, Northfield — fictional clients on the existing `/assets/work-*.jpg` images. Shown only when `case-studies` returns nothing.
+Case-study fallback cards (`src/components/landing/OurWork.tsx` `DEFAULT_WORK`): TadiBrothers, Quick Step and TaskFlow — the three real CMS projects, but with **similar-product stock photography instead of the real platform screenshots** (those only exist as admin uploads in the CMS, not in this repo). Shown only when `case-studies` returns nothing. **Replace later**: `public/assets/stock/work-ecommerce.jpg`, `work-flooring.jpg`, `work-dashboard.jpg` → the real screenshots, and the guessed slugs/titles/captions/meta → the real CMS values. The live cards always use `images[0]` from the CMS, unchanged.
+
+Team: no real team photos exist in this repo either (the previous build was CMS-only with no fallback), so the stock portraits above remain a **local fallback only**; the live section uses the CMS `photo` URLs unchanged.
 
 ---
 
@@ -116,6 +118,9 @@ Photos — `public/assets/stock/` (JPEG, ≤1600 px wide, each <250 KB; headshot
 | `team-6.jpg` | https://www.pexels.com/photo/18165006/ | Lil K |
 | `team-7.jpg` | https://www.pexels.com/photo/20819288/ | Emiliano Vittoriosi |
 | `team-8.jpg` | https://www.pexels.com/photo/4797690/ | TUBARONES PHOTOGRAPHY |
+| `work-ecommerce.jpg` (**replace later** with the real TadiBrothers screenshot) | https://www.pexels.com/photo/7667442/ | MART PRODUCTION |
+| `work-flooring.jpg` (**replace later** with the real Quick Step screenshot) | https://www.pexels.com/photo/7181184/ | Thirdman |
+| `work-dashboard.jpg` (**replace later** with the real TaskFlow screenshot) | https://www.pexels.com/photo/577210/ | Lukas Blazek |
 
 ---
 

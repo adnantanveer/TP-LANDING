@@ -89,8 +89,9 @@ const KINETIC_EASE = [0.16, 1, 0.3, 1] as const;
  * on screen" language every section heading now shares (see Statement.tsx
  * for the scroll-scrubbed version of the same idea).
  *
- * Words wrapped in *asterisks* pick up the ember gradient, so a heading
- * can keep its one accent moment without the caller splitting JSX by hand.
+ * A run of words wrapped in *asterisks* (one word or several) picks up
+ * the ember gradient, so a heading can keep its one accent moment without
+ * the caller splitting JSX by hand.
  *
  * Visibility is observed on the heading element itself, not on each
  * animated span: the spans start translated fully outside their
@@ -100,6 +101,25 @@ const KINETIC_EASE = [0.16, 1, 0.3, 1] as const;
  * concepts/shared/KineticText.tsx). Collapses to a static heading under
  * prefers-reduced-motion.
  */
+// "*many technologies.*" → [{many, em}, {technologies., em}]: an opening
+// asterisk switches emphasis on, a closing one switches it off after that
+// word, so the run can span any number of words.
+function parseEmphasis(text: string): { word: string; em: boolean }[] {
+  let em = false;
+  return text.split(" ").map((raw) => {
+    let word = raw;
+    if (word.startsWith("*")) {
+      em = true;
+      word = word.slice(1);
+    }
+    const closes = word.endsWith("*");
+    if (closes) word = word.slice(0, -1);
+    const out = { word, em };
+    if (closes) em = false;
+    return out;
+  });
+}
+
 export function KineticHeading({
   text,
   as: Tag = "h2",
@@ -116,22 +136,18 @@ export function KineticHeading({
   const reduce = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-12% 0px" });
-  const words = text.split(" ");
+  const words = parseEmphasis(text);
 
   if (reduce) {
     return createElement(
       Tag,
       { className },
-      words.map((w, i) => {
-        const em = w.startsWith("*") && w.endsWith("*");
-        const clean = em ? w.slice(1, -1) : w;
-        return (
-          <Fragment key={i}>
-            {em ? <span className="text-ember">{clean}</span> : clean}
-            {i < words.length - 1 ? " " : ""}
-          </Fragment>
-        );
-      })
+      words.map(({ word, em }, i) => (
+        <Fragment key={i}>
+          {em ? <span className="text-ember">{word}</span> : word}
+          {i < words.length - 1 ? " " : ""}
+        </Fragment>
+      ))
     );
   }
 
@@ -139,9 +155,7 @@ export function KineticHeading({
   return createElement(
     Tag,
     { ref, className, "aria-label": text.replace(/\*/g, "") },
-    words.map((w, wi) => {
-        const em = w.startsWith("*") && w.endsWith("*");
-        const clean = em ? w.slice(1, -1) : w;
+    words.map(({ word: clean, em }, wi) => {
         const pieces = split === "chars" ? clean.split("") : [clean];
         return (
           <Fragment key={wi}>

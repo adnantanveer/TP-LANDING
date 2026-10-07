@@ -1,4 +1,4 @@
-import { motion, useReducedMotion, useScroll, useTransform, useSpring } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { KineticHeading, LineReveal, SectionLabel, initials } from "./primitives";
@@ -24,15 +24,6 @@ const DEFAULT_MEMBERS: TeamMember[] = [
   { id: "t6", name: "Kenji Watanabe", role: "Senior Engineer", photo: "/assets/stock/team-6.jpg", banner: "", bio: "", order: 6 },
   { id: "t7", name: "Margaret Holloway", role: "Delivery Lead", photo: "/assets/stock/team-7.jpg", banner: "", bio: "", order: 7 },
   { id: "t8", name: "Jerome Adebayo", role: "Mobile Engineer", photo: "/assets/stock/team-8.jpg", banner: "", bio: "", order: 8 },
-];
-
-// Same fly-in-by-index pattern as before — keeps the entrance varied
-// regardless of team size instead of a fixed 1:1 slot mapping.
-const OFFSET_PATTERN = [
-  { x: -50, y: -30, rotate: -3 },
-  { x: 50, y: 20, rotate: 2 },
-  { x: -30, y: 40, rotate: 3 },
-  { x: 40, y: -40, rotate: -2 },
 ];
 
 /**
@@ -108,7 +99,7 @@ export function TeamSection() {
         <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {key.map((m, i) => (
             <div key={m.id} className="h-72 w-full sm:h-80">
-              <TeamCard {...m} {...OFFSET_PATTERN[i % OFFSET_PATTERN.length]} index={i} />
+              <TeamCard {...m} index={i} />
             </div>
           ))}
         </div>
@@ -179,26 +170,18 @@ function MosaicAvatar({ name, role, photo }: TeamMember) {
   );
 }
 
-function TeamCard({
-  x,
-  y,
-  rotate,
-  index,
-  ...member
-}: TeamMember & { x: number; y: number; rotate: number; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+// Entrance: a soft fade and short rise from blur to sharp, each card a
+// beat after the last — no rotation, no 3D, no per-card directions.
+function TeamCard({ index, ...member }: TeamMember & { index: number }) {
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 95%", "start 45%"] });
-  const p = useSpring(scrollYProgress, { stiffness: 100, damping: 22, mass: 0.4 });
-
-  const tx = useTransform(p, [0, 1], [reduce ? "0%" : `${x}%`, "0%"]);
-  const ty = useTransform(p, [0, 1], [reduce ? "0%" : `${y}%`, "0%"]);
-  const tr = useTransform(p, [0, 1], [reduce ? 0 : rotate * 3, 0]);
-  const scale = useTransform(p, [0, 1], [reduce ? 1 : 1.3, 1]);
-  const opacity = useTransform(p, [0, 0.6, 1], [reduce ? 1 : 0, 0.7, 1]);
-
   return (
-    <motion.article ref={ref} style={{ x: tx, y: ty, rotate: tr, scale, opacity }} transition={{ delay: index * 0.03 }} className="h-full w-full">
+    <motion.article
+      initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(8px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-12% 0px" }}
+      transition={{ duration: 1, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+      className="h-full w-full"
+    >
       <TeamFlipCard {...member} />
     </motion.article>
   );
