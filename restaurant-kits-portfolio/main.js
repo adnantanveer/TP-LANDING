@@ -600,13 +600,13 @@ if (!reduceMotion) {
                 return;
               }
               const w = document.createElement('span');
-              w.className = inPhrase ? 'tw-word tw-u' : 'tw-word';
+              w.className = inPhrase === 'u' ? 'tw-word tw-u' : 'tw-word';
               w.textContent = part;
               frag.appendChild(w);
             });
             child.replaceWith(frag);
           } else if (child.nodeType === Node.ELEMENT_NODE) {
-            walk(child, inPhrase || child.tagName === 'EM');
+            walk(child, inPhrase || (child.tagName === 'EM' ? (child.classList.contains('u') ? 'u' : 'em') : false));
           }
         });
       };
@@ -616,27 +616,41 @@ if (!reduceMotion) {
     const paras = [...statement.querySelectorAll('p')];
     let previousDone = Promise.resolve();
     paras.forEach((para) => {
-      const words = splitFlat(para);
+      const words = [...splitFlat(para)];
+      const phrases = [...para.querySelectorAll('em')];
+      const ruleWords = [...para.querySelectorAll('em.u .tw-u')];
       para.classList.add('tw-pending');
       gsap.set(words, { opacity: 0 });
-      gsap.set(para.querySelectorAll('.tw-u'), { backgroundSize: '0% 3px' });
+      gsap.set(ruleWords, { backgroundSize: '0% 3px' });
+
+      /* 1. brisk word-by-word reveal (grey), 2. highlight phrases turn black,
+         staggered, 3. the single underlined phrase draws left to right. */
+      const tl = gsap.timeline({ paused: true });
+      words.forEach((w, i) => tl.to(w, { opacity: 1, duration: 0.2, ease: 'none' }, i * 0.022));
+      const revealed = words.length * 0.022 + 0.2;
+      phrases.forEach((em, i) => tl.call(() => em.classList.add('is-lit'), null, revealed + 0.1 + i * 0.15));
+      const bolded = revealed + 0.1 + (phrases.length - 1) * 0.15 + 0.3;
+      const each = ruleWords.length ? 0.5 / ruleWords.length : 0;
+      ruleWords.forEach((w, i) => tl.to(w, { backgroundSize: '100% 3px', duration: each, ease: 'power2.out' }, bolded + 0.45 + i * each));
+      tl.call(() => para.classList.remove('tw-pending'), null, bolded + 0.45 + 0.5 + 0.05);
+
       const onScreen = new Promise((resolve) => {
         ScrollTrigger.create({ trigger: para, start: 'top 82%', once: true, onEnter: resolve });
       });
       const gate = previousDone;
       previousDone = new Promise((done) => {
-        Promise.all([onScreen, gate]).then(() => {
-          const tl = gsap.timeline({ delay: 0.2 });
-          words.forEach((w, i) => {
-            tl.to(w, { opacity: 1, duration: 0.25, ease: 'none' }, i * 0.035);
-            if (w.classList.contains('tw-u')) {
-              tl.to(w, { backgroundSize: '100% 3px', duration: 0.45, ease: 'power2.out' }, i * 0.035 + 0.04);
+        tl.eventCallback('onComplete', () => setTimeout(done, 300));
+        Promise.all([onScreen, gate]).then(() => tl.delay(0.15).play());
+        /* Scrolled well past before it finished: complete instantly. */
+        ScrollTrigger.create({
+          trigger: para,
+          start: 'bottom 45%',
+          once: true,
+          onEnter: () => {
+            if (tl.progress() < 1) {
+              gate.then(() => tl.progress(1));
             }
-          });
-          tl.call(() => {
-            para.classList.remove('tw-pending');
-            setTimeout(done, 500);
-          });
+          },
         });
       });
     });

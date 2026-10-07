@@ -3237,6 +3237,11 @@ nav a {
 
 .intro-statement p.tw-pending em {
   color: inherit;
+  transition: color 0.3s ease;
+}
+
+.intro-statement p.tw-pending em.is-lit {
+  color: #111;
 }
 
 /* Words are inline (not inline-block) so a phrase's per-word underlines,
