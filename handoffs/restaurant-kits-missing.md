@@ -100,7 +100,7 @@ Mac & Wild "Time to launch" is shown as 6 months at the user's direction (the in
 
 ## 9. Featured video (Gordon Ramsay Beef Wellington, YouTube wiHeOR0hFRk)
 - Played through the YouTube IFrame API (script loaded only when the slide is reached), muted autoplay, controls/branding hidden (controls=0, modestbranding=1, rel=0, playsinline=1, iv_load_policy=3, disablekb=1), looping 1:03 to 3:00 by reloading the clip with endSeconds (loop=1 would restart from 0). Site-styled mute/unmute button over the video. Pauses when the slide is not active or the section is off screen. Reduced motion: poster + play button.
-- Poster frame assets/gr-video-poster.jpg is YouTube's maxresdefault thumbnail of the video (i.ytimg.com/vi/wiHeOR0hFRk/maxresdefault.jpg); replace with an owned still if preferred.
+- Poster frame assets/gr-video-poster.jpg is the frame at 1:03 of the YouTube video (wiHeOR0hFRk), matching where playback starts; 1280px wide.
 - The iframe is scaled 1.32x inside an overflow-hidden wrapper to crop letterbox bars; adjust `.video-shell iframe { transform: ... scale(1.32) }` if too tight.
 
 ## 10. Favicon
