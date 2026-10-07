@@ -47,9 +47,7 @@ Evidence strength: Gordon Ramsay, Adam Handling, Holborn Dining Room/Calum Frank
 Rejected: Wagamama (its kits were a supermarket range, no RK link) and "Chef Collective" (no evidence; the file was actually a Restaurant Kits wordmark). Both files deleted. Guinness excluded (drinks brand).
 
 ## 2. Form URLs (`data-todo="form-url"`)
-Two CTAs in `#contact` ("The people behind the build") are mailto placeholders (tech team is the primary, partnerships the secondary):
-- "Work with tech team": `mailto:ed@restaurantkits.com?subject=Tech%20team%20enquiry`
-- "Work with partnerships": `mailto:ed@restaurantkits.com?subject=Partnerships%20enquiry`
+Two CTAs in `#contact` ("The people behind the build"), tech team primary, partnerships secondary. No mailto links anywhere on the site (user request, 2026-10-07): both are `href="#contact"` with `data-form="tech"` / `data-form="partnerships"` until the contact form ships. Form plan: Turnstile + `/api/contact` Worker sending via Cloudflare Email Routing to partnerships@ / tech@restaurant-kits.com (both currently forward to arjs999@gmail.com).
 Replace both hrefs with the real form URLs when they exist.
 
 ## 3. Users chart estimates (`#results`, `USERS_SERIES` in main.js)
