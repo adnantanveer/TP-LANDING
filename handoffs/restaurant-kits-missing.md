@@ -1,5 +1,11 @@
 # Restaurant Kits microsite: what is still missing
 
+> **Moved.** Restaurant Kits now lives in its own repo, `arjs1000/restaurant-kits`, deployed by
+> Cloudflare Pages to https://restaurant-kits.com. The maintained copy of this file is
+> `docs/handoff.md` there. The copy in this repo is synced to that repo's commit `a2fa734`
+> (including the IP-card alignment and mobile motion fixes) and is kept only for the
+> `/restaurant-kits/` mount on techpotam.tech.
+
 Source: `restaurant-kits-portfolio/` (built into `public/restaurant-kits/`, served at `/restaurant-kits/`).
 Every placeholder in the markup carries a `data-todo="..."` attribute; grep `data-todo` in `restaurant-kits-portfolio/index.html`.
 

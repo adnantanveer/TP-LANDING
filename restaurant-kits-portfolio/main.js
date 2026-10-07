@@ -5,18 +5,34 @@ gsap.registerPlugin(ScrollTrigger);
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* Phones and small tablets get tighter motion timing (see the T table below and
+   the mobile branch of the intro). Read once at load: the intro is a one-off and
+   the scroll reveals split words into the DOM, so neither can re-run when the
+   viewport crosses the breakpoint. */
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+/* Logo marquee speed on phones. The CSS animation is a fixed 48s per track, so
+   the effective speed is trackWidth / 48s: on desktop (tracks of 2240-4030px)
+   that is 47-84px/s across a 1440px screen. The same px/s on a 390px screen
+   with 30% smaller tiles reads about four times faster, so on mobile the
+   duration is derived from the track width for a constant, calmer speed. */
+const MOBILE_MARQUEE_PX_PER_SEC = 34;
+
 /* Logo strip: three rows, alternating direction. The markup ships the logos in
    two rows; this redistributes them round-robin into three and pads every track
    so the loop stays seamless up to 1920px wide. */
 (() => {
   const strip = document.querySelector('.brand-strip');
   if (!strip) return;
+  strip.classList.add('is-js');
   const marquees = [...strip.querySelectorAll('.marquee')];
   const visibleTracks = marquees.map((m) => m.querySelector('.marquee-track:not([aria-hidden])'));
   const items = visibleTracks.flatMap((t) => [...t.children]);
   const rows = [[], [], []];
   items.forEach((item, i) => rows[i % rows.length].push(item));
-  const minWidth = Math.max(innerWidth, 1920) * 1.1;
+  /* On phones a track only needs to cover the screen twice for the loop to stay
+     seamless (fewer clones, fewer lazy images); the speed is fixed separately. */
+  const minWidth = isMobile ? innerWidth * 2 : Math.max(innerWidth, 1920) * 1.1;
   marquees.forEach((m) => m.remove());
   const tracks = rows.map((rowItems, r) => {
     const marquee = document.createElement('div');
@@ -61,6 +77,29 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     dup.querySelectorAll('img').forEach((img) => img.setAttribute('alt', ''));
     marquee.appendChild(dup);
   });
+
+  /* Mobile: one duration per row, from its padded width, so every row moves at
+     the same calm speed (one extra layout read, after all the writes above). */
+  if (isMobile && !reduceMotion) {
+    const widths = tracks.map((track) => track.getBoundingClientRect().width);
+    tracks.forEach((track, i) => {
+      const seconds = `${(widths[i] / MOBILE_MARQUEE_PX_PER_SEC).toFixed(1)}s`;
+      track.style.animationDuration = seconds;
+      track.nextElementSibling.style.animationDuration = seconds;
+    });
+  }
+
+  /* The logos are lazy-loaded, so on a moving track they used to pop in at full
+     strength as each one finished loading. .is-loaded lets the stylesheet fade
+     them in instead (mobile rule; the class is inert on desktop). */
+  const markLoaded = (img) => img.classList.add('is-loaded');
+  strip.querySelectorAll('img').forEach((img) => {
+    if (img.complete && img.naturalWidth) markLoaded(img);
+    else {
+      img.addEventListener('load', () => markLoaded(img), { once: true });
+      img.addEventListener('error', () => markLoaded(img), { once: true });
+    }
+  });
 })();
 
 /* Split a heading into words that can rise into place */
@@ -95,7 +134,27 @@ const splitWords = (el) => {
 
 /* Intro: a one-off staggered entrance that alternates between the hero copy and
    the hero images. Nothing loops afterwards (no breathing / bobbing). */
-if (!reduceMotion) {
+if (!reduceMotion && isMobile) {
+  /* Mobile intro: the same order (logo, ornament, headline, copy, photo, stats,
+     buttons) on absolute positions instead of chained overlaps, so nothing that
+     is display:none on phones (nav links, the mini image stack on ≤640px) holds
+     the headline back. Headline words are in by ~0.45s; everything has settled
+     by ~1.15s. The .page-shell fade is skipped: the stylesheet already shows it. */
+  const heroTitle = document.querySelector('.banner-copy-wrap h1');
+  const titleWords = heroTitle ? splitWords(heroTitle) : [];
+  const miniImgs = [...document.querySelectorAll('.mini-stack img')].filter((img) => img.offsetParent !== null);
+  const tl = gsap
+    .timeline({ defaults: { ease: 'power3.out' } })
+    .from('.brand', { duration: 0.5, y: -16, opacity: 0, filter: 'blur(10px)' }, 0)
+    .from('.header-link', { duration: 0.4, y: -10, opacity: 0 }, 0.08)
+    .from('.icon-banner', { duration: 0.35, y: 12, opacity: 0 }, 0.08)
+    .from(titleWords, { duration: 0.5, yPercent: 110, rotate: 4, stagger: 0.03, ease: 'power4.out' }, 0.1)
+    .from('.banner-copy-wrap > p', { duration: 0.45, y: 14, opacity: 0 }, 0.38)
+    .from('.banner-right img', { duration: 0.55, x: 24, opacity: 0, scale: 0.98 }, 0.45)
+    .from('.hero-stats li', { duration: 0.4, y: 12, opacity: 0, stagger: 0.05 }, 0.55)
+    .from('.banner-actions .btn', { duration: 0.35, y: 10, opacity: 0, stagger: 0.06 }, 0.7);
+  if (miniImgs.length) tl.from(miniImgs, { duration: 0.4, y: 20, opacity: 0, scale: 0.97, stagger: 0.08 }, 0.2);
+} else if (!reduceMotion) {
   const heroTitle = document.querySelector('.banner-copy-wrap h1');
   const titleWords = heroTitle ? splitWords(heroTitle) : [];
 
@@ -122,16 +181,37 @@ if (!reduceMotion) {
     .from('.banner-actions .btn', { duration: 0.6, y: 16, opacity: 0, stagger: 0.1 }, '-=0.45');
 }
 
-/* Scroll reveals (skipped entirely for reduced motion so nothing stays hidden) */
+/* Reveal timings for the About and Partners sections. Desktop values are the
+   signed-off ones; mobile cuts durations and staggers by 35-50% and fires the
+   triggers earlier (top 90%) so content is mostly revealed as it enters. */
+const T = isMobile
+  ? {
+      revealStart: 'top 90%', revealDur: 0.5,
+      twStart: 'top 90%', twWordGap: 0.012, twWordDur: 0.12, twLitDelay: 0.06, twLitGap: 0.08, twBoldHold: 0.18, twRuleDelay: 0.25, twRuleDur: 0.3, twDelay: 0.08, twHold: 150,
+      photoStart: 'top 90%', photoDur: 0.7,
+      partnersStart: 'top 90%', titleDur: 0.5, titleStagger: 0.035, hlAt: '-=0.15', chefDur: 0.45, chefStagger: 0.14, chefAt: '+=0.15',
+      cardStart: 'top 90%', cardDur: 0.45, cardImgDur: 0.3, cardImgAt: '-=0.25', cardLineDur: 0.3, cardLineStagger: 0.07, cardLineAt: '-=0.2',
+    }
+  : {
+      revealStart: 'top 85%', revealDur: 0.9,
+      twStart: 'top 82%', twWordGap: 0.022, twWordDur: 0.2, twLitDelay: 0.1, twLitGap: 0.15, twBoldHold: 0.3, twRuleDelay: 0.45, twRuleDur: 0.5, twDelay: 0.15, twHold: 300,
+      photoStart: 'top 80%', photoDur: 1.2,
+      partnersStart: 'top 85%', titleDur: 0.9, titleStagger: 0.06, hlAt: '-=0.3', chefDur: 0.8, chefStagger: 0.28, chefAt: '+=0.3',
+      cardStart: 'top 85%', cardDur: 0.8, cardImgDur: 0.5, cardImgAt: '-=0.4', cardLineDur: 0.5, cardLineStagger: 0.12, cardLineAt: '-=0.3',
+    };
+
+/* Scroll reveals (skipped entirely for reduced motion so nothing stays hidden).
+   Only the About and Partners blocks take the mobile timing. */
 if (!reduceMotion) gsap.utils.toArray('.reveal').forEach((item) => {
+  const quick = isMobile && item.closest('#about, #partners');
   gsap.fromTo(
     item,
     { opacity: 0, y: 42 },
     {
-      scrollTrigger: { trigger: item, start: 'top 85%', once: true },
+      scrollTrigger: { trigger: item, start: quick ? T.revealStart : 'top 85%', once: true },
       opacity: 1,
       y: 0,
-      duration: 0.9,
+      duration: quick ? T.revealDur : 0.9,
       ease: 'power2.out',
     }
   );
@@ -691,21 +771,21 @@ if (!reduceMotion) whenIdle(() => {
       /* 1. brisk word-by-word reveal (grey), 2. highlight phrases turn black,
          staggered, 3. the single underlined phrase draws left to right. */
       const tl = gsap.timeline({ paused: true });
-      words.forEach((w, i) => tl.to(w, { opacity: 1, duration: 0.2, ease: 'none' }, i * 0.022));
-      const revealed = words.length * 0.022 + 0.2;
-      phrases.forEach((em, i) => tl.call(() => em.classList.add('is-lit'), null, revealed + 0.1 + i * 0.15));
-      const bolded = revealed + 0.1 + (phrases.length - 1) * 0.15 + 0.3;
-      const each = ruleWords.length ? 0.5 / ruleWords.length : 0;
-      ruleWords.forEach((w, i) => tl.to(w, { backgroundSize: '100% 3px', duration: each, ease: 'power2.out' }, bolded + 0.45 + i * each));
-      tl.call(() => para.classList.remove('tw-pending'), null, bolded + 0.45 + 0.5 + 0.05);
+      words.forEach((w, i) => tl.to(w, { opacity: 1, duration: T.twWordDur, ease: 'none' }, i * T.twWordGap));
+      const revealed = words.length * T.twWordGap + T.twWordDur;
+      phrases.forEach((em, i) => tl.call(() => em.classList.add('is-lit'), null, revealed + T.twLitDelay + i * T.twLitGap));
+      const bolded = revealed + T.twLitDelay + (phrases.length - 1) * T.twLitGap + T.twBoldHold;
+      const each = ruleWords.length ? T.twRuleDur / ruleWords.length : 0;
+      ruleWords.forEach((w, i) => tl.to(w, { backgroundSize: '100% 3px', duration: each, ease: 'power2.out' }, bolded + T.twRuleDelay + i * each));
+      tl.call(() => para.classList.remove('tw-pending'), null, bolded + T.twRuleDelay + T.twRuleDur + 0.05);
 
       const onScreen = new Promise((resolve) => {
-        ScrollTrigger.create({ trigger: para, start: 'top 82%', once: true, onEnter: resolve });
+        ScrollTrigger.create({ trigger: para, start: T.twStart, once: true, onEnter: resolve });
       });
       const gate = previousDone;
       previousDone = new Promise((done) => {
-        tl.eventCallback('onComplete', () => setTimeout(done, 300));
-        Promise.all([onScreen, gate]).then(() => tl.delay(0.15).play());
+        tl.eventCallback('onComplete', () => setTimeout(done, T.twHold));
+        Promise.all([onScreen, gate]).then(() => tl.delay(T.twDelay).play());
         /* Scrolled well past before it finished: complete instantly. */
         ScrollTrigger.create({
           trigger: para,
@@ -728,19 +808,19 @@ if (!reduceMotion) whenIdle(() => {
     const mark = partnersTitle.querySelector('.hl');
     const chefs = document.querySelectorAll('.chef-row li');
     gsap
-      .timeline({ scrollTrigger: { trigger: partnersTitle, start: 'top 85%', once: true } })
-      .from(splitWords(partnersTitle), { yPercent: 110, duration: 0.9, stagger: 0.06, ease: 'power4.out' })
-      .call(() => mark?.classList.add('is-on'), null, '-=0.3')
-      .from(chefs, { y: 50, opacity: 0, duration: 0.8, stagger: 0.28, ease: 'power3.out' }, '+=0.3');
+      .timeline({ scrollTrigger: { trigger: partnersTitle, start: T.partnersStart, once: true } })
+      .from(splitWords(partnersTitle), { yPercent: 110, duration: T.titleDur, stagger: T.titleStagger, ease: 'power4.out' })
+      .call(() => mark?.classList.add('is-on'), null, T.hlAt)
+      .from(chefs, { y: 50, opacity: 0, duration: T.chefDur, stagger: T.chefStagger, ease: 'power3.out' }, T.chefAt);
   }
 
   /* Case studies: card, then each line */
   document.querySelectorAll('.case-card').forEach((card) => {
     gsap
-      .timeline({ scrollTrigger: { trigger: card, start: 'top 85%', once: true } })
-      .from(card, { y: 40, opacity: 0, duration: 0.8, ease: 'power2.out' })
-      .from(card.querySelector('img'), { scale: 0.7, opacity: 0, duration: 0.5, ease: 'back.out(1.7)' }, '-=0.4')
-      .from(card.querySelectorAll('.card-kicker, h3, dl > div'), { y: 14, opacity: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, '-=0.3');
+      .timeline({ scrollTrigger: { trigger: card, start: T.cardStart, once: true } })
+      .from(card, { y: 40, opacity: 0, duration: T.cardDur, ease: 'power2.out' })
+      .from(card.querySelector('img'), { scale: 0.7, opacity: 0, duration: T.cardImgDur, ease: 'back.out(1.7)' }, T.cardImgAt)
+      .from(card.querySelectorAll('.card-kicker, h3, dl > div'), { y: 14, opacity: 0, duration: T.cardLineDur, stagger: T.cardLineStagger, ease: 'power2.out' }, T.cardLineAt);
   });
 
   document
@@ -784,9 +864,9 @@ if (!reduceMotion) whenIdle(() => {
       { clipPath: 'inset(0 0 100% 0 round 28px)' },
       {
         clipPath: 'inset(0 0 0% 0 round 28px)',
-        duration: 1.2,
+        duration: T.photoDur,
         ease: 'power4.inOut',
-        scrollTrigger: { trigger: '.intro-photo', start: 'top 80%', once: true },
+        scrollTrigger: { trigger: '.intro-photo', start: T.photoStart, once: true },
       }
     );
   }
@@ -806,6 +886,7 @@ if (!reduceMotion) whenIdle(() => {
     duration: 0.7,
     stagger: 0.14,
     ease: 'power3.out',
+    clearProps: 'transform,opacity',
   });
 
   /* Carousel opens like a curtain */

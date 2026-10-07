@@ -3468,13 +3468,15 @@ nav a {
   border-right: 1px solid rgba(17, 17, 17, 0.12);
   border-radius: 20px;
   background: #fff;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  /* Hover lift uses the standalone `translate` property so it never fights the GSAP
+     entrance, which animates `transform`. */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, translate 0.3s ease;
 }
 
 .ip-card:hover {
   border-color: rgba(17, 17, 17, 0.3);
   box-shadow: 0 16px 34px rgba(17, 17, 17, 0.08);
-  transform: translateY(-4px);
+  translate: 0 -4px;
 }
 
 .ip-card img {
@@ -4115,4 +4117,23 @@ nav a {
 /* Logo strip rows (main.js builds three) */
 .brand-strip .marquee + .marquee {
   margin-top: 14px;
+}
+
+/* Mobile motion timing (≤768px). main.js pads the logo rows (.is-js) and tags
+   each logo .is-loaded once it has loaded, so lazy logos fade in on the moving
+   track instead of popping; the About/Partners colour transitions run at the
+   same shortened pace as the GSAP reveals. Desktop is untouched. */
+@media (max-width: 768px) {
+  .brand-strip.is-js .marquee-track img:not(.is-loaded) {
+    opacity: 0;
+  }
+
+  .intro-statement em,
+  .intro-statement p.tw-pending em {
+    transition-duration: 0.25s;
+  }
+
+  .hl {
+    transition: background-size 0.35s cubic-bezier(0.65, 0, 0.35, 1), color 0.2s ease 0.1s;
+  }
 }

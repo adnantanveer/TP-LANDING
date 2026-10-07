@@ -8,6 +8,21 @@ fallback, so the backend can add it whenever convenient.
 
 Endpoints are all `GET ${VITE_API_URL}/api/content/<key>`.
 
+## Status (2026-10-07, branch `VersionFinal`)
+
+- Done: progress bars removed, kinetic "Ideas, engineered." statement, glass work cards with
+  always-on overlays, Process imagery, three Delivery variants, Precision removed, stack and
+  testimonial copy shortened, crossfading testimonials, team fade-in with foil frames, readable
+  contact block, artistic footer, UK placeholder contact details, large "By the numbers" heading.
+- Not done: the reviewer pass never ran; the user gave feedback directly instead. Delivery
+  variant not yet chosen (section 6). CMS values in section 1 still need entering in the admin.
+- Local review against live content: `TP_API_PROXY=https://techpotam.tech VITE_API_URL= npm run dev`
+  proxies `/api` to production (`vite.config.ts`). Contact and booking forms then post to
+  production too.
+- Restaurant Kits moved to its own repo (`arjs1000/restaurant-kits`, live at
+  https://restaurant-kits.com). The copy under `restaurant-kits-portfolio/` and
+  `public/restaurant-kits/` matches it as of commit `a2fa734`; see `restaurant-kits-missing.md`.
+
 ---
 
 ## 1. Values the admin should update (existing fields)
