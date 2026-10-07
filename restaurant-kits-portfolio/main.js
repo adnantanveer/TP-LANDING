@@ -318,6 +318,16 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
     };
     const soundBtn = shell.querySelector('.video-sound');
     const playBtn = shell.querySelector('.video-play');
+    const tapBtn = shell.querySelector('.video-tap');
+    const flash = shell.querySelector('.video-flash');
+    state.userPaused = false;
+    const flashIcon = (kind) => {
+      flash.classList.remove('is-flashing', 'show-play', 'show-pause');
+      // eslint-disable-next-line no-unused-expressions
+      flash.offsetWidth;
+      flash.classList.add('is-flashing', kind === 'play' ? 'show-play' : 'show-pause');
+    };
+    const setTapLabel = (playing) => tapBtn.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
 
     const loadApi = () =>
       new Promise((resolve) => {
@@ -375,20 +385,44 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
             if (muted) e.target.mute();
             else e.target.unMute();
             soundBtn.hidden = false;
+            tapBtn.hidden = false;
             soundBtn.setAttribute('aria-pressed', String(!muted));
             soundBtn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
             if (state.wantPlaying) e.target.playVideo();
             startGuard();
           },
           onStateChange: (e) => {
-            if (e.data === YT.PlayerState.PLAYING) shell.classList.add('is-playing');
+            if (e.data === YT.PlayerState.PLAYING) {
+              shell.classList.add('is-playing');
+              setTapLabel(true);
+            }
+            if (e.data === YT.PlayerState.PAUSED) setTapLabel(false);
             if (e.data === YT.PlayerState.ENDED && state.wantPlaying) e.target.loadVideoById(segment());
           },
         },
       });
     };
 
-    soundBtn.addEventListener('click', () => {
+    tapBtn.addEventListener('click', () => {
+      if (!state.ready) return;
+      const playing = state.player.getPlayerState() === window.YT.PlayerState.PLAYING;
+      if (playing) {
+        state.userPaused = true;
+        state.wantPlaying = false;
+        clearInterval(state.guard);
+        state.player.pauseVideo();
+        flashIcon('pause');
+      } else {
+        state.userPaused = false;
+        state.wantPlaying = true;
+        state.player.playVideo();
+        startGuard();
+        flashIcon('play');
+      }
+    });
+
+    soundBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
       if (!state.ready) return;
       const muted = state.player.isMuted();
       if (muted) state.player.unMute();
@@ -407,6 +441,7 @@ document.querySelectorAll('[data-slider]').forEach((slider) => {
     }
 
     state.play = () => {
+      if (state.userPaused) return; // the viewer paused it; leave it paused
       state.wantPlaying = true;
       if (reduceMotion && !state.player) return; // waits for the play button
       if (!state.player) create(true);
@@ -541,13 +576,12 @@ addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 if (!reduceMotion) {
-  /* About: the first paragraph writes itself on word by word, the key phrases
-     turn black (and the first one underlines) as it completes, then the second
-     paragraph follows. */
+  /* About: each paragraph writes itself on word by word (the highlighted
+     phrases are split and revealed in sequence with the rest); when a paragraph
+     completes, its key phrases turn black and the underline draws in. The second
+     paragraph starts once it is on screen AND the first has finished. */
   const statement = document.querySelector('.intro-statement');
-  const lead = statement?.querySelector('.tw-lead');
-  const follow = statement?.querySelector('.tw-follow');
-  if (statement && lead) {
+  if (statement) {
     const splitFlat = (el) => {
       const walk = (node) => {
         [...node.childNodes].forEach((child) => {
@@ -570,15 +604,28 @@ if (!reduceMotion) {
       walk(el);
       return el.querySelectorAll('.tw-word');
     };
-    const words = splitFlat(lead);
-    statement.classList.add('tw-pending');
-    gsap.set(words, { opacity: 0 });
-    if (follow) gsap.set(follow, { opacity: 0, y: 16 });
-    gsap
-      .timeline({ scrollTrigger: { trigger: statement, start: 'top 72%', once: true } })
-      .to(words, { opacity: 1, duration: 0.25, stagger: 0.035, ease: 'none' })
-      .call(() => statement.classList.remove('tw-pending'))
-      .to(follow || {}, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '+=0.9');
+    const paras = [...statement.querySelectorAll('p')];
+    let previousDone = Promise.resolve();
+    paras.forEach((para) => {
+      const words = splitFlat(para);
+      para.classList.add('tw-pending');
+      gsap.set(words, { opacity: 0 });
+      const onScreen = new Promise((resolve) => {
+        ScrollTrigger.create({ trigger: para, start: 'top 82%', once: true, onEnter: resolve });
+      });
+      const gate = previousDone;
+      previousDone = new Promise((done) => {
+        Promise.all([onScreen, gate]).then(() => {
+          gsap
+            .timeline({ delay: gate === undefined ? 0 : 0.2 })
+            .to(words, { opacity: 1, duration: 0.25, stagger: 0.035, ease: 'none' })
+            .call(() => {
+              para.classList.remove('tw-pending');
+              setTimeout(done, 500);
+            });
+        });
+      });
+    });
   }
 
   /* Partners: heading words rise, the "best chefs" block wipes in, then after a
@@ -715,21 +762,6 @@ if (!reduceMotion) {
       });
     });
 
-    /* Magnetic buttons (hero + header only; `.btn.plain` CTAs stay still) */
-    document.querySelectorAll('.banner-actions .btn, .primary-link').forEach((btn) => {
-      btn.addEventListener('mousemove', (event) => {
-        const box = btn.getBoundingClientRect();
-        gsap.to(btn, {
-          x: (event.clientX - box.left - box.width / 2) * 0.25,
-          y: (event.clientY - box.top - box.height / 2) * 0.35,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
-      });
-      btn.addEventListener('mouseleave', () => {
-        gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
-      });
-    });
   }
 
   /* Rising embers behind the Game of Thrones carousel */

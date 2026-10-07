@@ -47,9 +47,9 @@ Evidence strength: Gordon Ramsay, Adam Handling, Holborn Dining Room/Calum Frank
 Rejected: Wagamama (its kits were a supermarket range, no RK link) and "Chef Collective" (no evidence; the file was actually a Restaurant Kits wordmark). Both files deleted. Guinness excluded (drinks brand).
 
 ## 2. Form URLs (`data-todo="form-url"`)
-Two CTAs in `#contact` ("The people behind the build") are mailto placeholders:
-- "Work with partnerships": `mailto:ed@restaurantkits.com?subject=Partnerships%20enquiry`
+Two CTAs in `#contact` ("The people behind the build") are mailto placeholders (tech team is the primary, partnerships the secondary):
 - "Work with tech team": `mailto:ed@restaurantkits.com?subject=Tech%20team%20enquiry`
+- "Work with partnerships": `mailto:ed@restaurantkits.com?subject=Partnerships%20enquiry`
 Replace both hrefs with the real form URLs when they exist.
 
 ## 3. Users chart estimates (`#results`, `USERS_SERIES` in main.js)
@@ -88,12 +88,12 @@ Unsplash was not used (its search endpoint now needs auth). "Stock photography v
 - File: assets/chefs/gordon-ramsay-cc.jpg (600x600, cropped from the 853x1280 original: offset y=150, 700x700 square, resized).
 - Source: https://commons.wikimedia.org/wiki/File:Gordon_Ramsay.jpg (original https://upload.wikimedia.org/wikipedia/commons/6/6f/Gordon_Ramsay.jpg), Flickr original https://www.flickr.com/photos/41061319@N00/262930800/
 - Author: Dave Pullig. Licence: CC BY 2.0, https://creativecommons.org/licenses/by/2.0
-- Attribution (required by CC BY 2.0) lives on the chef card itself, not in the footer (the footer is now a single line by user request): a small visible caption under the name (`.photo-credit`: "Photo: Dave Pullig, Wikimedia Commons, CC BY 2.0" with the licence linked) plus the full credit in the image `title` attribute (title, author, source, licence, "cropped and resized").
+- Credit removed at user's direction (user states explicit permission); photo is Wikimedia CC BY 2.0 by Dave Pullig — if permission covers the subject not the photographer, swap in a supplied photo. No on-page attribution remains (no caption, no title attribute, nothing in the footer).
 - It is a 2006 photo. A more recent free alternative is the 2018 US Air Force public-domain photo (https://commons.wikimedia.org/wiki/File:MasterChef_comes_to_March_Air_Reserve_Base_180831-F-RA446-004.jpg) but he wears sunglasses and a flight suit.
 - The previous unlicensed chef photo (assets/chefs/gordon-ramsay.png) was deleted.
 
-## 8. Hero stat changed
-"£1M revenue in year one" was removed (revenue figure). Replaced with "80k+ meals shipped" (deck figure). The Trustpilot stat became the Trustpilot badge. The results heading "Nearly £1M in sales..." became "30,000 boxes into UK homes in our first 12 months." The KPI tile "17.85% margin per box" became "9 IPs secured for RKX".
+## 8. Hero stats changed
+"£1M revenue in year one" was removed (revenue figure). Replaced with "80k+ meals shipped" (deck figure). "25 restaurants signed" (deck) was changed to "32+" at the user's direction; confirm the source for 32. The Trustpilot stat became the Trustpilot badge. The results heading "Nearly £1M in sales..." became "30,000 boxes into UK homes in our first 12 months." The KPI tile "17.85% margin per box" became "9 IPs secured for RKX".
 
 ## 9. Featured video (Gordon Ramsay Beef Wellington, YouTube wiHeOR0hFRk)
 - Played through the YouTube IFrame API (script loaded only when the slide is reached), muted autoplay, controls/branding hidden (controls=0, modestbranding=1, rel=0, playsinline=1, iv_load_policy=3, disablekb=1), looping 1:03 to 3:00 by reloading the clip with endSeconds (loop=1 would restart from 0). Site-styled mute/unmute button over the video. Pauses when the slide is not active or the section is off screen. Reduced motion: poster + play button.

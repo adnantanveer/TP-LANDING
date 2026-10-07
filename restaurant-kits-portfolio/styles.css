@@ -373,8 +373,7 @@ nav a:hover::after {
 
 .btn.primary:hover,
 .btn.primary:focus-visible {
-  background: var(--brand-deep);
-  border-color: var(--brand-deep);
+  color: var(--brand);
 }
 
 .btn.ghost {
@@ -385,7 +384,6 @@ nav a:hover::after {
 
 .btn.ghost:hover,
 .btn.ghost:focus-visible {
-  background: var(--text);
   color: #fff;
 }
 
@@ -397,8 +395,6 @@ nav a:hover::after {
 
 .btn.ghost.light:hover,
 .btn.ghost.light:focus-visible {
-  background: #fff;
-  border-color: #fff;
   color: #111;
 }
 
@@ -3248,11 +3244,11 @@ nav a {
   transition: background-size 0.9s cubic-bezier(0.65, 0, 0.35, 1), color 0.5s ease;
 }
 
-.intro-statement.tw-pending em {
+.intro-statement p.tw-pending em {
   color: inherit;
 }
 
-.intro-statement.tw-pending em.underline {
+.intro-statement p.tw-pending em.underline {
   background-size: 0% 3px;
 }
 
@@ -3280,25 +3276,6 @@ nav a {
 .hl.is-on {
   background-size: 100% 100%;
   color: #fff;
-}
-
-/* Chef photo credit (CC BY 2.0 attribution lives here, not in the footer) */
-.photo-credit {
-  display: block;
-  margin-top: 8px;
-  font-size: 0.62rem;
-  line-height: 1.3;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.42);
-}
-
-.photo-credit a {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.photo-credit a:hover {
-  color: rgba(255, 255, 255, 0.8);
 }
 
 /* RKX: bordered tiles with consistent padding, more room at the bottom */
@@ -3502,8 +3479,326 @@ nav a {
     width: 38px;
     height: 38px;
   }
+}
 
-  .photo-credit {
-    font-size: 0.58rem;
+
+/* ============================================================
+   Revision 4: wipe-fill buttons, mono chefs/logos, no-box logo strip,
+   compact hero, video tap layer
+   ============================================================ */
+
+/* Buttons: a fill wipes in from the left and the text inverts. No movement. */
+.btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: color 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.btn.primary::before {
+  background: #fff;
+}
+
+.btn.ghost::before {
+  background: var(--text);
+}
+
+.btn.ghost.light::before {
+  background: #fff;
+}
+
+.btn.plain,
+.btn.plain:hover,
+.btn.plain:focus-visible {
+  transform: none;
+}
+
+.primary-link {
+  transition: background-color 0.3s ease;
+}
+
+.primary-link:hover {
+  background: var(--brand-deep);
+}
+
+/* Chefs and partner logos: black and white, colour on hover/focus */
+.chef-row li img,
+.case-card img {
+  filter: grayscale(1);
+  transition: filter 0.6s ease, transform 0.35s ease;
+}
+
+.chef-row li:hover img,
+.chef-row li:focus-within img,
+.case-card:hover img,
+.case-card:focus-within img {
+  filter: none;
+}
+
+/* Logo strip: no boxes, bigger marks */
+.logo-link,
+.logo-link.dark-tile,
+.logo-link:hover,
+.logo-link:focus-visible,
+.logo-link.dark-tile:hover,
+.logo-link.dark-tile:focus-visible {
+  width: 196px;
+  height: 100px;
+  padding: 6px 14px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+}
+
+.logo-link img {
+  filter: grayscale(1) contrast(1.05);
+  opacity: 0.72;
+  transition: filter 0.6s ease, opacity 0.6s ease;
+}
+
+.logo-link img.circle {
+  width: 86px;
+  height: 86px;
+}
+
+.logo-link:hover img,
+.logo-link:focus-visible img {
+  filter: none;
+  opacity: 1;
+}
+
+/* Marks drawn in white/pale colours are inked black so they read on the page;
+   they stay inked on hover (their "colour" would be invisible on cream). */
+.logo-link.dark-tile img,
+.logo-link.dark-tile:hover img,
+.logo-link.dark-tile:focus-visible img {
+  filter: grayscale(1) brightness(0);
+  opacity: 0.72;
+}
+
+.logo-link.dark-tile:hover img,
+.logo-link.dark-tile:focus-visible img {
+  opacity: 1;
+}
+
+.logo-placeholder,
+.logo-link:hover .logo-placeholder,
+.logo-link:focus-visible .logo-placeholder {
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  font-size: 1.9rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: rgba(17, 17, 17, 0.72);
+}
+
+.logo-link:hover .logo-placeholder,
+.logo-link:focus-visible .logo-placeholder {
+  color: var(--text);
+  opacity: 1;
+}
+
+.logo-placeholder small {
+  margin-top: 2px;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: rgba(17, 17, 17, 0.5);
+}
+
+.marquee-track {
+  gap: 28px;
+  padding-right: 28px;
+}
+
+/* Compact hero so the buttons clear the fold on 720-900px tall screens */
+.banner-copy-wrap > p {
+  max-width: 520px;
+}
+
+.hero-stats {
+  gap: 18px 36px;
+  margin-top: 26px;
+}
+
+.hero-stat-trust {
+  margin-top: 0;
+}
+
+.banner-actions {
+  margin-top: 24px;
+}
+
+@media (max-height: 860px) and (min-width: 981px) {
+  .original-banner {
+    padding-top: 20px;
+  }
+
+  .mini-stack {
+    margin-bottom: 14px;
+  }
+
+  .mini-stack img {
+    height: 128px;
+  }
+
+  .icon-banner {
+    width: 170px;
+    margin-bottom: 14px;
+  }
+
+  .banner-copy-wrap h1 {
+    font-size: clamp(2.2rem, 2.7vw, 3.2rem);
+  }
+
+  .banner-copy-wrap > p {
+    margin-top: 8px;
+    font-size: 1rem;
+  }
+
+  .hero-stats {
+    margin-top: 18px;
+    gap: 12px 30px;
+  }
+
+  .hero-stats strong,
+  .trust-top strong {
+    font-size: clamp(1.9rem, 2.6vw, 2.6rem);
+  }
+
+  .trust-stars {
+    --box: 22px;
+  }
+
+  .banner-actions {
+    margin-top: 18px;
+  }
+
+  .banner-actions .btn {
+    min-height: 50px;
+  }
+}
+
+/* Video: tap to pause/play, with a quick centre icon flash */
+.video-tap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.video-tap[hidden] {
+  display: none;
+}
+
+.video-tap:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: -3px;
+}
+
+.video-flash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: rgba(17, 17, 17, 0.6);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  pointer-events: none;
+}
+
+.video-flash svg {
+  width: 38px;
+  height: 38px;
+  fill: currentColor;
+  display: none;
+}
+
+.video-flash.show-play .ico-play,
+.video-flash.show-pause .ico-pause {
+  display: block;
+}
+
+.video-flash.is-flashing {
+  animation: videoFlash 0.7s ease-out forwards;
+}
+
+@keyframes videoFlash {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  25% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.video-sound {
+  z-index: 3;
+}
+
+.video-play {
+  z-index: 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chef-row li img,
+  .case-card img,
+  .logo-link img,
+  .btn,
+  .btn::before {
+    transition: none;
+  }
+
+  .video-flash.is-flashing {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .logo-link,
+  .logo-link.dark-tile {
+    width: 136px;
+    height: 76px;
+    padding: 4px 8px;
+  }
+
+  .logo-link img.circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .logo-placeholder {
+    font-size: 1.4rem;
+  }
+
+  .marquee-track {
+    gap: 16px;
+    padding-right: 16px;
   }
 }
