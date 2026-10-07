@@ -18,7 +18,7 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
   items.forEach((item, i) => rows[i % rows.length].push(item));
   const minWidth = Math.max(innerWidth, 1920) * 1.1;
   marquees.forEach((m) => m.remove());
-  rows.forEach((rowItems, r) => {
+  const tracks = rows.map((rowItems, r) => {
     const marquee = document.createElement('div');
     marquee.className = r % 2 ? 'marquee reverse' : 'marquee';
     const track = document.createElement('div');
@@ -26,13 +26,32 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     rowItems.forEach((item) => track.appendChild(item));
     marquee.appendChild(track);
     strip.appendChild(marquee);
-    /* pad with copies of the row until one track alone covers the widest screen */
+    return track;
+  });
+  /* Pad each row with whole copies of itself until one track alone covers the
+     widest screen. Every track is measured once, up front (one layout pass),
+     and the copy count is computed from that instead of re-reading scrollWidth
+     after every append, which forced a layout per iteration. Same count, same
+     track width, same marquee speed. */
+  const measured = tracks.map((track) => {
+    const cs = getComputedStyle(track);
+    return {
+      width: track.getBoundingClientRect().width,
+      gap: parseFloat(cs.columnGap) || 0,
+      pad: (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0),
+    };
+  });
+  tracks.forEach((track, i) => {
+    const { width, gap, pad } = measured[i];
     const originals = [...track.children];
-    let guard = 0;
-    while (track.scrollWidth < minWidth && guard < 6) {
-      originals.forEach((item) => track.appendChild(item.cloneNode(true)));
-      guard += 1;
-    }
+    /* each appended copy adds the row's items plus one more gap; the padding is
+       already in the measured width and is not repeated */
+    const step = width - pad + gap;
+    const copies = step > 0 ? Math.min(6, Math.max(0, Math.ceil((minWidth - width) / step))) : 6;
+    const frag = document.createDocumentFragment();
+    for (let c = 0; c < copies; c += 1) originals.forEach((item) => frag.appendChild(item.cloneNode(true)));
+    track.appendChild(frag);
+    const marquee = track.parentElement;
     const dup = track.cloneNode(true);
     dup.setAttribute('aria-hidden', 'true');
     dup.querySelectorAll('a').forEach((link) => {
@@ -320,7 +339,14 @@ const buildUsersChart = (figure) => {
     .to(callout, { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }, '-=0.25');
 };
 
-document.querySelectorAll('[data-chart-users]').forEach(buildUsersChart);
+/* Below-the-fold setup (the chart and the scroll-driven motion layer further
+   down) waits for the first idle moment so it stops competing with the hero
+   paint and intro. 120ms cap: it always runs well before anything it animates
+   can scroll into view. */
+const whenIdle = (fn) =>
+  'requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 120 }) : setTimeout(fn, 1);
+
+whenIdle(() => document.querySelectorAll('[data-chart-users]').forEach(buildUsersChart));
 
 /* Featured collaborations slider.
    Slide 0 is always the Game of Thrones item: the slider boots on it, autoplay
@@ -614,7 +640,7 @@ const onScroll = () => {
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
-if (!reduceMotion) {
+if (!reduceMotion) whenIdle(() => {
   /* About: each paragraph writes itself on word by word (the highlighted
      phrases are split and revealed in sequence with the rest); when a paragraph
      completes, its key phrases turn black and the underline draws in. The second
@@ -923,4 +949,4 @@ if (!reduceMotion) {
       if (running && !wasRunning) requestAnimationFrame(draw);
     }).observe(gotSection);
   }
-}
+});

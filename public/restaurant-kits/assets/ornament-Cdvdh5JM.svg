@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 179 23" fill="#0d1405">
+  <!-- Restaurant Kits ornament: vector redraw of iconbanner.png, same 179x23 layout. -->
+  <circle cx="10.9" cy="11.3" r="10.3"/>
+  <path d="M37.2 2.1c.6 1.6.4 3.6-.3 5.2c-.7 1.7-1.7 3.4-.7 4.4c1.2 1.1 7.6.1 9.4 1.6c1.5 1.3-.4 3.9-.1 5.9c.1.8.4 1.4.7 1.7" fill="none" stroke="#0d1405" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M72.9 .7L83.5 11.5L72.9 22.3L62.3 11.5Z"/>
+  <g stroke="#0d1405" stroke-width="2.3" stroke-linecap="round">
+    <line x1="98.82" y1="11.82" x2="107.68" y2="20.68"/>
+    <line x1="99.76" y1="7.81" x2="111.69" y2="19.74"/>
+    <line x1="101.80" y1="4.90" x2="114.60" y2="17.70"/>
+    <line x1="104.71" y1="2.86" x2="116.64" y2="14.79"/>
+    <line x1="108.72" y1="1.92" x2="117.58" y2="10.78"/>
+  </g>
+  <circle cx="140.4" cy="8.5" r="3.4"/>
+  <circle cx="134.8" cy="14.1" r="3.5"/>
+  <circle cx="167.9" cy="11.3" r="10.3"/>
+</svg>

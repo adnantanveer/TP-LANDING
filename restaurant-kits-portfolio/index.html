@@ -1,23 +1,71 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurant Kits | Portfolio</title>
     <meta
       name="description"
-      content="Restaurant Kits: meal kits from the UK's best restaurants, and RKX immersive at-home experiences with Warner Bros. brands including Game of Thrones, Harry Potter and Friends."
+      content="Meal kits from the UK’s best restaurants, delivered to your door, plus RKX immersive at-home dining experiences."
     />
-    <title>Restaurant Kits | Portfolio</title>
+    <!-- The site publishes at https://restaurant-kits.com/. The absolute URLs below only
+         resolve there; inside TP-LANDING's /restaurant-kits/ mount they still point at the
+         canonical home, which is intended. -->
+    <link rel="canonical" href="https://restaurant-kits.com/" />
+    <meta name="theme-color" content="#fff8f0" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Restaurant Kits" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content="Restaurant Kits | Portfolio" />
+    <meta
+      property="og:description"
+      content="Meal kits from the UK’s best restaurants, delivered to your door, plus RKX immersive at-home dining experiences."
+    />
+    <meta property="og:url" content="https://restaurant-kits.com/" />
+    <meta property="og:image" content="https://restaurant-kits.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A finished Restaurant Kits dinner" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Restaurant Kits | Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Meal kits from the UK’s best restaurants, delivered to your door, plus RKX immersive at-home dining experiences."
+    />
+    <meta name="twitter:image" content="https://restaurant-kits.com/og-image.jpg" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts are self-hosted (see the top of styles.css). The three weights the hero paints
+         with are preloaded so the first paint does not wait on CSS parsing to discover them. -->
+    <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/poppins-400-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/poppins-600-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/poppins-800-latin.woff2" crossorigin />
     <link rel="stylesheet" href="./styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://restaurant-kits.com/#organization",
+            "name": "Restaurant Kits",
+            "url": "https://restaurant-kits.com/",
+            "logo": "https://restaurant-kits.com/apple-touch-icon.png",
+            "foundingDate": "2020",
+            "description": "A new type of dark kitchen: meal kits from the UK’s best restaurants, delivered to your door, and RKX immersive at-home experiences."
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://restaurant-kits.com/#website",
+            "url": "https://restaurant-kits.com/",
+            "name": "Restaurant Kits",
+            "inLanguage": "en-GB",
+            "publisher": { "@id": "https://restaurant-kits.com/#organization" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -55,12 +103,14 @@
           <div class="container banner-shell">
             <div class="banner-left">
               <div class="mini-stack">
-                <img src="./assets/smallbaner1.png" alt="Restaurant Kits feature" />
-                <img src="./assets/smallbanner2.png" alt="Restaurant Kits meal kit" />
+                <!-- lazy: the stack is display:none on phones, so they are never fetched there;
+                     on desktop they sit in the viewport and load straight after first layout -->
+                <img src="./assets/smallbaner1.webp" alt="Restaurant Kits feature" width="280" height="213" loading="lazy" />
+                <img src="./assets/smallbanner2.webp" alt="Restaurant Kits meal kit" width="269" height="213" loading="lazy" />
               </div>
 
               <div class="banner-copy-wrap">
-                <img class="icon-banner" src="./assets/ornament.svg" alt="Restaurant Kits icon" />
+                <img class="icon-banner" src="./assets/ornament.svg" alt="" width="179" height="23" />
                 <h1>Bringing the world’s best food home.</h1>
                 <p>
                   A new type of dark kitchen: meal kits from the UK’s best restaurants, delivered to your door.
@@ -110,7 +160,16 @@
             </div>
 
             <div class="banner-right">
-              <img src="./assets/bannermai.jpg" alt="A finished Restaurant Kits dinner" />
+              <!-- LCP image: eager, high priority, sized for the column it fills (600px on desktop, full width stacked) -->
+              <img
+                src="./assets/bannermai-1200.webp"
+                srcset="./assets/bannermai-720.webp 720w, ./assets/bannermai-1200.webp 1200w, ./assets/bannermai-1800.webp 1800w"
+                sizes="(max-width: 980px) calc(100vw - 32px), 600px"
+                alt="A finished Restaurant Kits dinner"
+                width="1200"
+                height="1145"
+                fetchpriority="high"
+              />
             </div>
           </div>
         </section>
@@ -120,68 +179,68 @@
           <h2 id="partner-strip-heading" class="brand-strip-label">Partnered with over 30 restaurants</h2>
           <div class="marquee">
             <div class="marquee-track">
-              <a class="logo-link logo-link--lead" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants"><img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group"><img src="./assets/partners/adam-handling.png" alt="Adam Handling Restaurant Group" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)"><img src="./assets/partners/holborn-dining-room.png" alt="Holborn Dining Room (Calum Franklin)" loading="lazy" /></a>
-              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild"><img src="./assets/partners/mac-and-wild.png" alt="Mac &amp; Wild" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims"><img src="./assets/partners/pizza-pilgrims.png" alt="Pizza Pilgrims" loading="lazy" /></a>
-              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket"><img src="./assets/partners/kricket.svg" alt="Kricket" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns"><img src="./assets/partners/flesh-and-buns.png" alt="Flesh &amp; Buns" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q"><img src="./assets/partners/berber-and-q.png" alt="Berber &amp; Q" class="circle" loading="lazy" /></a>
+              <a class="logo-link logo-link--lead" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants"><img src="./assets/partners/gordon-ramsay.webp" alt="Gordon Ramsay Restaurants" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group"><img src="./assets/partners/adam-handling.webp" alt="Adam Handling Restaurant Group" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)"><img src="./assets/partners/holborn-dining-room.webp" alt="Holborn Dining Room (Calum Franklin)" loading="lazy" width="328" height="88" decoding="async" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild"><img src="./assets/partners/mac-and-wild.webp" alt="Mac &amp; Wild" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims"><img src="./assets/partners/pizza-pilgrims.webp" alt="Pizza Pilgrims" loading="lazy" width="276" height="45" decoding="async" /></a>
+              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket"><img src="./assets/partners/kricket.svg" alt="Kricket" loading="lazy" width="152" height="21" decoding="async" /></a>
+              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns"><img src="./assets/partners/flesh-and-buns.webp" alt="Flesh &amp; Buns" loading="lazy" width="299" height="204" decoding="async" /></a>
+              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q"><img src="./assets/partners/berber-and-q.webp" alt="Berber &amp; Q" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
               <a class="logo-link is-placeholder" href="https://anglothai.co.uk" target="_blank" rel="noopener noreferrer" data-todo="logo" title="AngloThai (logo coming soon)"><span class="logo-placeholder" role="img" aria-label="AngloThai, logo coming soon">AT<small>soon</small></span></a>
-              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala"><img src="./assets/partners/rola-wala.png" alt="Rola Wala" loading="lazy" /></a>
-              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)"><img src="./assets/partners/cornerstone.png" alt="Cornerstone (Tom Brown)" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun"><img src="./assets/partners/yum-bun.svg" alt="Yum Bun" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun"><img src="./assets/partners/patty-and-bun.svg" alt="Patty &amp; Bun" loading="lazy" /></a>
+              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala"><img src="./assets/partners/rola-wala.webp" alt="Rola Wala" loading="lazy" width="380" height="71" decoding="async" /></a>
+              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)"><img src="./assets/partners/cornerstone.webp" alt="Cornerstone (Tom Brown)" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun"><img src="./assets/partners/yum-bun.svg" alt="Yum Bun" loading="lazy" width="104" height="80" decoding="async" /></a>
+              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun"><img src="./assets/partners/patty-and-bun.svg" alt="Patty &amp; Bun" loading="lazy" width="400" height="83" decoding="async" /></a>
             </div>
             <div class="marquee-track" aria-hidden="true">
-              <a class="logo-link logo-link--lead" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants" tabindex="-1" aria-hidden="true"><img src="./assets/partners/gordon-ramsay.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group" tabindex="-1" aria-hidden="true"><img src="./assets/partners/adam-handling.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/holborn-dining-room.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild" tabindex="-1" aria-hidden="true"><img src="./assets/partners/mac-and-wild.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims" tabindex="-1" aria-hidden="true"><img src="./assets/partners/pizza-pilgrims.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket" tabindex="-1" aria-hidden="true"><img src="./assets/partners/kricket.svg" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns" tabindex="-1" aria-hidden="true"><img src="./assets/partners/flesh-and-buns.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q" tabindex="-1" aria-hidden="true"><img src="./assets/partners/berber-and-q.png" alt="" class="circle" loading="lazy" /></a>
+              <a class="logo-link logo-link--lead" href="https://www.gordonramsayrestaurants.com" target="_blank" rel="noopener noreferrer" title="Gordon Ramsay Restaurants" tabindex="-1" aria-hidden="true"><img src="./assets/partners/gordon-ramsay.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.adamhandling.co.uk" target="_blank" rel="noopener noreferrer" title="Adam Handling Restaurant Group" tabindex="-1" aria-hidden="true"><img src="./assets/partners/adam-handling.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Holborn Dining Room (Calum Franklin)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/holborn-dining-room.webp" alt="" loading="lazy" width="328" height="88" decoding="async" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Mac &amp; Wild" tabindex="-1" aria-hidden="true"><img src="./assets/partners/mac-and-wild.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.pizzapilgrims.co.uk" target="_blank" rel="noopener noreferrer" title="Pizza Pilgrims" tabindex="-1" aria-hidden="true"><img src="./assets/partners/pizza-pilgrims.webp" alt="" loading="lazy" width="276" height="45" decoding="async" /></a>
+              <a class="logo-link" href="https://kricketrestaurants.com" target="_blank" rel="noopener noreferrer" title="Kricket" tabindex="-1" aria-hidden="true"><img src="./assets/partners/kricket.svg" alt="" loading="lazy" width="152" height="21" decoding="async" /></a>
+              <a class="logo-link" href="https://www.fleshandbuns.com" target="_blank" rel="noopener noreferrer" title="Flesh &amp; Buns" tabindex="-1" aria-hidden="true"><img src="./assets/partners/flesh-and-buns.webp" alt="" loading="lazy" width="299" height="204" decoding="async" /></a>
+              <a class="logo-link" href="https://www.berberandq.com" target="_blank" rel="noopener noreferrer" title="Berber &amp; Q" tabindex="-1" aria-hidden="true"><img src="./assets/partners/berber-and-q.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
               <a class="logo-link is-placeholder" href="https://anglothai.co.uk" target="_blank" rel="noopener noreferrer" data-todo="logo" title="AngloThai (logo coming soon)" tabindex="-1" aria-hidden="true"><span class="logo-placeholder" role="img" aria-label="AngloThai, logo coming soon">AT<small>soon</small></span></a>
-              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala" tabindex="-1" aria-hidden="true"><img src="./assets/partners/rola-wala.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/cornerstone.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun" tabindex="-1" aria-hidden="true"><img src="./assets/partners/yum-bun.svg" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun" tabindex="-1" aria-hidden="true"><img src="./assets/partners/patty-and-bun.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="https://rolawala.com" target="_blank" rel="noopener noreferrer" title="Rola Wala" tabindex="-1" aria-hidden="true"><img src="./assets/partners/rola-wala.webp" alt="" loading="lazy" width="380" height="71" decoding="async" /></a>
+              <a class="logo-link" href="https://cornerstonehackney.com" target="_blank" rel="noopener noreferrer" title="Cornerstone (Tom Brown)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/cornerstone.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.yumbun.com" target="_blank" rel="noopener noreferrer" title="Yum Bun" tabindex="-1" aria-hidden="true"><img src="./assets/partners/yum-bun.svg" alt="" loading="lazy" width="104" height="80" decoding="async" /></a>
+              <a class="logo-link" href="https://www.pattyandbun.co.uk" target="_blank" rel="noopener noreferrer" title="Patty &amp; Bun" tabindex="-1" aria-hidden="true"><img src="./assets/partners/patty-and-bun.svg" alt="" loading="lazy" width="400" height="83" decoding="async" /></a>
             </div>
           </div>
           <div class="marquee reverse">
             <div class="marquee-track">
-              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)"><img src="./assets/partners/flank.png" alt="Flank (Tom Griffiths)" loading="lazy" /></a>
-              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s"><img src="./assets/partners/biffs.svg" alt="Biff&#x27;s" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley"><img src="./assets/partners/carters-of-moseley.png" alt="Carters of Moseley" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn"><img src="./assets/partners/baozi-inn.png" alt="Baozi Inn" loading="lazy" /></a>
-              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co."><img src="./assets/partners/pitt-cue.png" alt="Pitt Cue Co." class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa"><img src="./assets/partners/som-saa.png" alt="Som Saa" loading="lazy" /></a>
-              <a class="logo-link" href="#" data-todo="url" title="Corazón"><img src="./assets/partners/corazon.png" alt="Corazón" class="circle" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen"><img src="./assets/partners/juma-kitchen.png" alt="JUMA Kitchen" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap"><img src="./assets/partners/sarap.png" alt="Sarap" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké"><img src="./assets/partners/island-poke.png" alt="Island Poké" loading="lazy" /></a>
-              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit"><img src="./assets/partners/chef-calums-pie-kit.png" alt="Chef Calum&#x27;s Pie Kit" class="circle" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s"><img src="./assets/partners/nanny-bills.webp" alt="Nanny Bill&#x27;s" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones"><img src="./assets/partners/dirty-bones.svg" alt="Dirty Bones" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)"><img src="./assets/partners/flank.webp" alt="Flank (Tom Griffiths)" loading="lazy" width="380" height="96" decoding="async" /></a>
+              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s"><img src="./assets/partners/biffs.svg" alt="Biff&#x27;s" loading="lazy" width="491" height="233" decoding="async" /></a>
+              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley"><img src="./assets/partners/carters-of-moseley.webp" alt="Carters of Moseley" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn"><img src="./assets/partners/baozi-inn.webp" alt="Baozi Inn" loading="lazy" width="380" height="151" decoding="async" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co."><img src="./assets/partners/pitt-cue.webp" alt="Pitt Cue Co." class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa"><img src="./assets/partners/som-saa.webp" alt="Som Saa" loading="lazy" width="380" height="102" decoding="async" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Corazón"><img src="./assets/partners/corazon.webp" alt="Corazón" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen"><img src="./assets/partners/juma-kitchen.webp" alt="JUMA Kitchen" loading="lazy" width="260" height="260" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap"><img src="./assets/partners/sarap.webp" alt="Sarap" loading="lazy" width="380" height="129" decoding="async" /></a>
+              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké"><img src="./assets/partners/island-poke.webp" alt="Island Poké" loading="lazy" width="250" height="59" decoding="async" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit"><img src="./assets/partners/chef-calums-pie-kit.webp" alt="Chef Calum&#x27;s Pie Kit" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s"><img src="./assets/partners/nanny-bills.webp" alt="Nanny Bill&#x27;s" loading="lazy" width="457" height="142" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones"><img src="./assets/partners/dirty-bones.svg" alt="Dirty Bones" loading="lazy" decoding="async" /></a>
               <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="12:51 by James Cochran (logo coming soon)"><span class="logo-placeholder" role="img" aria-label="12:51 by James Cochran, logo coming soon">12<small>soon</small></span></a>
               <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="Fanny&#x27;s Kebabs (logo coming soon)"><span class="logo-placeholder" role="img" aria-label="Fanny&#x27;s Kebabs, logo coming soon">FK<small>soon</small></span></a>
             </div>
             <div class="marquee-track" aria-hidden="true">
-              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/flank.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s" tabindex="-1" aria-hidden="true"><img src="./assets/partners/biffs.svg" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley" tabindex="-1" aria-hidden="true"><img src="./assets/partners/carters-of-moseley.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn" tabindex="-1" aria-hidden="true"><img src="./assets/partners/baozi-inn.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co." tabindex="-1" aria-hidden="true"><img src="./assets/partners/pitt-cue.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa" tabindex="-1" aria-hidden="true"><img src="./assets/partners/som-saa.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="#" data-todo="url" title="Corazón" tabindex="-1" aria-hidden="true"><img src="./assets/partners/corazon.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen" tabindex="-1" aria-hidden="true"><img src="./assets/partners/juma-kitchen.png" alt="" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap" tabindex="-1" aria-hidden="true"><img src="./assets/partners/sarap.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké" tabindex="-1" aria-hidden="true"><img src="./assets/partners/island-poke.png" alt="" loading="lazy" /></a>
-              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit" tabindex="-1" aria-hidden="true"><img src="./assets/partners/chef-calums-pie-kit.png" alt="" class="circle" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s" tabindex="-1" aria-hidden="true"><img src="./assets/partners/nanny-bills.webp" alt="" loading="lazy" /></a>
-              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones" tabindex="-1" aria-hidden="true"><img src="./assets/partners/dirty-bones.svg" alt="" loading="lazy" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Flank (Tom Griffiths)" tabindex="-1" aria-hidden="true"><img src="./assets/partners/flank.webp" alt="" loading="lazy" width="380" height="96" decoding="async" /></a>
+              <a class="logo-link" href="https://biffs.co" target="_blank" rel="noopener noreferrer" title="Biff&#x27;s" tabindex="-1" aria-hidden="true"><img src="./assets/partners/biffs.svg" alt="" loading="lazy" width="491" height="233" decoding="async" /></a>
+              <a class="logo-link" href="https://www.carters.co.uk" target="_blank" rel="noopener noreferrer" title="Carters of Moseley" tabindex="-1" aria-hidden="true"><img src="./assets/partners/carters-of-moseley.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://baoziinn.com" target="_blank" rel="noopener noreferrer" title="Baozi Inn" tabindex="-1" aria-hidden="true"><img src="./assets/partners/baozi-inn.webp" alt="" loading="lazy" width="380" height="151" decoding="async" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Pitt Cue Co." tabindex="-1" aria-hidden="true"><img src="./assets/partners/pitt-cue.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link" href="https://www.somsaa.com" target="_blank" rel="noopener noreferrer" title="Som Saa" tabindex="-1" aria-hidden="true"><img src="./assets/partners/som-saa.webp" alt="" loading="lazy" width="380" height="102" decoding="async" /></a>
+              <a class="logo-link" href="#" data-todo="url" title="Corazón" tabindex="-1" aria-hidden="true"><img src="./assets/partners/corazon.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://jumakitchen.com" target="_blank" rel="noopener noreferrer" title="JUMA Kitchen" tabindex="-1" aria-hidden="true"><img src="./assets/partners/juma-kitchen.webp" alt="" loading="lazy" width="260" height="260" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://www.saraplondon.com" target="_blank" rel="noopener noreferrer" title="Sarap" tabindex="-1" aria-hidden="true"><img src="./assets/partners/sarap.webp" alt="" loading="lazy" width="380" height="129" decoding="async" /></a>
+              <a class="logo-link" href="https://www.islandpoke.com" target="_blank" rel="noopener noreferrer" title="Island Poké" tabindex="-1" aria-hidden="true"><img src="./assets/partners/island-poke.webp" alt="" loading="lazy" width="250" height="59" decoding="async" /></a>
+              <a class="logo-link" href="https://holborndiningroom.com" target="_blank" rel="noopener noreferrer" title="Chef Calum&#x27;s Pie Kit" tabindex="-1" aria-hidden="true"><img src="./assets/partners/chef-calums-pie-kit.webp" alt="" class="circle" loading="lazy" width="208" height="208" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://www.nannybills.co.uk" target="_blank" rel="noopener noreferrer" title="Nanny Bill&#x27;s" tabindex="-1" aria-hidden="true"><img src="./assets/partners/nanny-bills.webp" alt="" loading="lazy" width="457" height="142" decoding="async" /></a>
+              <a class="logo-link dark-tile" href="https://dirty-bones.com" target="_blank" rel="noopener noreferrer" title="Dirty Bones" tabindex="-1" aria-hidden="true"><img src="./assets/partners/dirty-bones.svg" alt="" loading="lazy" decoding="async" /></a>
               <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="12:51 by James Cochran (logo coming soon)" tabindex="-1" aria-hidden="true"><span class="logo-placeholder" role="img" aria-label="12:51 by James Cochran, logo coming soon">12<small>soon</small></span></a>
               <a class="logo-link is-placeholder" href="#" data-todo="url logo" title="Fanny&#x27;s Kebabs (logo coming soon)" tabindex="-1" aria-hidden="true"><span class="logo-placeholder" role="img" aria-label="Fanny&#x27;s Kebabs, logo coming soon">FK<small>soon</small></span></a>
             </div>
@@ -202,12 +261,12 @@
               </div>
 
               <figure class="intro-photo reveal">
-                <img src="./assets/stock/chef-cooking.jpg" alt="A chef plating a dish in a restaurant kitchen" loading="lazy" />
+                <img src="./assets/stock/chef-cooking.webp" srcset="./assets/stock/chef-cooking-800.webp 800w, ./assets/stock/chef-cooking.webp 1067w" sizes="(max-width: 980px) calc(100vw - 32px), 562px" alt="A chef plating a dish in a restaurant kitchen" loading="lazy" width="1067" height="1600" decoding="async" />
               </figure>
             </div>
 
             <div class="rk-divider" aria-hidden="true">
-              <img src="./assets/ornament.svg" alt="" />
+              <img src="./assets/ornament.svg" alt="" width="179" height="23" />
             </div>
           </div>
         </section>
@@ -224,19 +283,19 @@
               <p class="eyebrow alt">Best-in-class chefs &amp; their restaurants</p>
               <ul>
                 <li>
-                  <img src="./assets/chefs/gordon-ramsay-cc.jpg" alt="Gordon Ramsay" />
+                  <img src="./assets/chefs/gordon-ramsay-cc.webp" alt="Gordon Ramsay" width="280" height="280" loading="lazy" decoding="async" />
                   <strong>Gordon Ramsay</strong><span>Michelin star chef</span>
                 </li>
                 <li>
-                  <img src="./assets/chefs/adam-handling.png" alt="Chef Adam Handling" />
+                  <img src="./assets/chefs/adam-handling.webp" alt="Chef Adam Handling" width="176" height="176" loading="lazy" decoding="async" />
                   <strong>Chef Adam Handling</strong><span>Award-winning chef</span>
                 </li>
                 <li>
-                  <img src="./assets/chefs/tom-griffiths-flank.png" alt="Tom Griffiths" />
+                  <img src="./assets/chefs/tom-griffiths-flank.webp" alt="Tom Griffiths" width="174" height="174" loading="lazy" decoding="async" />
                   <strong>Tom Griffiths</strong><span>Flank</span>
                 </li>
                 <li>
-                  <img src="./assets/chefs/calum-franklin-pie-room.png" alt="Calum Franklin" />
+                  <img src="./assets/chefs/calum-franklin-pie-room.webp" alt="Calum Franklin" width="176" height="174" loading="lazy" decoding="async" />
                   <strong>Calum Franklin</strong><span>The Pie Room</span>
                 </li>
               </ul>
@@ -244,7 +303,7 @@
 
             <div class="case-grid">
               <article class="case-card">
-                <img src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" />
+                <img src="./assets/partners/gordon-ramsay.webp" alt="Gordon Ramsay Restaurants" width="208" height="208" loading="lazy" decoding="async" />
                 <div>
                   <span class="card-kicker">Case study</span>
                   <h3>Gordon Ramsay Restaurants</h3>
@@ -255,7 +314,7 @@
                 </div>
               </article>
               <article class="case-card">
-                <img src="./assets/partners/mac-and-wild.png" alt="Mac & Wild" />
+                <img src="./assets/partners/mac-and-wild.webp" alt="Mac & Wild" width="208" height="208" loading="lazy" decoding="async" />
                 <div>
                   <span class="card-kicker">Case study</span>
                   <h3>Mac &amp; Wild</h3>
@@ -274,7 +333,7 @@
         <section id="rkx" class="rkx-section">
           <div class="container">
             <div class="rkx-head reveal">
-              <img class="rkx-logo" src="./assets/rkx-logo.png" alt="R.K.X" />
+              <img class="rkx-logo" src="./assets/rkx-logo.webp" alt="R.K.X" width="284" height="154" loading="lazy" decoding="async" />
               <p class="rkx-tag">The biggest<br />events at home</p>
             </div>
 
@@ -283,14 +342,14 @@
             </p>
 
             <div class="ip-row">
-              <div class="ip-card"><img src="./assets/warner-bros-logo.png" alt="Warner Bros." /></div>
-              <div class="ip-card"><img src="./assets/harry-potter-logo.png" alt="Harry Potter" /></div>
-              <div class="ip-card"><img src="./assets/friends-logo.png" alt="Friends" /></div>
-              <div class="ip-card"><img src="./assets/game-of-thrones-logo.png" alt="Game of Thrones" /></div>
+              <div class="ip-card"><img src="./assets/warner-bros-logo.webp" alt="Warner Bros." width="265" height="339" loading="lazy" decoding="async" /></div>
+              <div class="ip-card"><img src="./assets/harry-potter-logo.webp" alt="Harry Potter" width="451" height="210" loading="lazy" decoding="async" /></div>
+              <div class="ip-card"><img src="./assets/friends-logo.webp" alt="Friends" width="448" height="78" loading="lazy" decoding="async" /></div>
+              <div class="ip-card"><img src="./assets/game-of-thrones-logo.webp" alt="Game of Thrones" width="229" height="229" loading="lazy" decoding="async" /></div>
             </div>
 
             <div class="rkx-divider" aria-hidden="true">
-              <img src="./assets/ornament.svg" alt="" />
+              <img src="./assets/ornament.svg" alt="" width="179" height="23" />
             </div>
           </div>
         </section>
@@ -303,7 +362,7 @@
           <div class="container got-grid" data-slider>
             <div class="got-copy reveal">
               <div class="copy-panel is-active" data-panel="got">
-                <img class="got-lockup-img" src="./assets/rk-x-got-logo-transparent.png" alt="R.K. X Game of Thrones" />
+                <img class="got-lockup-img" src="./assets/rk-x-got-logo-transparent.webp" alt="R.K. X Game of Thrones" width="520" height="154" loading="lazy" decoding="async" />
                 <p class="got-eyebrow">The Iron Anniversary</p>
                 <h2>Dinner is coming.</h2>
                 <p>
@@ -327,7 +386,7 @@
               </div>
 
               <div class="copy-panel" data-panel="gr" aria-hidden="true">
-                <img class="gr-logo" src="./assets/partners/gordon-ramsay.png" alt="Gordon Ramsay Restaurants" />
+                <img class="gr-logo" src="./assets/partners/gordon-ramsay.webp" alt="Gordon Ramsay Restaurants" width="208" height="208" loading="lazy" decoding="async" />
                 <p class="gr-eyebrow">Gordon Ramsay Restaurants × Restaurant Kits</p>
                 <h2>Beef Wellington, made at home.</h2>
                 <p>
@@ -345,14 +404,14 @@
               <div class="slider-viewport">
                 <div class="slider-track">
                   <figure class="slide slide-laptop" data-panel="got" data-caption="Game of Thrones: the Iron Anniversary booking site">
-                    <img src="./assets/got-laptop-mockup-transparent.png" alt="The Game of Thrones Iron Anniversary booking page shown on a laptop" />
+                    <img src="./assets/got-laptop-mockup-transparent.webp" alt="The Game of Thrones Iron Anniversary booking page shown on a laptop" width="1144" height="660" />
                   </figure>
                   <figure class="slide slide-menu" data-panel="got" data-caption="Game of Thrones: the menu and collector’s items">
-                    <img src="./assets/got-menu.png" alt="The Iron Anniversary menu, £120 for two" />
+                    <img src="./assets/got-menu.webp" alt="The Iron Anniversary menu, £120 for two" width="512" height="1010" />
                   </figure>
                   <figure class="slide slide-video" data-panel="gr" data-video data-caption="Gordon Ramsay Restaurants: the Beef Wellington kit">
                     <div class="video-shell" data-yt="wiHeOR0hFRk" data-start="63" data-end="180">
-                      <img class="video-poster" src="./assets/gr-video-poster.jpg" alt="Gordon Ramsay Restaurants and Restaurant Kits: the Beef Wellington kit video" loading="lazy" />
+                      <img class="video-poster" src="./assets/gr-video-poster.webp" alt="Gordon Ramsay Restaurants and Restaurant Kits: the Beef Wellington kit video" loading="lazy" width="1280" height="720" />
                       <div class="yt-host" aria-hidden="true"></div>
                       <button class="video-tap" type="button" aria-label="Pause video" hidden>
                         <span class="video-flash" aria-hidden="true">
@@ -396,7 +455,7 @@
             <div class="iconic-wrap reveal">
               <div class="receive-box">
                 <div class="receive-img">
-                  <img src="./assets/hero-image.jpg" alt="Restaurant ingredients" />
+                  <img src="./assets/hero-image.webp" srcset="./assets/hero-image-800.webp 800w, ./assets/hero-image.webp 1180w" sizes="(max-width: 980px) calc(100vw - 32px), 590px" alt="Restaurant ingredients" width="1180" height="806" loading="lazy" decoding="async" />
                 </div>
                 <div class="receive-text">
                   <span class="step-marker" aria-hidden="true">01</span>
@@ -422,7 +481,7 @@
                   </div>
                 </div>
                 <div class="turn-img">
-                  <img src="./assets/stock/plated-dish.jpg" alt="A beautifully plated finished restaurant dish" loading="lazy" />
+                  <img src="./assets/stock/plated-dish.webp" srcset="./assets/stock/plated-dish-800.webp 800w, ./assets/stock/plated-dish.webp 1180w" sizes="(max-width: 980px) calc(100vw - 32px), 590px" alt="A beautifully plated finished restaurant dish" loading="lazy" width="1180" height="885" decoding="async" />
                 </div>
               </div>
             </div>
@@ -520,7 +579,7 @@
         <section class="section-shell closing">
           <div class="container archive-box reveal">
             <figure class="closing-photo">
-              <img src="./assets/stock/table-dinner.jpg" alt="Friends sharing dinner around a table at home" loading="lazy" />
+              <img src="./assets/stock/table-dinner.webp" srcset="./assets/stock/table-dinner-800.webp 800w, ./assets/stock/table-dinner.webp 1400w" sizes="(max-width: 980px) calc(100vw - 32px), 560px" alt="Friends sharing dinner around a table at home" loading="lazy" width="1400" height="788" decoding="async" />
             </figure>
 
             <div class="closing-copy">

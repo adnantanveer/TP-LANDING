@@ -115,4 +115,35 @@ User chose 3 rows, black and white with colour on hover. The `?logos=` switch an
 3. Confirm the weaker partners (Island Poké, Nanny Bill's, Patty & Bun, Baozi Inn, Som Saa) should stay in the strip.
 4. Which restaurants (if any) should be removed from the strip for brand-permission reasons.
 5. The deck reference images (assets/partners-reference.png, rkx-got-reference.png, rkx-ip-reference.png) are unused by the site but kept as documentation. Delete if not wanted.
-6. The hero image (assets/bannermai.jpg, 1.7 MB) is still the original; it could be swapped for a lighter, clearer image.
+6. The hero image (assets/bannermai.jpg, 1.7 MB) is still the original; it could be swapped for a lighter, clearer image. (The site now serves WebP renditions of it; see Performance.)
+
+## 13. Performance (2026-10-07)
+
+Lighthouse 12, `vite preview` on :8423, headless Chrome. Mobile = default throttled run, desktop = `--preset=desktop`.
+
+| | Mobile before | Mobile after | Desktop before | Desktop after |
+|---|---|---|---|---|
+| Performance | 71 | 89 | 83 | 100 |
+| FCP | 2.6 s | 1.6 s | 0.74 s | 0.37 s |
+| LCP | 18.0 s | 3.8 s | 3.0 s | 0.76 s |
+| CLS | 0 | 0 | 0 | 0 |
+| TBT | 50 ms | 37 ms | 0 ms | 0 ms |
+| Speed Index | 3.2 s | 1.6 s | 0.83 s | 0.46 s |
+| Transfer | 3.96 MB | 0.72 MB | 3.90 MB | 0.70 MB |
+| SEO | 92 | 100 | 92 | 100 |
+
+LCP element before and after: the hero photo (`.banner-right img`).
+
+What changed:
+- Every raster is WebP, capped at 2x its largest displayed CSS size (hero: 720/1200/1800w `srcset`, `fetchpriority="high"`; stock photos: 800w + full `srcset`; partner logos capped at 380x260). Lossless WebP where it beat lossy for logos/alpha. AVIF was only ~23% smaller than WebP on the hero, so it was not worth a `<picture>`.
+- Every `<img>` has `width`/`height`; below-the-fold images are `loading="lazy" decoding="async"`. Slider slides stay eager (translated off-screen inside `overflow: hidden`, lazy would flash on arrival). Base rules that set only `width` got `height: auto` so the attributes act as a ratio hint only.
+- Fonts are self-hosted (`assets/fonts/`, same Google latin/latin-ext woff2 subsets, OFL): Poppins 400/600/700/800/900 (500 was never used) and Cinzel at 500/700 only (its weight-400 uses resolve to 500 exactly as before). The three hero weights are preloaded; the render-blocking fonts.googleapis.com CSS is gone.
+- `three` removed from package.json (unused). Marquee padding measures each track once instead of forcing a layout per clone; the below-the-fold motion layer and chart build wait for `requestIdleCallback` (120 ms cap). The YouTube IFrame API still loads only when the video slide is reached.
+- `assetsInlineLimit: 0` in vite.config.js: the small logos were being base64'd into index.html (27 copies, +60 KB on the critical document).
+- `public/`: `robots.txt`, `sitemap.xml`, `og-image.jpg` (1200x630 crop of the hero).
+
+Still flagged, left on purpose:
+- Mobile LCP 3.8 s on the simulated slow 4G: render-blocking `styles.css` (~11 KB gz) plus the 106 KB hero candidate. Inlining critical CSS would be the next step.
+- "Properly size images": the three slides (eager, sized for desktop) and partner logos sized for 2x desktop tiles look oversized in the 412px mobile emulation.
+- Colour contrast (`.header-link.primary-link` coral on cream, `<small>` in the placeholder logo chips): design choices, not changed.
+- Old source rasters (`bannermai.jpg`, `*.png`/`*.jpg` under assets/, assets/chefs, assets/partners, assets/stock) and the deck reference PNGs are now unreferenced and can be deleted; they are not part of the build.
