@@ -3943,50 +3943,7 @@ nav a {
   }
 }
 
-
-/* ============================================================
-   TEMP (round 9): logo strip variants for comparison, driven by ?logos=
-   2row | 3row | colour | 3row-colour (main.js sets html[data-logos]).
-   Remove this block and the matching main.js block once a variant is chosen.
-   ============================================================ */
-html[data-logos$='colour'] .logo-link img {
-  filter: none;
-  opacity: 1;
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-
-html[data-logos$='colour'] .logo-link:hover img,
-html[data-logos$='colour'] .logo-link:focus-visible img {
-  filter: none;
-  opacity: 0.82;
-  transform: scale(1.05);
-}
-
-/* Pale/white marks get a small dark chip so they read in full colour */
-html[data-logos$='colour'] .logo-link.dark-tile {
-  width: 196px;
-  height: 100px;
-  padding: 16px 22px;
-  background: #1f1e1d;
-  border-radius: 14px;
-}
-
-html[data-logos$='colour'] .logo-link.dark-tile img,
-html[data-logos$='colour'] .logo-link.dark-tile:hover img,
-html[data-logos$='colour'] .logo-link.dark-tile:focus-visible img {
-  filter: none;
-  opacity: 1;
-}
-
-html[data-logos$='colour'] .logo-link.dark-tile:hover img,
-html[data-logos$='colour'] .logo-link.dark-tile:focus-visible img {
-  opacity: 0.85;
-}
-
-html[data-logos$='colour'] .logo-placeholder {
-  color: var(--text);
-}
-
-html[data-logos^='3row'] .marquee + .marquee {
+/* Logo strip rows (main.js builds three) */
+.brand-strip .marquee + .marquee {
   margin-top: 14px;
 }

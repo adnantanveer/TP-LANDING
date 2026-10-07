@@ -106,8 +106,8 @@ Mac & Wild "Time to launch" is shown as 6 months at the user's direction (the in
 ## 10. Favicon
 `public/favicon.svg` (vector "R.K." in Poppins Black, outlines extracted from the Google Fonts TTF, no font dependency), `favicon-32.png`, `apple-touch-icon.png` (180px, cream background). Linked with relative paths in index.html.
 
-## 11. TEMP: logo strip variant switch (remove once chosen)
-`?logos=2row` (default) | `3row` | `colour` | `3row-colour` on the RK page. Implemented in the TEMP block near the top of `main.js` (sets `html[data-logos]`, rebuilds the marquee rows, pads tracks for seamless loops) and the TEMP block at the end of `styles.css`. In the colour variants the four pale/white marks (JUMA, Sarap, Nanny Bill's, Dirty Bones) sit on a small dark chip (#1f1e1d, 14px radius); no dark-version logo files exist for them. Once the user picks: if 2row, delete both TEMP blocks; if another variant, bake its row split/CSS into the markup and stylesheet, then delete the blocks.
+## 11. Logo strip layout (resolved)
+User chose 3 rows, black and white with colour on hover. The `?logos=` switch and colour variants are removed. `main.js` redistributes the logos into three alternating rows at runtime and pads each track for a seamless loop up to 1920px; the markup still holds them in two rows. The RKX line now reads "We secured 9 IPs during 2021." (Wonderland at Home reference removed at the user's request).
 
 ## 12. Open questions for the user
 1. Is 4.8 the Trustpilot score you want shown given the live page now reads 2.7? (See section 5.)
