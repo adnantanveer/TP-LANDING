@@ -652,7 +652,7 @@ if (!reduceMotion) {
       .timeline({ scrollTrigger: { trigger: partnersTitle, start: 'top 85%', once: true } })
       .from(splitWords(partnersTitle), { yPercent: 110, duration: 0.9, stagger: 0.06, ease: 'power4.out' })
       .call(() => mark?.classList.add('is-on'), null, '-=0.3')
-      .from(chefs, { y: 50, opacity: 0, duration: 0.8, stagger: 0.16, ease: 'power3.out' }, '+=1.0');
+      .from(chefs, { y: 50, opacity: 0, duration: 0.8, stagger: 0.28, ease: 'power3.out' }, '+=0.3');
   }
 
   /* Case studies: card, then each line */
