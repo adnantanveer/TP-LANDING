@@ -124,23 +124,17 @@ document.querySelectorAll('[data-count]').forEach((el) => {
    Users chart (Traction)
    ------------------------------------------------------------
    ILLUSTRATIVE ESTIMATES. These quarterly "users" figures are not from the
-   investor deck; they are placeholders shaped to end at the deck's "30k+"
-   boxes-shipped figure. Replace with real numbers before relying on them.
+   investor deck; they are placeholders over the ~18 months the company traded
+   (2021 Q1 to 2022 Q2), shaped to end at the deck's "30k+" boxes-shipped figure. Replace with real numbers before relying on them.
    See handoffs/restaurant-kits-missing.md.
    ============================================================ */
 const USERS_SERIES = [
   { label: '2021 Q1', value: 1200 },
-  { label: '2021 Q2', value: 2100 },
-  { label: '2021 Q3', value: 3400 },
-  { label: '2021 Q4', value: 5000 },
-  { label: '2022 Q1', value: 7200 },
-  { label: '2022 Q2', value: 9800 },
-  { label: '2022 Q3', value: 12600 },
-  { label: '2022 Q4', value: 15900 },
-  { label: '2023 Q1', value: 19400 },
-  { label: '2023 Q2', value: 23000 },
-  { label: '2023 Q3', value: 26600 },
-  { label: '2023 Q4', value: 30400 },
+  { label: '2021 Q2', value: 4500 },
+  { label: '2021 Q3', value: 9800 },
+  { label: '2021 Q4', value: 16000 },
+  { label: '2022 Q1', value: 23500 },
+  { label: '2022 Q2', value: 30400 },
 ];
 
 const compact = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k` : String(n));

@@ -58,19 +58,13 @@ ILLUSTRATIVE values, not from the deck. They were shaped to end at the deck's "3
 | Quarter | Users (est.) |
 |---|---|
 | 2021 Q1 | 1,200 |
-| 2021 Q2 | 2,100 |
-| 2021 Q3 | 3,400 |
-| 2021 Q4 | 5,000 |
-| 2022 Q1 | 7,200 |
-| 2022 Q2 | 9,800 |
-| 2022 Q3 | 12,600 |
-| 2022 Q4 | 15,900 |
-| 2023 Q1 | 19,400 |
-| 2023 Q2 | 23,000 |
-| 2023 Q3 | 26,600 |
-| 2023 Q4 | 30,400 |
+| 2021 Q2 | 4,500 |
+| 2021 Q3 | 9,800 |
+| 2021 Q4 | 16,000 |
+| 2022 Q1 | 23,500 |
+| 2022 Q2 | 30,400 |
 
-Update the array in `main.js` AND the `<table>` inside `.chart-table` in `index.html` (the accessible twin). Note the company had stopped trading by 2022 according to the Wayback captures, so the 2023 quarters may need to become earlier periods.
+Update the array in `main.js` AND the `<table>` inside `.chart-table` in `index.html` (the accessible twin).
 
 ## 4. Funder logos (`.backer-chips li[data-todo="logo"]`)
 Text chips only. Logos needed for: 1818 (1818 Venture Capital), Start-up Funding Club (SFC Capital), and an "EIS investors" treatment. The copy "£1.6M EIS-approved round" comes from the deck's "raising £1.6M, EIS approved": confirm whether it closed.
@@ -105,7 +99,7 @@ Unsplash was not used (its search endpoint now needs auth). "Stock photography v
 
 ## 10. Open questions for the user
 1. Is 4.8 the Trustpilot score you want shown given the live page now reads 2.7? (See section 5.)
-2. The users chart periods: the business appears to have stopped trading around 2022. Should the chart cover 2020 Q3 to 2022 Q2 instead of 2021 to 2023?
+2. The users chart now covers 2021 Q1 to 2022 Q2; confirm the start quarter (the first kits shipped mid-2020).
 3. Confirm the weaker partners (Island Poké, Nanny Bill's, Patty & Bun, Baozi Inn, Som Saa) should stay in the strip.
 4. Which restaurants (if any) should be removed from the strip for brand-permission reasons.
 5. The deck reference images (assets/partners-reference.png, rkx-got-reference.png, rkx-ip-reference.png) are unused by the site but kept as documentation. Delete if not wanted.

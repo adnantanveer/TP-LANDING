@@ -3194,3 +3194,36 @@ nav a {
     font-size: 0.76rem;
   }
 }
+
+/* Section rhythm around the ornament dividers: the divider closes the section
+   above it, and the next section brings its own single top padding. */
+.story.section-shell {
+  padding-bottom: 0;
+}
+
+.rk-divider {
+  margin: 64px 0 0;
+}
+
+.partners.section-shell {
+  padding-top: 88px;
+}
+
+.rkx-section {
+  padding-bottom: 0;
+}
+
+.rkx-divider {
+  margin: 64px 0 0;
+}
+
+@media (max-width: 640px) {
+  .rk-divider,
+  .rkx-divider {
+    margin: 40px 0 0;
+  }
+
+  .partners.section-shell {
+    padding-top: 48px;
+  }
+}
