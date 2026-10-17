@@ -128,7 +128,9 @@ function WorkCard({ slug, images, client, title, caption, meta, sector, index, s
             is doing behind it. */}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_55%,transparent)_0%,transparent_28%,transparent_45%,color-mix(in_oklab,var(--background)_92%,transparent)_100%)]" aria-hidden />
 
-        <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 font-mono text-[0.68rem] uppercase tracking-[0.3em] text-foreground/85">
+        {/* Same frosted strip as the footer, so the client name stays
+            readable over light screenshots too. */}
+        <div className="absolute inset-x-0 top-0 flex items-center justify-between border-b border-foreground/10 bg-background/70 px-5 py-3.5 font-mono text-[0.68rem] uppercase tracking-[0.3em] text-foreground backdrop-blur-xl md:px-6">
           <span>{client}</span>
           <span className="text-primary">0{index + 1}</span>
         </div>

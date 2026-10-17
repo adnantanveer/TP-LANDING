@@ -504,39 +504,6 @@
   margin-top: 0;
 }
 
-/* Team roster flip card (TeamFlipCard.tsx). Tailwind's arbitrary-value
-   syntax can only emit the unprefixed `backface-visibility` — without the
-   -webkit- prefix too, Chrome/Safari's compositor briefly shows the wrong
-   face right as the rotation crosses 90deg, reading as a flicker instead of
-   a clean flip. Real CSS here instead, with both prefixes and `will-change`
-   so the whole rotation stays on the GPU compositor for its full duration. */
-.team-flip {
-  perspective: 1600px;
-}
-.team-flip__inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  will-change: transform;
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.team-flip:hover .team-flip__inner,
-.team-flip:focus-within .team-flip__inner {
-  transform: rotateY(180deg);
-}
-.team-flip__face {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: 1rem;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.team-flip__face--back {
-  transform: rotateY(180deg);
-}
-
 /* Statement.tsx — the "SOFTWARE, SHIPPED." block, pulled in from the Index
    concept (src/concepts/index-concept/Statement.tsx): same layout, motion,
    and condensed impact-display font, but re-themed to actually use this
@@ -654,7 +621,7 @@
   }
 }
 
-/* Team (TeamFlipCard.tsx / TeamSection.tsx) — the "foil" ring: a thin
+/* Team (TeamMosaic.tsx / TeamSection.tsx) — the "foil" ring: a thin
    conic metallic sweep (warm gold into cool silver, back to gold) masked
    to a 1.5px band, with a second hairline inside it so it reads as an
    editorial frame rather than a coloured border. The sweep rotates slowly

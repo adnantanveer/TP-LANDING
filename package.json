@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:live": "VITE_API_URL= TP_API_PROXY=https://techpotam.tech vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",

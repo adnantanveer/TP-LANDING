@@ -30,6 +30,18 @@ function toLinkProps(href: string): { to: string } {
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
+// Section ids the homepage (pages/Home.tsx) actually renders. A CMS menu
+// link to any other same-page anchor is dropped instead of shown as a dead
+// link: e.g. the live menu still has "Capabilities" -> "#precision", but
+// the Precision section is no longer on the homepage (see the handoff, §1).
+// Keep this in sync when a homepage section is added or removed.
+const HOMEPAGE_SECTIONS = new Set(["top", "services", "work", "process", "delivery", "stack", "testimonials", "team", "contact"]);
+
+function hasLiveTarget(href: string): boolean {
+  if (!href.startsWith("#") || href.startsWith("#/")) return true; // routes and external URLs
+  return HOMEPAGE_SECTIONS.has(href.slice(1));
+}
+
 type MenuLink = { label: string; href: string; active: boolean };
 type MenuContent = { links: MenuLink[]; ctaLabel: string; ctaHref: string; ctaActive: boolean };
 
@@ -69,7 +81,14 @@ export function Nav({ progressAxis }: { progressAxis?: "y" }) {
   useEffect(() => {
     fetch(`${API_URL}/api/content/menu`)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => data && setMenu(data))
+      .then((data: MenuContent | null) => {
+        if (!data) return;
+        const dropped = data.links?.filter((l) => !hasLiveTarget(l.href)) ?? [];
+        if (dropped.length && import.meta.env.DEV) {
+          console.warn("[Nav] Hiding CMS menu links with no target section:", dropped.map((l) => `${l.label} (${l.href})`).join(", "));
+        }
+        setMenu({ ...data, links: (data.links ?? []).filter((l) => hasLiveTarget(l.href)) });
+      })
       .catch(() => {});
   }, []);
 

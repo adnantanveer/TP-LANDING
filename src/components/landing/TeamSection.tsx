@@ -1,13 +1,13 @@
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { KineticHeading, LineReveal, SectionLabel, initials } from "./primitives";
-import { TeamFlipCard, type TeamMember } from "./TeamFlipCard";
+import { KineticHeading, LineReveal, SectionLabel } from "./primitives";
+import { TeamMosaic, type TeamMember } from "./TeamMosaic";
+import { sortTeam, useTeamContent } from "./useTeamContent";
 
-const API_URL = import.meta.env.VITE_API_URL as string;
-
-const KEY_COUNT = 4;
-const MOSAIC_MAX = 10;
+// The homepage shows two rows of four (eight people); everyone else is on
+// the full /team page behind "Meet the team".
+const HOME_MAX = 8;
 // Matches the "150+ engineers" figure in Stats.tsx — the admin can set a
 // real `headcount` on the team endpoint (optional, see the handoff).
 const DEFAULT_HEADCOUNT = 150;
@@ -28,57 +28,43 @@ const DEFAULT_MEMBERS: TeamMember[] = [
 
 /**
  * Homepage teaser for the full "Our Team" roster (see pages/Team.tsx).
- * Leads with the key members (isKeyMember when the CMS sets it, else the
- * first four by order) as large flip cards, then suggests the real scale
- * of the bench with a mosaic of the wider team's portraits and a "+N"
- * count that hands off to the full grid. Sits on a moody architectural
- * photograph (public/assets/stock/team-bg-*) that drifts against the
- * scroll under a heavy dark wash — texture, not a picture.
+ * Same admin feed (`/api/content/team`) and the same irregular TeamMosaic
+ * grid as /team: key members first, then by order, capped at HOME_MAX,
+ * with a "+N" count that hands off to the full page. Sits on a moody
+ * architectural photograph that drifts against the scroll under a heavy
+ * dark wash: texture, not a picture.
  */
 export function TeamSection() {
   const reduce = useReducedMotion();
-  const [members, setMembers] = useState<TeamMember[]>(DEFAULT_MEMBERS);
-  const [headcount, setHeadcount] = useState(DEFAULT_HEADCOUNT);
+  const { members, headcount: liveHeadcount } = useTeamContent(DEFAULT_MEMBERS);
+  const headcount = liveHeadcount ?? DEFAULT_HEADCOUNT;
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-8%", "8%"]);
 
-  useEffect(() => {
-    fetch(`${API_URL}/api/content/team`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.teamMembers?.length) setMembers(data.teamMembers);
-        if (typeof data?.headcount === "number") setHeadcount(data.headcount);
-      })
-      .catch(() => {});
-  }, []);
-
   if (members.length === 0) return null;
 
-  const sorted = members.slice().sort((a, b) => a.order - b.order);
-  const flagged = sorted.filter((m) => m.isKeyMember);
-  const key = (flagged.length > 0 ? flagged : sorted).slice(0, KEY_COUNT);
-  const keyIds = new Set(key.map((m) => m.id));
-  const wider = sorted.filter((m) => !keyIds.has(m.id)).slice(0, MOSAIC_MAX);
-  const remaining = Math.max(0, headcount - key.length - wider.length);
+  const shown = sortTeam(members).slice(0, HOME_MAX);
+  const remaining = Math.max(0, headcount - shown.length);
 
   return (
-    <section id="team" ref={ref} className="relative overflow-hidden py-28 md:py-36">
-      {/* Backdrop photograph, oversized for the parallax drift. */}
-      <motion.div style={{ y: bgY }} className="absolute -inset-y-[10%] inset-x-0" aria-hidden>
-        <img
-          src="/assets/stock/team-bg-3.jpg"
-          alt=""
-          width={1600}
-          height={1000}
-          loading="lazy"
-          className="h-full w-full object-cover opacity-50 saturate-[0.4]"
-        />
-      </motion.div>
-      <div
-        className="absolute inset-0 bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklab,var(--background)_78%,transparent)_30%,color-mix(in_oklab,var(--background)_82%,transparent)_70%,var(--background)_100%)]"
-        aria-hidden
-      />
+    <section id="team" ref={ref} className="relative py-28 md:py-36">
+      {/* Backdrop photograph, oversized for the parallax drift. Clipped here
+          rather than on the section, so the floating details card can
+          overhang the grid without being cut off. */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <motion.div style={{ y: bgY }} className="absolute -inset-y-[10%] inset-x-0">
+          <img
+            src="/assets/stock/team-bg-3.jpg"
+            alt=""
+            width={1600}
+            height={1000}
+            loading="lazy"
+            className="h-full w-full object-cover opacity-50 saturate-[0.4]"
+          />
+        </motion.div>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,var(--background)_0%,color-mix(in_oklab,var(--background)_78%,transparent)_30%,color-mix(in_oklab,var(--background)_82%,transparent)_70%,var(--background)_100%)]" />
+      </div>
 
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="flex flex-wrap items-end justify-between gap-6">
@@ -90,21 +76,16 @@ export function TeamSection() {
             />
           </div>
           <LineReveal
-            lines={[`${headcount}+ engineers and designers. These are the ones you'll talk to.`]}
+            lines={[`${headcount}+ engineers and designers. Hover anyone to meet them.`]}
             delay={0.35}
             className="max-w-xs text-sm text-muted-foreground"
           />
         </div>
 
-        <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {key.map((m, i) => (
-            <div key={m.id} className="h-72 w-full sm:h-80">
-              <TeamCard {...m} index={i} />
-            </div>
-          ))}
+        <div className="mt-14">
+          <TeamMosaic members={shown} />
         </div>
 
-        {/* Wider team mosaic. */}
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -112,23 +93,14 @@ export function TeamSection() {
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="mt-12 flex flex-wrap items-center justify-between gap-6 border-t border-foreground/10 pt-8"
         >
-          <div className="flex items-center">
-            <ul className="flex -space-x-3">
-              {wider.map((m, i) => (
-                <li key={m.id} className="relative" style={{ zIndex: wider.length - i }}>
-                  <MosaicAvatar {...m} />
-                </li>
-              ))}
-            </ul>
+          <p className="flex items-center gap-4 text-sm text-muted-foreground">
             {remaining > 0 && (
-              <span className="foil-ring relative z-0 -ml-3 flex h-12 w-12 items-center justify-center rounded-full bg-background font-mono text-xs text-foreground sm:h-14 sm:w-14">
+              <span className="foil-ring relative flex h-12 w-12 items-center justify-center rounded-full bg-background font-mono text-xs text-foreground sm:h-14 sm:w-14">
                 +{remaining}
               </span>
             )}
-            <p className="ml-5 hidden max-w-[14rem] text-sm text-muted-foreground sm:block">
-              across engineering, design and delivery.
-            </p>
-          </div>
+            more across engineering, design and delivery.
+          </p>
 
           <Link
             to="/team"
@@ -142,47 +114,5 @@ export function TeamSection() {
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function MosaicAvatar({ name, role, photo }: TeamMember) {
-  const [loaded, setLoaded] = useState(false);
-  return (
-    <span
-      title={role ? `${name}, ${role}` : name}
-      className="foil-ring relative block h-12 w-12 overflow-hidden rounded-full bg-card sm:h-14 sm:w-14"
-    >
-      <span className="absolute inset-0 flex items-center justify-center font-mono text-[0.65rem] text-foreground/70">
-        {initials(name)}
-      </span>
-      {photo && (
-        <img
-          src={photo}
-          alt={name}
-          width={800}
-          height={800}
-          loading="lazy"
-          onLoad={() => setLoaded(true)}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
-        />
-      )}
-    </span>
-  );
-}
-
-// Entrance: a soft fade and short rise from blur to sharp, each card a
-// beat after the last — no rotation, no 3D, no per-card directions.
-function TeamCard({ index, ...member }: TeamMember & { index: number }) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.article
-      initial={reduce ? false : { opacity: 0, y: 28, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-12% 0px" }}
-      transition={{ duration: 1, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-      className="h-full w-full"
-    >
-      <TeamFlipCard {...member} />
-    </motion.article>
   );
 }

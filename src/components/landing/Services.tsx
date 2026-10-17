@@ -1,11 +1,47 @@
-import { motion, useScroll, useTransform } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { useEffect, useId, useRef, useState } from "react";
 import { InlineIcon } from "@/components/InlineIcon";
 import { KineticHeading, LineReveal } from "./primitives";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-type ServiceItem = { title: string; body: string; icon: string; active: boolean };
+// `details` is an optional CMS field (see handoffs/techpotam-backend-admin.md §2).
+// When the API leaves it out, DEFAULT_DETAILS below fills it by title.
+type ServiceItem = { title: string; body: string; icon: string; active: boolean; details?: string[] };
+
+// What each service covers, revealed when a row is hovered, focused or tapped.
+const DEFAULT_DETAILS: Record<string, string[]> = {
+  "Product engineering": [
+    "Web apps and SaaS platforms",
+    "React, TypeScript and Node.js",
+    "API design and third-party integrations",
+    "Automated testing and CI from day one",
+  ],
+  "Mobile applications": [
+    "React Native, Swift and Kotlin",
+    "Offline sync and push notifications",
+    "App Store and Google Play releases",
+    "Analytics and crash reporting",
+  ],
+  "AI & automation": [
+    "LLM assistants and chatbots",
+    "Document processing and smart search",
+    "Workflow automation across your tools",
+    "Guardrails, evaluation and monitoring",
+  ],
+  "Cloud & DevOps": [
+    "AWS and Azure architecture",
+    "UK-region hosting for data residency",
+    "CI/CD pipelines and infrastructure as code",
+    "Monitoring, alerting and cost control",
+  ],
+  "Design & experience": [
+    "UX research and prototyping",
+    "UI design and design systems",
+    "Accessibility to WCAG 2.2 AA",
+    "Motion and interaction design",
+  ],
+};
 
 // Filled (not outline) so these read as more "colored" than a thin stroke
 // glyph — still just currentColor, so they pick up text-primary from
@@ -67,6 +103,11 @@ function withIconFallback(items: ServiceItem[]): ServiceItem[] {
   return items.map((item) => (hasUsableIcon(item.icon) ? item : { ...item, icon: defaults.get(item.title) ?? item.icon }));
 }
 
+// Same idea for the hover details: real CMS data wins when present.
+function detailsFor(item: ServiceItem): string[] {
+  return item.details?.filter(Boolean).length ? item.details.filter(Boolean) : DEFAULT_DETAILS[item.title] ?? [];
+}
+
 export function Services() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -82,7 +123,9 @@ export function Services() {
 
   if (!content.visible) return null;
 
-  const services = content.items.filter((item) => item.active).map((item, i) => ({ n: String(i + 1).padStart(2, "0"), ...item }));
+  const services = content.items
+    .filter((item) => item.active)
+    .map((item, i) => ({ n: String(i + 1).padStart(2, "0"), ...item, details: detailsFor(item) }));
 
   return (
     <section
@@ -118,15 +161,21 @@ function ServiceRow({
   title,
   body,
   icon,
+  details,
   index,
 }: {
   n: string;
   title: string;
   body: string;
   icon: string;
+  details: string[];
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const panelId = useId();
+  const reduce = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [canHover, setCanHover] = useState(true);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 90%", "start 40%"] });
   const opacity = useTransform(scrollYProgress, [0, 1], [0.25, 1]);
   const x = useTransform(scrollYProgress, [0, 1], [index % 2 ? 60 : -60, 0]);
@@ -134,12 +183,58 @@ function ServiceRow({
   const iconRotate = useTransform(scrollYProgress, [0, 1], [index % 2 ? -25 : 25, 0]);
   const iconScale = useTransform(scrollYProgress, [0, 1], [0.7, 1]);
 
+  // Mouse users get hover; touch users tap to toggle. Keyboard users use Enter/Space.
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setCanHover(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!open || canHover) return;
+    const close = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [open, canHover]);
+
+  const hasDetails = details.length > 0;
+  const toggle = () => hasDetails && setOpen((o) => !o);
+
   return (
     <motion.div
       ref={ref}
-      style={{ opacity, x, rotateY: rotate, transformStyle: "preserve-3d" }}
-      className="perspective-scene group grid grid-cols-1 items-center gap-4 border-t border-border py-10 md:grid-cols-[4.5rem_6rem_1fr_1.1fr]"
+      style={{ opacity, x, rotateY: rotate, transformStyle: "preserve-3d", zIndex: open ? 30 : 1 }}
+      role={hasDetails ? "button" : undefined}
+      tabIndex={hasDetails ? 0 : undefined}
+      aria-expanded={hasDetails ? open : undefined}
+      aria-controls={hasDetails ? panelId : undefined}
+      onMouseEnter={() => canHover && hasDetails && setOpen(true)}
+      onMouseLeave={() => canHover && setOpen(false)}
+      onClick={() => !canHover && toggle()}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+        if (e.key === "Escape") setOpen(false);
+      }}
+      className={`perspective-scene group relative grid grid-cols-1 items-center gap-4 border-t border-border py-10 outline-none transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary/60 md:grid-cols-[4.5rem_6rem_1fr_1.1fr] ${
+        hasDetails ? "cursor-pointer" : ""
+      }`}
     >
+      {/* Soft highlight behind the open row */}
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-[-1.5rem] inset-y-0 -z-10 rounded-2xl bg-primary/[0.07]"
+        initial={false}
+        animate={{ opacity: open ? 1 : 0, scale: open ? 1 : 0.98 }}
+        transition={{ duration: reduce ? 0 : 0.35 }}
+      />
+
       <motion.span style={{ rotateY: iconRotate, scale: iconScale }} className="transition-transform duration-500 group-hover:scale-110">
         <InlineIcon
           svg={icon}
@@ -148,11 +243,87 @@ function ServiceRow({
         />
       </motion.span>
       <span className="font-mono text-xs text-primary">{n}</span>
-      <h3 className="text-2xl font-medium transition-colors duration-300 group-hover:text-primary md:text-3xl">
+      <h3
+        className={`text-2xl font-medium transition-colors duration-300 group-hover:text-primary md:text-3xl ${
+          open ? "text-primary" : ""
+        }`}
+      >
         {title}
       </h3>
-      <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+      <div className="flex items-start justify-between gap-4">
+        <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+        {hasDetails && (
+          <motion.span
+            aria-hidden
+            className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-primary"
+            animate={{ rotate: open ? 45 : 0 }}
+            transition={{ duration: reduce ? 0 : 0.3 }}
+          >
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </motion.span>
+        )}
+      </div>
 
+      {/* Full-width details card: rises above the list instead of pushing it down */}
+      <div
+        className={`pointer-events-none absolute inset-x-[-1.5rem] top-3 z-10 ${open ? "" : "invisible"}`}
+      >
+        <AnimatePresence>
+          {open && hasDetails && (
+            <motion.div
+              key="details"
+              id={panelId}
+              role="region"
+              aria-label={`${title}: what's included`}
+              className="pointer-events-auto w-full rounded-3xl border border-primary/25 bg-[color-mix(in_oklab,var(--background)_90%,transparent)] p-6 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8),0_0_0_1px_color-mix(in_oklab,var(--primary)_12%,transparent),0_30px_80px_-40px_color-mix(in_oklab,var(--primary)_70%,transparent)] backdrop-blur-xl md:p-8"
+              initial={{ opacity: 0, y: reduce ? 0 : 36, scale: reduce ? 1 : 0.96, rotateX: reduce ? 0 : -10 }}
+              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+              exit={{ opacity: 0, y: reduce ? 0 : 16, scale: reduce ? 1 : 0.98 }}
+              transition={{ duration: reduce ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
+              style={{ transformPerspective: 1200, transformOrigin: "50% 100%" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] md:gap-10">
+                <div>
+                  <div className="mb-4 flex items-center gap-4">
+                    <InlineIcon svg={icon} fallback={title} className="h-11 w-11 text-primary" />
+                    <span className="font-mono text-xs text-primary">{n}</span>
+                  </div>
+                  <h4 className="text-2xl font-medium text-primary md:text-3xl">{title}</h4>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
+                  <a
+                    href="#contact"
+                    aria-label={`Talk to us about ${title}`}
+                    className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
+                  >
+                    Talk to us about this <span aria-hidden>→</span>
+                  </a>
+                </div>
+
+                <div className="md:border-l md:border-border md:pl-10">
+                  <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-primary">What’s included</span>
+                  <ul className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                    {details.map((item, i) => (
+                      <motion.li
+                        key={item}
+                        className="flex items-start gap-3 rounded-xl border border-border/70 bg-primary/[0.04] px-4 py-3 text-sm text-foreground/90"
+                        initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: reduce ? 0 : 0.12 + i * 0.07, duration: reduce ? 0 : 0.35 }}
+                      >
+                        <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                        {item}
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
