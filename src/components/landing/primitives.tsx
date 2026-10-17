@@ -62,7 +62,7 @@ export function TiltCard({ children, className }: { children: ReactNode; classNa
 // First + last initials ("Amit Kumar" -> "AK") read as a deliberate
 // monogram badge rather than a single stray letter — used wherever a
 // person (or a role-only attribution like "Operations Director") needs a
-// placeholder avatar (TeamFlipCard, Testimonials' Quote).
+// placeholder avatar (TeamMosaic, Testimonials' Quote).
 export function initials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return "?";
