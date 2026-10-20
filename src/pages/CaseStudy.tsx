@@ -4,11 +4,25 @@ import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Sections";
 import { Reveal, SectionLabel } from "@/components/landing/primitives";
 import { CaseStudyCarousel } from "@/components/CaseStudyCarousel";
+import { InlineIcon } from "@/components/InlineIcon";
 import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const API_URL = import.meta.env.VITE_API_URL as string;
 
 type WorkResult = { stat: string; label: string };
+type WorkLink = { url: string; description: string; icon: string; active: boolean };
+
+// No title field — when a link has no icon set, InlineIcon's letter-fallback
+// needs some text to initial from, so use the description, falling back to
+// the URL's bare hostname.
+function linkFallback(link: WorkLink) {
+  if (link.description) return link.description;
+  try {
+    return new URL(link.url).hostname.replace(/^www\./, "");
+  } catch {
+    return link.url || "?";
+  }
+}
 type WorkImage = { url: string; type: "image" | "video"; title: string; altText: string; caption: string };
 
 // Real photography already used elsewhere on this site (not a fabricated
@@ -29,6 +43,7 @@ type WorkItem = {
   approach: string;
   results: WorkResult[];
   stack: string[];
+  links: WorkLink[];
 };
 
 /**
@@ -56,6 +71,7 @@ export function CaseStudy() {
   const realImages = project.images ?? [];
   const coverImages = realImages.length >= 2 ? realImages : [...realImages, DUMMY_IMAGE];
   const gallery = project.images?.slice(1) ?? [];
+  const activeLinks = (project.links ?? []).filter((l) => l.active);
 
   return (
     <main className="relative">
@@ -157,6 +173,39 @@ export function CaseStudy() {
           </Reveal>
         </div>
       </section>
+
+      {/* see it live — website/iOS/Android/subdomain links, only rendered if any are active */}
+      {activeLinks.length > 0 && (
+        <section className="relative py-28">
+          <div className="mx-auto max-w-6xl px-6">
+            <Reveal>
+              <SectionLabel>See it live</SectionLabel>
+              <h2 className="mt-5 max-w-xl text-[clamp(1.8rem,4vw,2.8rem)] font-semibold leading-[1.05]">
+                Where you can <span className="text-ember">try it</span>.
+              </h2>
+            </Reveal>
+
+            <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {activeLinks.map((link, i) => (
+                <Reveal key={link.url + i} delay={0.06 * i}>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block rounded-2xl border border-border bg-card p-8 transition-colors hover:border-primary"
+                  >
+                    <InlineIcon svg={link.icon} fallback={linkFallback(link)} className="h-10 w-10 rounded-xl bg-primary/10 text-primary [&>svg]:h-5 [&>svg]:w-5" />
+                    {link.description && <p className="mt-4 text-sm text-muted-foreground">{link.description}</p>}
+                    <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-foreground transition-transform group-hover:translate-x-1">
+                      Visit <span aria-hidden>→</span>
+                    </p>
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* gallery — every image beyond the cover, only rendered if there are any */}
       {gallery.length > 0 && (
